@@ -1,0 +1,6 @@
+dependencies:
+   - name: bscui
+     version: 0.1.0
+     src: htmlwidgets/lib/bscui-0.1.0
+     script:
+      - bscui-lib.js
