@@ -15,6 +15,11 @@ bscui <- function(
       width = NULL, height = NULL, elementId = NULL
 ) {
 
+   cont <- regmatches(svg_txt, gregexpr("<svg[^>]*>", svg_txt))[[1]]
+   if(length(cont) != 1){
+      cont <- '<svg xmlns="http://www.w3.org/2000/svg" version="1.1">'
+   }
+
    svg_txt <- sub(
       '.*<svg\n[^>]*>', '', svg_txt
    )
@@ -25,10 +30,7 @@ bscui <- function(
       '<g>%s</g>',
       svg_txt
    )
-   svg_txt <- sprintf(
-      '<svg width="100%s" height="100%s">%s</svg>',
-      "%", "%", svg_txt
-   )
+   svg_txt <- paste0(cont, svg_txt,'</svg>')
 
 
    # forward options using x
