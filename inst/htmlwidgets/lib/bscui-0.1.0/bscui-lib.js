@@ -97,7 +97,10 @@ function Sui(element_id){
          "display: none;"
       );
       menu.appendChild(menu_items);
-      menu_items.appendChild(document.createElement('br'));
+
+      var msep_elt = document.createElement('p');
+      msep_elt.setAttribute("height", "20px");
+      menu_items.appendChild(msep_elt);
 
       var reset_button = document.createElementNS(xmlns, 'svg');
       reset_button.innerHTML =
@@ -129,7 +132,7 @@ function Sui(element_id){
       menu_items.appendChild(zoomout_button);
 
       //
-      menu_items.appendChild(document.createElement('br'));
+      menu_items.appendChild(msep_elt.cloneNode(true));
 
       var savesvg_button = document.createElementNS(xmlns, 'svg');
       savesvg_button.innerHTML =
@@ -159,11 +162,15 @@ function Sui(element_id){
          '<path d="M344 0H488c13.3 0 24 10.7 24 24V168c0 9.7-5.8 18.5-14.8 22.2s-19.3 1.7-26.2-5.2l-39-39-87 87c-9.4 9.4-24.6 9.4-33.9 0l-32-32c-9.4-9.4-9.4-24.6 0-33.9l87-87L327 41c-6.9-6.9-8.9-17.2-5.2-26.2S334.3 0 344 0zM168 512H24c-13.3 0-24-10.7-24-24V344c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2l39 39 87-87c9.4-9.4 24.6-9.4 33.9 0l32 32c9.4 9.4 9.4 24.6 0 33.9l-87 87 39 39c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8z"></path>' +
          '</g>'
       scalepng_button.setAttribute("viewBox", "0 0 512 512");
+      scalepng_button.setAttribute(
+         "style",
+         "width: 50%; margin-right: 0; margin-left: auto; display: block;"
+      );
       menu_items.appendChild(scalepng_button);
 
       var scalepng_ui = document.createElement('div');
       scalepng_ui.style.display = "none";
-      scalepng_ui.style.width = "80px";
+      scalepng_ui.style.width = "100px";
       menu_items.appendChild(scalepng_ui);
       var png_scale = document.createElement('input');
       png_scale.setAttribute("type", "number");
@@ -172,6 +179,7 @@ function Sui(element_id){
       png_scale.value = default_png_scale;
       png_scale.setAttribute("style", 'text-align:right;');
       png_scale.style.width = "50px";
+      png_scale.style.marginLeft = "10px";
       png_scale.style.display = "inline";
       scalepng_ui.appendChild(png_scale);
       var closeui_button = document.createElementNS(xmlns, 'svg');
