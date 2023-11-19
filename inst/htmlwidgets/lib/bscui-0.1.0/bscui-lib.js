@@ -50,7 +50,7 @@ function Sui(element_id){
       var el = document.getElementById(sui.id);
 
       // Container
-      var div = document.createElement('div');
+      var div = create_html_element('div');
       div.setAttribute(
          "style",
          // "border: 1px solid #ccc;" +
@@ -66,7 +66,7 @@ function Sui(element_id){
 
       // Menu
       var xmlns = "http://www.w3.org/2000/svg";
-      var menu = document.createElement('div');
+      var menu = create_html_element('div');
       menu.setAttribute(
          "style",
          "background-color: #3d3d3d2b;" +
@@ -77,7 +77,7 @@ function Sui(element_id){
       div.appendChild(menu);
 
       // Show button
-      var show_button = document.createElementNS(xmlns, 'svg');
+      var show_button = create_svg_element('svg');
       show_button.innerHTML =
          '<g>' +
          '<title>Menu</title>' +
@@ -90,7 +90,7 @@ function Sui(element_id){
       menu.appendChild(show_button);
 
       // Menu elements
-      var menu_items = document.createElement('div');
+      var menu_items = create_html_element('div');
       menu_items.setAttribute(
          "style",
          //"height: 200px;" +
@@ -98,11 +98,11 @@ function Sui(element_id){
       );
       menu.appendChild(menu_items);
 
-      var msep_elt = document.createElement('p');
+      var msep_elt = create_html_element('p');
       msep_elt.setAttribute("height", "20px");
       menu_items.appendChild(msep_elt);
 
-      var reset_button = document.createElementNS(xmlns, 'svg');
+      var reset_button = create_svg_element('svg');
       reset_button.innerHTML =
          '<g>' +
          '<title>Reset view</title>' +
@@ -112,7 +112,7 @@ function Sui(element_id){
       reset_button.setAttribute("viewBox", "0 0 1000 1000");
       menu_items.appendChild(reset_button);
 
-      var zoomin_button = document.createElementNS(xmlns, 'svg');
+      var zoomin_button = create_svg_element('svg');
       zoomin_button.innerHTML =
          '<g>' +
          '<title>Zoom in</title>' +
@@ -122,7 +122,7 @@ function Sui(element_id){
       zoomin_button.setAttribute("viewBox", "0 0 875 1000");
       menu_items.appendChild(zoomin_button);
 
-      var zoomout_button = document.createElementNS(xmlns, 'svg');
+      var zoomout_button = create_svg_element('svg');
       zoomout_button.innerHTML =
          '<g>' +
          '<title>Zoom out</title>' +
@@ -134,7 +134,7 @@ function Sui(element_id){
       //
       menu_items.appendChild(msep_elt.cloneNode(true));
 
-      var savesvg_button = document.createElementNS(xmlns, 'svg');
+      var savesvg_button = create_svg_element('svg');
       savesvg_button.innerHTML =
          '<g>' +
          '<title>Save SVG</title>' +
@@ -144,7 +144,7 @@ function Sui(element_id){
       savesvg_button.setAttribute("viewBox", "0 0 640 512");
       menu_items.appendChild(savesvg_button);
 
-      var savepng_button = document.createElementNS(xmlns, 'svg');
+      var savepng_button = create_svg_element('svg');
       savepng_button.innerHTML =
          '<g>' +
          '<title>Save PNG</title>' +
@@ -154,7 +154,7 @@ function Sui(element_id){
       savepng_button.setAttribute("viewBox", "0 0 1000 1000");
       menu_items.appendChild(savepng_button);
 
-      var scalepng_button = document.createElementNS(xmlns, 'svg');
+      var scalepng_button = create_svg_element('svg');
       scalepng_button.innerHTML =
          '<g>' +
          '<title>Scale PNG</title>' +
@@ -168,11 +168,11 @@ function Sui(element_id){
       );
       menu_items.appendChild(scalepng_button);
 
-      var scalepng_ui = document.createElement('div');
+      var scalepng_ui = create_html_element('div');
       scalepng_ui.style.display = "none";
       scalepng_ui.style.width = "100px";
       menu_items.appendChild(scalepng_ui);
-      var png_scale = document.createElement('input');
+      var png_scale = create_html_element('input');
       png_scale.setAttribute("type", "number");
       png_scale.setAttribute("min", 0);
       png_scale.setAttribute("step", 1);
@@ -182,7 +182,7 @@ function Sui(element_id){
       png_scale.style.marginLeft = "10px";
       png_scale.style.display = "inline";
       scalepng_ui.appendChild(png_scale);
-      var closeui_button = document.createElementNS(xmlns, 'svg');
+      var closeui_button = create_svg_element('svg');
       closeui_button.style.height = "20px"
       closeui_button.style.display = "inline";
       closeui_button.innerHTML =
@@ -526,7 +526,7 @@ function Sui(element_id){
       );
 
       var body = document.querySelector("body");
-      var a = body.appendChild(document.createElement("a"));
+      var a = body.appendChild(create_html_element("a"));
       a.style.visibility="hidden";
       a.setAttribute("href", imgsrc);
       a.setAttribute("download", fileName);
@@ -571,7 +571,7 @@ function Sui(element_id){
       imgsrc = 'data:image/svg+xml;base64,'+ btoa(imgsrc);
       var w = vbw*scale;
       var h = vbh*scale;
-      var canvas = document.createElement("canvas");
+      var canvas = create_html_element("canvas");
       canvas.setAttribute("width", w);
       canvas.setAttribute("height", h);
 
@@ -581,7 +581,7 @@ function Sui(element_id){
          context.drawImage(img, 0, 0, w, h);
          var canvasdata = canvas.toDataURL("image/png");
          var body = document.querySelector("body");
-         var a = body.appendChild(document.createElement("a"));
+         var a = body.appendChild(create_html_element("a"));
          a.style.visibility="hidden";
          a.setAttribute("download", fileName);
          a.setAttribute("href", canvasdata);
@@ -605,4 +605,26 @@ function Sui(element_id){
 function point_to_area_ref(point, area) {
    var pt = new DOMPoint(point.x, point.y);
    return pt.matrixTransform(area.getScreenCTM().inverse());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/**
+ * Create an SVG element with namespace
+ *
+ * @param {tag_name} the tag name of the element
+ *
+ */
+function create_svg_element(tag_name){
+   return document.createElementNS("http://www.w3.org/2000/svg", tag_name)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/**
+ * Create an HTML element with namespace
+ *
+ * @param {tag_name} the tag name of the element
+ *
+ */
+function create_html_element(tag_name){
+   return document.createElementNS("http://www.w3.org/1999/xhtml", tag_name)
 }
