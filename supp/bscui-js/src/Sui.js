@@ -4,15 +4,15 @@
 /**
  * SVG user interface
  *
- * @param {element_id} parent element identifier
+ * @param {string} element_id parent element identifier
  *
  */
 function Sui(element_id){
 
    // Config
    this.zoom_min = null;
-   this.zoom_max = null;
    this.zoom_step = null;
+   this.zoom_max = null;
    this.clip = null;
 
    // Init state
@@ -31,12 +31,13 @@ function Sui(element_id){
    /**
     * Initialize the Sui object
     *
-    * @param {svg_txt} string with svg code
-    * @param {zoom_min} smallest zoom value
-    * @param {zoom_max} largest zoom value
-    * @param {zom_step} zooming step: the larger the faster
-    * @param {clip} if true, when the current zoom is 1, the viewBox is
+    * @param {string} svg_txt string with svg code
+    * @param {number} zoom_min smallest zoom value
+    * @param {number} zoom_max largest zoom value
+    * @param {number} zom_step zooming step: the larger the faster
+    * @param {boolean} clip if true, when the current zoom is 1, the viewBox is
     *    automatically set to its original state (the drawing cannot be moved)
+    * @param {number} default_png_scale default value for scaling PNG export
     *
     */
    this.init = function(
@@ -77,23 +78,13 @@ function Sui(element_id){
       div.appendChild(menu);
 
       // Show button
-      var show_button = create_svg_element('svg');
-      show_button.innerHTML =
-         '<g>' +
-         '<title>Menu</title>' +
-         '<rect width="100%" height="100%" style="fill:#3d3d3d00;"></rect>' +
-         '<line x1="1" y1="3" x2="17" y2="3" stroke="black" stroke-width="4" />' +
-         '<line x1="1" y1="9" x2="17" y2="9" stroke="black" stroke-width="4" />' +
-         '<line x1="1" y1="15" x2="17" y2="15" stroke="black" stroke-width="4" />' +
-         '</g>';
-      show_button.setAttribute("viewBox", "0 0 18 18");
+      var show_button = create_svg_icon("menu", "Menu");
       menu.appendChild(show_button);
 
       // Menu elements
       var menu_items = create_html_element('div');
       menu_items.setAttribute(
          "style",
-         //"height: 200px;" +
          "display: none;"
       );
       menu.appendChild(menu_items);
@@ -102,66 +93,25 @@ function Sui(element_id){
       msep_elt.setAttribute("height", "20px");
       menu_items.appendChild(msep_elt);
 
-      var reset_button = create_svg_element('svg');
-      reset_button.innerHTML =
-         '<g>' +
-         '<title>Reset view</title>' +
-         '<rect width="100%" height="100%" style="fill:#3d3d3d00;"></rect>' +
-         '<path d="m250 850l-187 0-63 0 0-62 0-188 63 0 0 188 187 0 0 62z m688 0l-188 0 0-62 188 0 0-188 62 0 0 188 0 62-62 0z m-875-938l0 188-63 0 0-188 0-62 63 0 187 0 0 62-187 0z m875 188l0-188-188 0 0-62 188 0 62 0 0 62 0 188-62 0z m-125 188l-1 0-93-94-156 156 156 156 92-93 2 0 0 250-250 0 0-2 93-92-156-156-156 156 94 92 0 2-250 0 0-250 0 0 93 93 157-156-157-156-93 94 0 0 0-250 250 0 0 0-94 93 156 157 156-157-93-93 0 0 250 0 0 250z" transform="matrix(1 0 0 -1 0 850)"></path>' +
-         '</g>'
-      reset_button.setAttribute("viewBox", "0 0 1000 1000");
+      var reset_button = create_svg_icon("fit", "Reset view");
       menu_items.appendChild(reset_button);
 
-      var zoomin_button = create_svg_element('svg');
-      zoomin_button.innerHTML =
-         '<g>' +
-         '<title>Zoom in</title>' +
-         '<rect width="100%" height="100%" style="fill:#3d3d3d00;"></rect>' +
-         '<path d="m1 787l0-875 875 0 0 875-875 0z m687-500l-187 0 0-187-125 0 0 187-188 0 0 125 188 0 0 187 125 0 0-187 187 0 0-125z" transform="matrix(1 0 0 -1 0 850)"></path>' +
-         '</g>'
-      zoomin_button.setAttribute("viewBox", "0 0 875 1000");
+      var zoomin_button = create_svg_icon("zoom_in", "Zoom in");
       menu_items.appendChild(zoomin_button);
 
-      var zoomout_button = create_svg_element('svg');
-      zoomout_button.innerHTML =
-         '<g>' +
-         '<title>Zoom out</title>' +
-         '<path d="m0 788l0-876 875 0 0 876-875 0z m688-500l-500 0 0 125 500 0 0-125z" transform="matrix(1 0 0 -1 0 850)"></path>' +
-         '</g>'
-      zoomout_button.setAttribute("viewBox", "0 0 875 1000");
+      var zoomout_button = create_svg_icon("zoom_out", "Zoom out");
       menu_items.appendChild(zoomout_button);
 
       //
       menu_items.appendChild(msep_elt.cloneNode(true));
 
-      var savesvg_button = create_svg_element('svg');
-      savesvg_button.innerHTML =
-         '<g>' +
-         '<title>Save SVG</title>' +
-         '<rect width="100%" height="100%" style="fill:#3d3d3d00;"></rect>' +
-         '<path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z"></path>' +
-         '</g>'
-      savesvg_button.setAttribute("viewBox", "0 0 640 512");
+      var savesvg_button = create_svg_icon("code", "Save SVG");
       menu_items.appendChild(savesvg_button);
 
-      var savepng_button = create_svg_element('svg');
-      savepng_button.innerHTML =
-         '<g>' +
-         '<title>Save PNG</title>' +
-         '<rect width="100%" height="100%" style="fill:#3d3d3d00;"></rect>' +
-         '<path d="m500 450c-83 0-150-67-150-150 0-83 67-150 150-150 83 0 150 67 150 150 0 83-67 150-150 150z m400 150h-120c-16 0-34 13-39 29l-31 93c-6 15-23 28-40 28h-340c-16 0-34-13-39-28l-31-94c-6-15-23-28-40-28h-120c-55 0-100-45-100-100v-450c0-55 45-100 100-100h800c55 0 100 45 100 100v450c0 55-45 100-100 100z m-400-550c-138 0-250 112-250 250 0 138 112 250 250 250 138 0 250-112 250-250 0-138-112-250-250-250z m365 380c-19 0-35 16-35 35 0 19 16 35 35 35 19 0 35-16 35-35 0-19-16-35-35-35z" transform="matrix(1 0 0 -1 0 850)"></path>' +
-         '</g>'
-      savepng_button.setAttribute("viewBox", "0 0 1000 1000");
+      var savepng_button = create_svg_icon("photo", "Save PNG");
       menu_items.appendChild(savepng_button);
 
-      var scalepng_button = create_svg_element('svg');
-      scalepng_button.innerHTML =
-         '<g>' +
-         '<title>Scale PNG</title>' +
-         '<rect width="100%" height="100%" style="fill:#3d3d3d00;"></rect>' +
-         '<path d="M344 0H488c13.3 0 24 10.7 24 24V168c0 9.7-5.8 18.5-14.8 22.2s-19.3 1.7-26.2-5.2l-39-39-87 87c-9.4 9.4-24.6 9.4-33.9 0l-32-32c-9.4-9.4-9.4-24.6 0-33.9l87-87L327 41c-6.9-6.9-8.9-17.2-5.2-26.2S334.3 0 344 0zM168 512H24c-13.3 0-24-10.7-24-24V344c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2l39 39 87-87c9.4-9.4 24.6-9.4 33.9 0l32 32c9.4 9.4 9.4 24.6 0 33.9l-87 87 39 39c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8z"></path>' +
-         '</g>'
-      scalepng_button.setAttribute("viewBox", "0 0 512 512");
+      var scalepng_button = create_svg_icon("scale", "Scale PNG");
       scalepng_button.setAttribute(
          "style",
          "width: 50%; margin-right: 0; margin-left: auto; display: block;"
@@ -182,16 +132,10 @@ function Sui(element_id){
       png_scale.style.marginLeft = "10px";
       png_scale.style.display = "inline";
       scalepng_ui.appendChild(png_scale);
-      var closeui_button = create_svg_element('svg');
+
+      var closeui_button = create_svg_icon("close", "Close");
       closeui_button.style.height = "20px"
       closeui_button.style.display = "inline";
-      closeui_button.innerHTML =
-         '<g>' +
-         '<title>Close</title>' +
-         '<rect width="100%" height="100%" style="fill:#3d3d3d00;"></rect>' +
-         '<path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"></path>' +
-         '</g>'
-      closeui_button.setAttribute("viewBox", "0 0 512 512");
       scalepng_ui.appendChild(closeui_button);
       this.png_scale = png_scale
 
@@ -205,19 +149,19 @@ function Sui(element_id){
          }
       });
       reset_button.addEventListener("click", function(event){
-         sui.reset_zoom(event);
+         sui.reset_view();
       });
       zoomin_button.addEventListener("click", function(event){
-         sui.zoom_in(event);
+         sui.zoom_in();
       });
       zoomout_button.addEventListener("click", function(event){
-         sui.zoom_out(event);
+         sui.zoom_out();
       });
       savepng_button.addEventListener("click", function(event){
-         sui.save_png(event);
+         sui.save_png();
       });
       savesvg_button.addEventListener("click", function(event){
-         sui.save_svg(event);
+         sui.save_svg();
       });
       scalepng_button.addEventListener("click", function(event){
          var v = menu_items.style.display;
@@ -286,12 +230,10 @@ function Sui(element_id){
 
    //////////////////////////////////
    /**
-    * Reset zoom
-    *
-    * @param {event} click event
+    * Reset view
     *
     */
-   this.reset_zoom = function(event){
+   this.reset_view = function(){
       var sui = this;
       var svg = sui.svg;
       svg.setAttribute("viewBox", sui.ori_viewBox);
@@ -302,10 +244,8 @@ function Sui(element_id){
    /**
     * Zoom in
     *
-    * @param {event} click event
-    *
     */
-   this.zoom_in = function(event){
+   this.zoom_in = function(){
       var sui = this;
       var svg = sui.svg;
       var viewBox = svg.getAttribute("viewBox").split(" ");
@@ -338,10 +278,8 @@ function Sui(element_id){
    /**
     * Zoom out
     *
-    * @param {event} click event
-    *
     */
-   this.zoom_out = function(event){
+   this.zoom_out = function(){
       var sui = this;
       var svg = sui.svg;
       var viewBox = svg.getAttribute("viewBox").split(" ");
@@ -374,7 +312,7 @@ function Sui(element_id){
    /**
     * Zoom in and out drawing using mouse wheel
     *
-    * @param {event} wheel event
+    * @param {object} event wheel event
     *
     */
    this.wheel_zoom = function(event){
@@ -429,7 +367,7 @@ function Sui(element_id){
    /**
     * Move drawing using mouse left button
     *
-    * @param {event} left button mousedown event
+    * @param {object} event left button mousedown event
     *
     */
    this.mouse_move = function(event){
@@ -506,10 +444,8 @@ function Sui(element_id){
    /**
     * Save SVG file
     *
-    * @param {event} click event
-    *
     */
-   this.save_svg = function(event){
+   this.save_svg = function(){
       var fileName = "image.svg";
 
       var sui = this;
@@ -538,10 +474,8 @@ function Sui(element_id){
    /**
     * Save PNG file
     *
-    * @param {event} click event
-    *
     */
-   this.save_png = function(event){
+   this.save_png = function(){
       var fileName = "image.png";
 
       var sui = this;
@@ -591,40 +525,4 @@ function Sui(element_id){
       img.src = imgsrc;
    };
 
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-/**
- * Convert point coordinate in an area of interest
- *
- * @param {point} the point on screen
- * @param {area} the area of interest (e.g. DOM element)
- *
- */
-function point_to_area_ref(point, area) {
-   var pt = new DOMPoint(point.x, point.y);
-   return pt.matrixTransform(area.getScreenCTM().inverse());
-}
-
-////////////////////////////////////////////////////////////////////////////////
-/**
- * Create an SVG element with namespace
- *
- * @param {tag_name} the tag name of the element
- *
- */
-function create_svg_element(tag_name){
-   return document.createElementNS("http://www.w3.org/2000/svg", tag_name)
-}
-
-////////////////////////////////////////////////////////////////////////////////
-/**
- * Create an HTML element with namespace
- *
- * @param {tag_name} the tag name of the element
- *
- */
-function create_html_element(tag_name){
-   return document.createElementNS("http://www.w3.org/1999/xhtml", tag_name)
 }
