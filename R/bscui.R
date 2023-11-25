@@ -3,17 +3,14 @@
 #'
 #' @param svg_txt character string with svg code
 #' @param context_elements TBD
-#' @param menu if TRUE (default) control menu will be available
-
-#' @param show_menu show the menu
+#' @param show_menu if TRUE (default) control menu will be available
+#' @param menu_width css width value
 #' @param zoom_min smallest zoom value
 #' @param zoom_max largest zoom value
 #' @param zoom_step zooming step: the larger the faster
 #' @param clip if true, when the current zoom is 1, the viewBox is
 #'    automatically set to its original state (the drawing cannot be moved)
 #' @param default_png_scale default value for scaling PNG export
-
-
 #' @param width,height widget width: must be a valid CSS unit (like `'100\%'`,
 #'   `'400px'`, `'auto'`) or a number, which will be coerced to a
 #'   string and have `'px'` appended.
@@ -25,6 +22,7 @@ bscui <- function(
       svg_txt,
       context_elements=NULL,
       show_menu = TRUE,
+      menu_width = "20px",
       zoom_min = 0.5,
       zoom_max = 20,
       zoom_step = 1.1,
@@ -55,6 +53,7 @@ bscui <- function(
    x = list(
       svg_txt = svg_txt,
       show_menu = show_menu,
+      menu_width = menu_width,
       zoom_min = zoom_min,
       zoom_max = zoom_max,
       zoom_step = zoom_step,

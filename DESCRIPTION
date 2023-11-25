@@ -6,6 +6,8 @@ Author: Who wrote it
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
+Import:
+   htmlwidgets
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

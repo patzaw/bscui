@@ -8,6 +8,7 @@ bscui(
   svg_txt,
   context_elements = NULL,
   show_menu = TRUE,
+  menu_width = "20px",
   zoom_min = 0.5,
   zoom_max = 20,
   zoom_step = 1.1,
@@ -23,7 +24,9 @@ bscui(
 
 \item{context_elements}{TBD}
 
-\item{show_menu}{show the menu}
+\item{show_menu}{if TRUE (default) control menu will be available}
+
+\item{menu_width}{css width value}
 
 \item{zoom_min}{smallest zoom value}
 
@@ -41,8 +44,6 @@ automatically set to its original state (the drawing cannot be moved)}
 string and have \code{'px'} appended.}
 
 \item{elementId}{hmtl identifier of the widget}
-
-\item{menu}{if TRUE (default) control menu will be available}
 }
 \description{
 Build SVG/Shiny custom user interface

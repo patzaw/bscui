@@ -33,6 +33,7 @@ function Sui(element_id){
     *
     * @param {string} svg_txt string with svg code
     * @param {binary} show_menu show the menu
+    * @param {string} menu_width css width value
     * @param {number} zoom_min smallest zoom value
     * @param {number} zoom_max largest zoom value
     * @param {number} zoom_step zooming step: the larger the faster
@@ -44,6 +45,7 @@ function Sui(element_id){
    this.init = function(
       svg_txt,
       show_menu = true,
+      menu_width = "20px",
       zoom_min = 0.5, zoom_max = 20,
       zoom_step = 1.1,
       clip=false,
@@ -77,6 +79,7 @@ function Sui(element_id){
             "top: 0; left: 0;" +
             "width: 20px; padding: 5px"
       );
+      menu.style.width = menu_width;
       if (show_menu){
          div.appendChild(menu);
       }
