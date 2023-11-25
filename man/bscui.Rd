@@ -7,6 +7,12 @@
 bscui(
   svg_txt,
   context_elements = NULL,
+  show_menu = TRUE,
+  zoom_min = 0.5,
+  zoom_max = 20,
+  zoom_step = 1.1,
+  clip = FALSE,
+  default_png_scale = 1,
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -17,11 +23,26 @@ bscui(
 
 \item{context_elements}{TBD}
 
+\item{show_menu}{show the menu}
+
+\item{zoom_min}{smallest zoom value}
+
+\item{zoom_max}{largest zoom value}
+
+\item{zoom_step}{zooming step: the larger the faster}
+
+\item{clip}{if true, when the current zoom is 1, the viewBox is
+automatically set to its original state (the drawing cannot be moved)}
+
+\item{default_png_scale}{default value for scaling PNG export}
+
 \item{width, height}{widget width: must be a valid CSS unit (like \code{'100\\\%'},
 \code{'400px'}, \code{'auto'}) or a number, which will be coerced to a
 string and have \code{'px'} appended.}
 
 \item{elementId}{hmtl identifier of the widget}
+
+\item{menu}{if TRUE (default) control menu will be available}
 }
 \description{
 Build SVG/Shiny custom user interface

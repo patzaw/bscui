@@ -32,9 +32,10 @@ function Sui(element_id){
     * Initialize the Sui object
     *
     * @param {string} svg_txt string with svg code
+    * @param {binary} show_menu show the menu
     * @param {number} zoom_min smallest zoom value
     * @param {number} zoom_max largest zoom value
-    * @param {number} zom_step zooming step: the larger the faster
+    * @param {number} zoom_step zooming step: the larger the faster
     * @param {boolean} clip if true, when the current zoom is 1, the viewBox is
     *    automatically set to its original state (the drawing cannot be moved)
     * @param {number} default_png_scale default value for scaling PNG export
@@ -42,6 +43,7 @@ function Sui(element_id){
     */
    this.init = function(
       svg_txt,
+      show_menu = true,
       zoom_min = 0.5, zoom_max = 20,
       zoom_step = 1.1,
       clip=false,
@@ -75,7 +77,9 @@ function Sui(element_id){
             "top: 0; left: 0;" +
             "width: 20px; padding: 5px"
       );
-      div.appendChild(menu);
+      if (show_menu){
+         div.appendChild(menu);
+      }
 
       // Show button
       var show_button = create_svg_icon("menu", "Menu");

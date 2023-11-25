@@ -3,6 +3,17 @@
 #'
 #' @param svg_txt character string with svg code
 #' @param context_elements TBD
+#' @param menu if TRUE (default) control menu will be available
+
+#' @param show_menu show the menu
+#' @param zoom_min smallest zoom value
+#' @param zoom_max largest zoom value
+#' @param zoom_step zooming step: the larger the faster
+#' @param clip if true, when the current zoom is 1, the viewBox is
+#'    automatically set to its original state (the drawing cannot be moved)
+#' @param default_png_scale default value for scaling PNG export
+
+
 #' @param width,height widget width: must be a valid CSS unit (like `'100\%'`,
 #'   `'400px'`, `'auto'`) or a number, which will be coerced to a
 #'   string and have `'px'` appended.
@@ -11,15 +22,22 @@
 #' @export
 #'
 bscui <- function(
-      svg_txt, context_elements=NULL,
+      svg_txt,
+      context_elements=NULL,
+      show_menu = TRUE,
+      zoom_min = 0.5,
+      zoom_max = 20,
+      zoom_step = 1.1,
+      clip = FALSE,
+      default_png_scale = 1,
       width = NULL, height = NULL, elementId = NULL
 ) {
 
+   ## Prepare SVG ----
    cont <- regmatches(svg_txt, gregexpr("<svg[^>]*>", svg_txt))[[1]]
    if(length(cont) != 1){
       cont <- '<svg xmlns="http://www.w3.org/2000/svg" version="1.1">'
    }
-
    svg_txt <- sub(
       '.*<svg\n[^>]*>', '', svg_txt
    )
@@ -33,9 +51,15 @@ bscui <- function(
    svg_txt <- paste0(cont, svg_txt,'</svg>')
 
 
-   # forward options using x
+   ## forward options using x
    x = list(
-      svg_txt = svg_txt
+      svg_txt = svg_txt,
+      show_menu = show_menu,
+      zoom_min = zoom_min,
+      zoom_max = zoom_max,
+      zoom_step = zoom_step,
+      clip = clip,
+      default_png_scale = default_png_scale
    )
 
    # create widget
