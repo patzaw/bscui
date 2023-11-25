@@ -2,5 +2,6 @@
 
 export(bscui)
 export(bscuiOutput)
+export(read_svg_lines)
 export(renderBscui)
 import(htmlwidgets)
