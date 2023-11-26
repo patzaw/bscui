@@ -18,6 +18,11 @@ function Sui(element_id){
    // Init state
    this.id = element_id;
    this.svg = null;
+   this.ui_elements = null;
+   this.selectable = [];
+   this.buttons = [];
+
+   // View
    this.ori_viewBox = null;
    this.png_scale = null;
    this.default_png_scale = null;
@@ -40,16 +45,19 @@ function Sui(element_id){
     * @param {boolean} clip if true, when the current zoom is 1, the viewBox is
     *    automatically set to its original state (the drawing cannot be moved)
     * @param {number} default_png_scale default value for scaling PNG export
+    * @param {number} dblclick_timeout minimum time between 2 independant clicks
     *
     */
    this.init = function(
       svg_txt,
+      ui_elements,
       show_menu = true,
       menu_width = "20px",
       zoom_min = 0.5, zoom_max = 20,
       zoom_step = 1.1,
       clip=false,
-      default_png_scale = 1
+      default_png_scale = 1,
+      dblclick_timeout = 350
    ){
       var sui = this;
       var el = document.getElementById(sui.id);
@@ -186,12 +194,47 @@ function Sui(element_id){
 
       // Config
       sui.svg = svg;
+      sui.ui_elements = ui_elements;
       sui.zoom_current = 1;
       sui.zoom_min = zoom_min;
       sui.zoom_max = zoom_max;
       sui.zoom_step = zoom_step;
       sui.clip = clip;
       sui.default_png_scale = default_png_scale;
+
+      // Update ui elements
+      if(ui_elements){
+         for (let i = 0; i < ui_elements.id.length; i++) {
+            let id = ui_elements.id[i];
+            if(ui_elements.ui_type[i] == "selectable"){
+               sui.selectable.push(id);
+            }
+            if (ui_elements.ui_type[i] == "button") {
+               sui.buttons.push(id);
+            }
+            let element = svg.getElementById(id);
+            for(let pname in ui_elements){
+               if (pname == "opacity") {
+                  element.style.opacity = ui_elements.opacity[i];
+               }
+               if(pname == "fill"){
+                  element.style.fill = ui_elements.fill[i];
+               }
+               if (pname == "fill_opacity") {
+                  element.style.fillOpacity = ui_elements.fill_opacity[i];
+               }
+               if (pname == "stroke") {
+                  element.style.stroke = ui_elements.stroke[i];
+               }
+               if (pname == "stroke_width") {
+                  element.style.strokeWidth = ui_elements.stroke_width[i];
+               }
+               if (pname == "stroke_opacity") {
+                  element.style.strokeOpacity = ui_elements.stroke_opacity[i];
+               }
+            }
+         }
+      }
 
       // Adapt viewbox
       function wait_for_svg_to_be_rendered(widget_id) {
@@ -224,6 +267,7 @@ function Sui(element_id){
       //
 
       // Events
+      var clickTimer;
       svg.addEventListener("wheel", function(event){
          sui.wheel_zoom(event);
       });
@@ -231,6 +275,47 @@ function Sui(element_id){
       svg.addEventListener("mousedown", function(event){
          sui.mouse_move(event);
       });
+
+      svg.addEventListener("click", function(event){
+         if(sui.moved){
+            console.log("moving");
+         }else{
+            var target = event.target;
+            var target_ids = get_ancestors_ids(target);
+            var to_update = array_intersection(
+               target_ids,
+               sui.selectable
+            );
+            console.log(to_update);
+            var to_trigger = array_intersection(
+               target_ids,
+               sui.buttons
+            );
+            if(to_trigger.length > 0){
+               clearTimeout(clickTimer);
+               clickTimer = setTimeout(function () {
+                  console.log(to_trigger);
+                  console.log("single click");
+               }, dblclick_timeout);
+            }
+         }
+      })
+
+      svg.addEventListener("dblclick", function (event) {
+         if (sui.moved) {
+            console.log("moving");
+         } else {
+            clearTimeout(clickTimer);
+            var target = event.target;
+            var target_ids = get_ancestors_ids(target);
+            var to_trigger = array_intersection(
+               target_ids,
+               sui.buttons
+            );
+            console.log(to_trigger);
+            console.log("double click");
+         }
+      })
 
       return(el);
    };

@@ -35,3 +35,40 @@ function point_to_area_ref(point, area) {
    var pt = new DOMPoint(point.x, point.y);
    return(pt.matrixTransform(area.getScreenCTM().inverse()));
 }
+
+////////////////////////////////////////////////////////////////////////////////
+/**
+ * Get the identifiers of all the ancestors of an element including itself
+ *
+ * @param {object} element html element
+ * 
+ * @returns {Array} identifiers of element ancestors
+ *
+ */
+function get_ancestors_ids(element) {
+   var toRet = [element.id];
+   var currentElement = element.parentNode;
+
+   while (currentElement !== null) {
+      toRet.push(currentElement.id);
+      currentElement = currentElement.parentNode;
+   }
+
+   return(toRet);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/**
+ * Get the intersection of two arrays
+ *
+ * @param {Array} array1 first array
+ * @param {Array} array2 second array
+ * 
+ * @returns {Array} intersection
+ *
+ */
+function array_intersection(array1, array2) {
+   const set1 = new Set(array1);
+   const set2 = new Set(array2);
+   return([...set1].filter(element => set2.has(element)));
+}

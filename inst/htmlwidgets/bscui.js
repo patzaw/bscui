@@ -15,6 +15,7 @@ HTMLWidgets.widget({
 
             sui.init(
                svg_txt = x.svg_txt,
+               ui_elements= x.ui_elements,
                show_menu = x.show_menu,
                menu_width = x.menu_width,
                zoom_min = x.zoom_min,

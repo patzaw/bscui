@@ -2,7 +2,29 @@
 #' Build SVG/Shiny custom user interface
 #'
 #' @param svg_txt character string with svg code
-#' @param context_elements TBD
+#' @param ui_elements NULL or a data frame with the following columns:
+#'    - **id**: the element identifier
+#'    - **ui_type**: either "selectable" (several elements can be selected),
+#'    "button" (action will be triggered on click), "none" (no ui)
+#'    - **title**: a description of the element to display on mouseover event
+#'    (support html tags). If NA, no description will be displayed.
+#'    - **visibility**: the css visibility of the element. NA values
+#'    are interpreted as "hidden".
+#'    - **opacity**: the opacity of the element between 0 and 1
+#'    (if NA, the value in the svg is kept)
+#'    - **fill**: the color used to fill the element
+#'    (if NA, the value in the svg is kept)
+#'    - **fill_opacity**: opacity of fill
+#'    (if NA, the value in the svg is kept)
+#'    - **stroke**: the color used for element border
+#'    (if NA, the value in the svg is kept)
+#'    - **stroke_width**: the width of the element border
+#'    (if NA, the value in the svg is kept)
+#'    - **stroke_opacity**: opacity of stroke
+#'    (if NA, the value in the svg is kept)
+#' @param selection_color the color with which selected elements will be
+#' highlighted
+#'
 #' @param show_menu if TRUE (default) control menu will be available
 #' @param menu_width css width value
 #' @param zoom_min smallest zoom value
@@ -11,6 +33,7 @@
 #' @param clip if true, when the current zoom is 1, the viewBox is
 #'    automatically set to its original state (the drawing cannot be moved)
 #' @param default_png_scale default value for scaling PNG export
+#'
 #' @param width,height widget width: must be a valid CSS unit (like `'100\%'`,
 #'   `'400px'`, `'auto'`) or a number, which will be coerced to a
 #'   string and have `'px'` appended.
@@ -20,7 +43,7 @@
 #'
 bscui <- function(
       svg_txt,
-      context_elements=NULL,
+      ui_elements=NULL,
       show_menu = TRUE,
       menu_width = "20px",
       zoom_min = 0.5,
@@ -52,6 +75,7 @@ bscui <- function(
    ## forward options using x
    x = list(
       svg_txt = svg_txt,
+      ui_elements = ui_elements,
       show_menu = show_menu,
       menu_width = menu_width,
       zoom_min = zoom_min,

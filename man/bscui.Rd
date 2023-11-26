@@ -6,7 +6,7 @@
 \usage{
 bscui(
   svg_txt,
-  context_elements = NULL,
+  ui_elements = NULL,
   show_menu = TRUE,
   menu_width = "20px",
   zoom_min = 0.5,
@@ -22,7 +22,28 @@ bscui(
 \arguments{
 \item{svg_txt}{character string with svg code}
 
-\item{context_elements}{TBD}
+\item{ui_elements}{NULL or a data frame with the following columns:
+\itemize{
+\item \strong{id}: the element identifier
+\item \strong{ui_type}: either "selectable" (several elements can be selected),
+"button" (action will be triggered on click), "none" (no ui)
+\item \strong{title}: a description of the element to display on mouseover event
+(support html tags). If NA, no description will be displayed.
+\item \strong{visibility}: the css visibility of the element. NA values
+are interpreted as "hidden".
+\item \strong{opacity}: the opacity of the element between 0 and 1
+(if NA, the value in the svg is kept)
+\item \strong{fill}: the color used to fill the element
+(if NA, the value in the svg is kept)
+\item \strong{fill_opacity}: opacity of fill
+(if NA, the value in the svg is kept)
+\item \strong{stroke}: the color used for element border
+(if NA, the value in the svg is kept)
+\item \strong{stroke_width}: the width of the element border
+(if NA, the value in the svg is kept)
+\item \strong{stroke_opacity}: opacity of stroke
+(if NA, the value in the svg is kept)
+}}
 
 \item{show_menu}{if TRUE (default) control menu will be available}
 
@@ -44,6 +65,9 @@ automatically set to its original state (the drawing cannot be moved)}
 string and have \code{'px'} appended.}
 
 \item{elementId}{hmtl identifier of the widget}
+
+\item{selection_color}{the color with which selected elements will be
+highlighted}
 }
 \description{
 Build SVG/Shiny custom user interface
