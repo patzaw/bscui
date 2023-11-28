@@ -18,9 +18,16 @@ function Sui(element_id){
    // Init state
    this.id = element_id;
    this.svg = null;
+   this.main_group = null;
+   this.sel_group = null;
    this.ui_elements = null;
    this.selectable = [];
    this.buttons = [];
+   this.select_event = null;
+   this.operate_event = null;
+   this.hover_event = null;
+   this.selected = [];
+   this.button = {n: 0, id: null};
 
    // View
    this.ori_viewBox = null;
@@ -57,7 +64,7 @@ function Sui(element_id){
       zoom_step = 1.1,
       clip=false,
       default_png_scale = 1,
-      dblclick_timeout = 350
+      dblclick_timeout = 250
    ){
       var sui = this;
       var el = document.getElementById(sui.id);
@@ -192,9 +199,31 @@ function Sui(element_id){
       // Add to the document
       el.appendChild(div);
 
+      // SVG groups
+      var main_group = svg.querySelector("g");
+      var sel_group = create_svg_element("g");
+      svg.appendChild(sel_group);
+
       // Config
       sui.svg = svg;
+      sui.main_group = main_group;
+      sui.sel_group = sel_group;
       sui.ui_elements = ui_elements;
+      sui.select_event = new CustomEvent("elementSelected", {
+         detail: {
+            id: sui.id,
+         },
+      });
+      sui.operate_event = new CustomEvent("elementOperated", {
+         detail: {
+            id: sui.id,
+         },
+      });
+      sui.hover_event = new CustomEvent("elementHovered", {
+         detail: {
+            id: sui.id,
+         },
+      });
       sui.zoom_current = 1;
       sui.zoom_min = zoom_min;
       sui.zoom_max = zoom_max;
@@ -285,21 +314,66 @@ function Sui(element_id){
             var to_update = array_intersection(
                target_ids,
                sui.selectable
-            );
-            console.log(to_update);
+            )[0];
+            //
             var to_trigger = array_intersection(
                target_ids,
                sui.buttons
-            );
-            if(to_trigger.length > 0){
+            )[0];
+            if(to_trigger){
                clearTimeout(clickTimer);
                clickTimer = setTimeout(function () {
                   console.log(to_trigger);
                   console.log("single click");
+                  // trigger event
                }, dblclick_timeout);
+            }else{
+               if (!event.ctrlKey) {
+                  if (!to_update) {
+                     sui.selected = [];
+                  } else {
+                     sui.selected = [to_update];
+                  }
+               } else {
+                  if (to_update) {
+                     let ind = sui.selected.indexOf(to_update);
+                     if (ind == -1) {
+                        sui.selected.push(to_update);
+                     } else {
+                        sui.selected.splice(ind, 1);
+                     }
+                  }
+               }
+               // trigger event
+               svg.dispatchEvent(sui.select_event);
             }
          }
       })
+
+      svg.addEventListener("elementSelected", function(event){
+         console.log(sui.sel_group);
+         console.log(sui.selected);
+         var disp_sel = sui.sel_group.children;
+         var disp_identifiers = [];
+         Array.from(disp_sel).forEach(element => {
+            disp_identifiers.push(element.id);
+            if(!sui.selected.includes(element.id)){
+               sui.sel_group.removeChild(element);
+            }
+         });
+         sui.selected.forEach(id => {
+            if(!disp_identifiers.includes(id)){
+               var to_add = svg.getElementById(id).cloneNode(true);
+               to_add.style.fill = "none";
+               to_add.style.stroke = "orange";
+               to_add.style.visibility = "visible";
+               to_add.style.strokeWidth = to_add.style.strokeWidth +2;
+               to_add.style.strokeOpacity = 1;
+               to_add.style.opacity = 0.5;
+               sui.sel_group.appendChild(to_add);
+            }
+         })
+      });
 
       svg.addEventListener("dblclick", function (event) {
          if (sui.moved) {
@@ -311,9 +385,10 @@ function Sui(element_id){
             var to_trigger = array_intersection(
                target_ids,
                sui.buttons
-            );
+            )[0];
             console.log(to_trigger);
             console.log("double click");
+            // trigger event
          }
       })
 

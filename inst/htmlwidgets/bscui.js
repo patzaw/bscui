@@ -25,6 +25,12 @@ HTMLWidgets.widget({
                default_png_scale = x.default_png_scale
             );
 
+            if(window.Shiny){
+               sui.svg.addEventListener("elementSelected", function(event){
+                  Shiny.setInputValue(el.id + '_selected', sui.selected);
+               });
+            }
+
          },
 
          resize: function(width, height) {

@@ -23,9 +23,32 @@ server <- function(input, output, session){
       "svg-examples", "homo_sapiens.male.svg",
       package="bscui"
    )), collapse="\n")
+   xml <- read_xml(svg)
+   elements <- get_element_titles(xml) %>%
+      mutate(
+         ui_type = "selectable",
+         title = sprintf("This is <strong>%s</strong>", label),
+         visibility = "visible",
+         opacity = 0.5,
+         fill = "#000080",
+         fill_opacity = 0.5,
+         stroke = "#000080",
+         stroke_width = 0.5,
+         stroke_opacity = 1
+      )%>%
+      filter(
+         label %in% c(
+            "brain", "heart", "lung",
+            "liver", "small_intestine", "stomach", "pancreas"
+         )
+      ) %>%
+      mutate(ui_type = ifelse(label == "brain", "button", "selectable"))
 
    output$org_interface <- renderBscui({
-      bscui(svg, menu_width="30px")
+      bscui(svg, elements, menu_width="30px")
+   })
+   observe({
+      print(input$org_interface_selected)
    })
 }
 
