@@ -44,7 +44,10 @@ xml <- read_xml(svg)
 elements <- get_element_titles(xml) %>%
    mutate(
       ui_type = "selectable",
-      title = sprintf("This is <strong>%s</strong>", label),
+      title = sprintf(
+         '<div style="background:#FFFF0080; padding:5px;">This is <strong>%s</strong><div>',
+         label
+      ),
       visibility = "visible",
       opacity = 0.5,
       fill = "#000080",
@@ -54,7 +57,8 @@ elements <- get_element_titles(xml) %>%
       stroke_opacity = 1
    )
 bscui(
-   svg,
+   svg %>%
+      gsub("<title[^<]*</title>", "", .),
    elements %>%
       filter(
          label %in% c(

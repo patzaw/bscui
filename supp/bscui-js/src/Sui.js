@@ -27,6 +27,9 @@ function Sui(element_id){
    this.operate_event = null;
    this.hover_event = null;
    this.selected = [];
+   this.hovered = null;
+   this.clientX = null;
+   this.clientY = null;
    this.button = {n: 0, id: null};
 
    // View
@@ -295,8 +298,7 @@ function Sui(element_id){
          });
       //
 
-      // Events
-      var clickTimer;
+      // Display Events
       svg.addEventListener("wheel", function(event){
          sui.wheel_zoom(event);
       });
@@ -305,18 +307,90 @@ function Sui(element_id){
          sui.mouse_move(event);
       });
 
+      // Interaction Events
+      var leaveTimer;
+      sui.ui_elements.id.forEach(function(element_id){
+         var element = svg.getElementById(element_id);
+         element.addEventListener("mouseover", function(event){
+            sui.hovered = element_id;
+            sui.clientX = event.clientX;
+            sui.clientY = event.clientY;
+            svg.dispatchEvent(sui.hover_event)
+         });
+         element.addEventListener("mouseleave", function (event) {
+            sui.hovered = null;
+            clearTimeout(leaveTimer);
+            leaveTimer = setTimeout(function () {
+               svg.dispatchEvent(sui.hover_event)
+            }, 500);
+         });
+      });
+
+      svg.addEventListener("elementHovered", function (event) {
+         var ttid = el.id + "..ui_tooltip";
+         var tooltip = document.getElementById(ttid);
+         if(sui.hovered){
+            var exists = false;
+            if(tooltip){
+               if(tooltip.getAttribute("data-element") != sui.hovered){
+                  tooltip.parentElement.removeChild(tooltip);
+               }else{
+                  exists = true
+               }
+            }
+            if(!exists){
+               var ind = sui.ui_elements.id.indexOf(sui.hovered);
+               var title = sui.ui_elements.title[ind];
+               if(title){
+                  var container = svg.parentElement;
+                  var tooltip = create_html_element("div");
+                  tooltip.id = ttid;
+                  tooltip.innerHTML = title;
+                  var x = sui.clientX -
+                     container.getBoundingClientRect().left +
+                     container.scrollLeft;
+                  var y = sui.clientY -
+                     container.getBoundingClientRect().top +
+                     container.scrollTop;
+                  tooltip.style.left = x + "px";
+                  tooltip.style.top = y + "px";
+                  tooltip.style.display = "block";
+                  tooltip.style.position = "absolute";
+                  tooltip.setAttribute("data-element", sui.hovered);
+                  tooltip.addEventListener("mouseover", function (event) {
+                     clearTimeout(leaveTimer);
+                     sui.hovered = tooltip.getAttribute("data-element");
+                  })
+                  tooltip.addEventListener("mouseleave", function (event) {
+                     sui.hovered = null;
+                     clearTimeout(leaveTimer);
+                     leaveTimer = setTimeout(function () {
+                        svg.dispatchEvent(sui.hover_event)
+                     }, 500);
+                  })
+                  container.appendChild(tooltip);
+               }
+            }
+         }else{
+            if(tooltip) {
+               tooltip.parentElement.removeChild(tooltip);
+            }
+         }
+      });
+
+      var clickTimer;
       svg.addEventListener("click", function(event){
          if(sui.moved){
             console.log("moving");
          }else{
             var target = event.target;
             var target_ids = get_ancestors_ids(target);
-            var to_update = array_intersection(
+            var to_update = array_intersect(
                target_ids,
                sui.selectable
             )[0];
             //
-            var to_trigger = array_intersection(
+            var to_trigger = array_intersect(
                target_ids,
                sui.buttons
             )[0];
@@ -348,11 +422,9 @@ function Sui(element_id){
                svg.dispatchEvent(sui.select_event);
             }
          }
-      })
+      });
 
       svg.addEventListener("elementSelected", function(event){
-         console.log(sui.sel_group);
-         console.log(sui.selected);
          var disp_sel = sui.sel_group.children;
          var disp_identifiers = [];
          Array.from(disp_sel).forEach(element => {
@@ -364,6 +436,7 @@ function Sui(element_id){
          sui.selected.forEach(id => {
             if(!disp_identifiers.includes(id)){
                var to_add = svg.getElementById(id).cloneNode(true);
+               to_add.id = "selection.-_-." + to_add.id;
                to_add.style.fill = "none";
                to_add.style.stroke = "orange";
                to_add.style.visibility = "visible";
@@ -382,7 +455,7 @@ function Sui(element_id){
             clearTimeout(clickTimer);
             var target = event.target;
             var target_ids = get_ancestors_ids(target);
-            var to_trigger = array_intersection(
+            var to_trigger = array_intersect(
                target_ids,
                sui.buttons
             )[0];
@@ -390,7 +463,7 @@ function Sui(element_id){
             console.log("double click");
             // trigger event
          }
-      })
+      });
 
       return(el);
    };

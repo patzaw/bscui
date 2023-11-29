@@ -1,5 +1,28 @@
 library(shiny)
 library(bscui)
+library(xml2)
+library(magrittr)
+library(dplyr)
+
+get_element_titles <- function(x){
+   id <- xml_attr(x, "id")
+   children <- xml_children(x)
+   children_titles <- tibble(id=character(), label=character())
+   label <- character()
+   if(length(children) > 0) for(i in 1:length(children)){
+      child <- children[[i]]
+      if(xml_name(child) == "title"){
+         label <- xml_attr(child, "id")
+      }else{
+         children_titles <- children_titles %>%
+            bind_rows(get_element_titles(child))
+      }
+   }
+   toRet <- tibble(id = id, label = label) %>%
+      bind_rows(children_titles) %>%
+      filter(!is.na(id))
+   return(toRet)
+}
 
 ui <- function(req){
    fluidPage(
@@ -27,7 +50,10 @@ server <- function(input, output, session){
    elements <- get_element_titles(xml) %>%
       mutate(
          ui_type = "selectable",
-         title = sprintf("This is <strong>%s</strong>", label),
+         title = sprintf(
+            '<div style="background:#FFFF0080; padding:5px;">This is <strong>%s</strong><div>',
+            label
+         ),
          visibility = "visible",
          opacity = 0.5,
          fill = "#000080",
@@ -45,7 +71,12 @@ server <- function(input, output, session){
       mutate(ui_type = ifelse(label == "brain", "button", "selectable"))
 
    output$org_interface <- renderBscui({
-      bscui(svg, elements, menu_width="30px")
+      bscui(
+         svg %>%
+            gsub("<title[^<]*</title>", "", .),
+         elements,
+         menu_width="30px"
+      )
    })
    observe({
       print(input$org_interface_selected)

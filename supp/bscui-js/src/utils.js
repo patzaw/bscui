@@ -48,12 +48,10 @@ function point_to_area_ref(point, area) {
 function get_ancestors_ids(element) {
    var toRet = [element.id];
    var currentElement = element.parentNode;
-
    while (currentElement !== null) {
       toRet.push(currentElement.id);
       currentElement = currentElement.parentNode;
    }
-
    return(toRet);
 }
 
@@ -67,8 +65,7 @@ function get_ancestors_ids(element) {
  * @returns {Array} intersection
  *
  */
-function array_intersection(array1, array2) {
-   const set1 = new Set(array1);
+function array_intersect(array1, array2) {
    const set2 = new Set(array2);
-   return([...set1].filter(element => set2.has(element)));
+   return(array1.filter(element => set2.has(element)));
 }
