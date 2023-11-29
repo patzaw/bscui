@@ -55,7 +55,9 @@ function Sui(element_id){
     * @param {boolean} clip if true, when the current zoom is 1, the viewBox is
     *    automatically set to its original state (the drawing cannot be moved)
     * @param {number} default_png_scale default value for scaling PNG export
+    * @param {string} selection_color color used to highlight selection
     * @param {number} dblclick_timeout minimum time between 2 independant clicks
+    * @param {number} hover_timeout time before update hovered element
     *
     */
    this.init = function(
@@ -67,7 +69,9 @@ function Sui(element_id){
       zoom_step = 1.1,
       clip=false,
       default_png_scale = 1,
-      dblclick_timeout = 250
+      selection_color = "orange",
+      dblclick_timeout = 250,
+      hover_timeout = 500,
    ){
       var sui = this;
       var el = document.getElementById(sui.id);
@@ -308,73 +312,64 @@ function Sui(element_id){
       });
 
       // Interaction Events
-      var leaveTimer;
-      sui.ui_elements.id.forEach(function(element_id){
-         var element = svg.getElementById(element_id);
-         element.addEventListener("mouseover", function(event){
-            sui.hovered = element_id;
+      var mouse_move_timer;
+      svg.addEventListener("mousemove", function (event) {
+         clearTimeout(mouse_move_timer);
+         mouse_move_timer = setTimeout(function(){
+            var target = event.target;
+            var target_ids = get_ancestors_ids(target);
+            var hovered = array_intersect(
+               target_ids,
+               sui.ui_elements.id
+            )[0];
+            sui.hovered = hovered;
             sui.clientX = event.clientX;
             sui.clientY = event.clientY;
             svg.dispatchEvent(sui.hover_event)
-         });
-         element.addEventListener("mouseleave", function (event) {
-            sui.hovered = null;
-            clearTimeout(leaveTimer);
-            leaveTimer = setTimeout(function () {
-               svg.dispatchEvent(sui.hover_event)
-            }, 500);
-         });
+         }, hover_timeout)
       });
 
+      var container = svg.parentElement;
+      var ttid = el.id + "..ui_tooltip";
+      var tooltip = create_html_element("div");
+      tooltip.id = ttid;
+      tooltip.style.visibility = "hidden";
+      container.appendChild(tooltip);
+      tooltip.addEventListener("mouseover", function (event) {
+         clearTimeout(mouse_move_timer);
+         sui.hovered = tooltip.getAttribute("data-element");
+      })
       svg.addEventListener("elementHovered", function (event) {
-         var ttid = el.id + "..ui_tooltip";
-         var tooltip = document.getElementById(ttid);
-         if(sui.hovered){
+         if (sui.hovered) {
             var exists = false;
-            if(tooltip){
-               if(tooltip.getAttribute("data-element") != sui.hovered){
-                  tooltip.parentElement.removeChild(tooltip);
-               }else{
+            if (tooltip.style.visibility == "visible") {
+               if (tooltip.getAttribute("data-element") != sui.hovered) {
+                  tooltip.style.visibility = "hidden";
+               } else {
                   exists = true
                }
             }
-            if(!exists){
+            if (!exists) {
                var ind = sui.ui_elements.id.indexOf(sui.hovered);
                var title = sui.ui_elements.title[ind];
-               if(title){
-                  var container = svg.parentElement;
-                  var tooltip = create_html_element("div");
-                  tooltip.id = ttid;
+               if (title) {
                   tooltip.innerHTML = title;
                   var x = sui.clientX -
                      container.getBoundingClientRect().left +
-                     container.scrollLeft;
+                     container.scrollLeft + 5;
                   var y = sui.clientY -
                      container.getBoundingClientRect().top +
-                     container.scrollTop;
+                     container.scrollTop + 5;
                   tooltip.style.left = x + "px";
                   tooltip.style.top = y + "px";
                   tooltip.style.display = "block";
                   tooltip.style.position = "absolute";
                   tooltip.setAttribute("data-element", sui.hovered);
-                  tooltip.addEventListener("mouseover", function (event) {
-                     clearTimeout(leaveTimer);
-                     sui.hovered = tooltip.getAttribute("data-element");
-                  })
-                  tooltip.addEventListener("mouseleave", function (event) {
-                     sui.hovered = null;
-                     clearTimeout(leaveTimer);
-                     leaveTimer = setTimeout(function () {
-                        svg.dispatchEvent(sui.hover_event)
-                     }, 500);
-                  })
-                  container.appendChild(tooltip);
+                  tooltip.style.visibility = "visible";
                }
             }
-         }else{
-            if(tooltip) {
-               tooltip.parentElement.removeChild(tooltip);
-            }
+         } else {
+            tooltip.style.visibility = "hidden";
          }
       });
 
@@ -438,11 +433,12 @@ function Sui(element_id){
                var to_add = svg.getElementById(id).cloneNode(true);
                to_add.id = "selection.-_-." + to_add.id;
                to_add.style.fill = "none";
-               to_add.style.stroke = "orange";
+               to_add.style.stroke = selection_color;
                to_add.style.visibility = "visible";
                to_add.style.strokeWidth = to_add.style.strokeWidth +2;
                to_add.style.strokeOpacity = 1;
                to_add.style.opacity = 0.5;
+               to_add.style.pointerEvents = 'none';
                sui.sel_group.appendChild(to_add);
             }
          })

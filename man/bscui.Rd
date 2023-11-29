@@ -14,6 +14,9 @@ bscui(
   zoom_step = 1.1,
   clip = FALSE,
   default_png_scale = 1,
+  selection_color = "orange",
+  dblclick_timeout = 250,
+  hover_timeout = 500,
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -60,14 +63,17 @@ automatically set to its original state (the drawing cannot be moved)}
 
 \item{default_png_scale}{default value for scaling PNG export}
 
+\item{selection_color}{color used to highlight selection}
+
+\item{dblclick_timeout}{minimum time between 2 independant clicks}
+
+\item{hover_timeout}{time before update hovered element}
+
 \item{width, height}{widget width: must be a valid CSS unit (like \code{'100\\\%'},
 \code{'400px'}, \code{'auto'}) or a number, which will be coerced to a
 string and have \code{'px'} appended.}
 
 \item{elementId}{hmtl identifier of the widget}
-
-\item{selection_color}{the color with which selected elements will be
-highlighted}
 }
 \description{
 Build SVG/Shiny custom user interface

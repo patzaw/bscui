@@ -33,7 +33,9 @@
 #' @param clip if true, when the current zoom is 1, the viewBox is
 #'    automatically set to its original state (the drawing cannot be moved)
 #' @param default_png_scale default value for scaling PNG export
-#'
+#' @param selection_color color used to highlight selection
+#' @param dblclick_timeout minimum time between 2 independant clicks
+#' @param hover_timeout time before update hovered element
 #' @param width,height widget width: must be a valid CSS unit (like `'100\%'`,
 #'   `'400px'`, `'auto'`) or a number, which will be coerced to a
 #'   string and have `'px'` appended.
@@ -51,6 +53,9 @@ bscui <- function(
       zoom_step = 1.1,
       clip = FALSE,
       default_png_scale = 1,
+      selection_color = "orange",
+      dblclick_timeout = 250,
+      hover_timeout = 500,
       width = NULL, height = NULL, elementId = NULL
 ) {
 
@@ -82,7 +87,10 @@ bscui <- function(
       zoom_max = zoom_max,
       zoom_step = zoom_step,
       clip = clip,
-      default_png_scale = default_png_scale
+      default_png_scale = default_png_scale,
+      selection_color = selection_color,
+      dblclick_timeout = dblclick_timeout,
+      hover_timeout = hover_timeout
    )
 
    # create widget

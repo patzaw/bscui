@@ -68,18 +68,25 @@ server <- function(input, output, session){
             "liver", "small_intestine", "stomach", "pancreas"
          )
       ) %>%
-      mutate(ui_type = ifelse(label == "brain", "button", "selectable"))
+      mutate(ui_type = ifelse(label == "brain", "button", "selectable")) %>%
+      mutate(title = ifelse(label == "brain", NA, title))
 
    output$org_interface <- renderBscui({
       bscui(
          svg %>%
             gsub("<title[^<]*</title>", "", .),
          elements,
-         menu_width="30px"
+         menu_width="30px",
+         selection_color="red"
       )
    })
    observe({
+      message("selected")
       print(input$org_interface_selected)
+   })
+   observe({
+      message("hovered")
+      print(input$org_interface_hovered)
    })
 }
 

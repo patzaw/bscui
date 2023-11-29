@@ -66,5 +66,6 @@ bscui(
             "liver", "small_intestine", "stomach", "pancreas"
          )
       ) %>%
-      mutate(ui_type = ifelse(label == "brain", "button", "selectable"))
+      mutate(ui_type = ifelse(label == "brain", "button", "selectable")) %>%
+      mutate(title = ifelse(label == "brain", NA, title))
 )
