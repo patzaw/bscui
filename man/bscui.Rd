@@ -15,6 +15,7 @@ bscui(
   clip = FALSE,
   default_png_scale = 1,
   selection_color = "orange",
+  hover_color = list(button = "yellow", selectable = "grey"),
   dblclick_timeout = 250,
   hover_timeout = 500,
   width = NULL,
@@ -64,6 +65,9 @@ automatically set to its original state (the drawing cannot be moved)}
 \item{default_png_scale}{default value for scaling PNG export}
 
 \item{selection_color}{color used to highlight selection}
+
+\item{hover_color}{color used to highlight hovered element
+(one for "button", one for "selectable", one for "none")}
 
 \item{dblclick_timeout}{minimum time between 2 independant clicks}
 

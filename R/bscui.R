@@ -34,6 +34,8 @@
 #'    automatically set to its original state (the drawing cannot be moved)
 #' @param default_png_scale default value for scaling PNG export
 #' @param selection_color color used to highlight selection
+#' @param hover_color color used to highlight hovered element
+#' (one for "button", one for "selectable", one for "none")
 #' @param dblclick_timeout minimum time between 2 independant clicks
 #' @param hover_timeout time before update hovered element
 #' @param width,height widget width: must be a valid CSS unit (like `'100\%'`,
@@ -54,6 +56,9 @@ bscui <- function(
       clip = FALSE,
       default_png_scale = 1,
       selection_color = "orange",
+      hover_color = list(
+         button="yellow", selectable="grey"
+      ),
       dblclick_timeout = 250,
       hover_timeout = 500,
       width = NULL, height = NULL, elementId = NULL
@@ -89,6 +94,7 @@ bscui <- function(
       clip = clip,
       default_png_scale = default_png_scale,
       selection_color = selection_color,
+      hover_color = hover_color,
       dblclick_timeout = dblclick_timeout,
       hover_timeout = hover_timeout
    )

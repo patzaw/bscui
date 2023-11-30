@@ -2,12 +2,12 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 /**
- * SVG user interface
+ * SVG custom user interface
  *
  * @param {string} element_id parent element identifier
  *
  */
-function Sui(element_id){
+function Scui(element_id){
 
    // Config
    this.zoom_min = null;
@@ -30,7 +30,7 @@ function Sui(element_id){
    this.hovered = null;
    this.clientX = null;
    this.clientY = null;
-   this.button = {n: 0, id: null};
+   this.button = {n: 0, id: null, click: null};
 
    // View
    this.ori_viewBox = null;
@@ -44,7 +44,7 @@ function Sui(element_id){
 
    //////////////////////////////////
    /**
-    * Initialize the Sui object
+    * Initialize the Scui object
     *
     * @param {string} svg_txt string with svg code
     * @param {binary} show_menu show the menu
@@ -56,6 +56,8 @@ function Sui(element_id){
     *    automatically set to its original state (the drawing cannot be moved)
     * @param {number} default_png_scale default value for scaling PNG export
     * @param {string} selection_color color used to highlight selection
+    * @param {string} hover_color color used to highlight hovered element
+    *    (one for "button", one for "selectable", one for "none")
     * @param {number} dblclick_timeout minimum time between 2 independant clicks
     * @param {number} hover_timeout time before update hovered element
     *
@@ -70,11 +72,12 @@ function Sui(element_id){
       clip=false,
       default_png_scale = 1,
       selection_color = "orange",
+      hover_color = {button:"yellow", selectable: "grey"},
       dblclick_timeout = 250,
-      hover_timeout = 500,
+      hover_timeout = 400,
    ){
-      var sui = this;
-      var el = document.getElementById(sui.id);
+      var scui = this;
+      var el = document.getElementById(scui.id);
 
       // Container
       var div = create_html_element('div');
@@ -178,19 +181,19 @@ function Sui(element_id){
          }
       });
       reset_button.addEventListener("click", function(event){
-         sui.reset_view();
+         scui.reset_view();
       });
       zoomin_button.addEventListener("click", function(event){
-         sui.zoom_in();
+         scui.zoom_in();
       });
       zoomout_button.addEventListener("click", function(event){
-         sui.zoom_out();
+         scui.zoom_out();
       });
       savepng_button.addEventListener("click", function(event){
-         sui.save_png();
+         scui.save_png();
       });
       savesvg_button.addEventListener("click", function(event){
-         sui.save_svg();
+         scui.save_svg();
       });
       scalepng_button.addEventListener("click", function(event){
          var v = menu_items.style.display;
@@ -212,41 +215,41 @@ function Sui(element_id){
       svg.appendChild(sel_group);
 
       // Config
-      sui.svg = svg;
-      sui.main_group = main_group;
-      sui.sel_group = sel_group;
-      sui.ui_elements = ui_elements;
-      sui.select_event = new CustomEvent("elementSelected", {
+      scui.svg = svg;
+      scui.main_group = main_group;
+      scui.sel_group = sel_group;
+      scui.ui_elements = ui_elements;
+      scui.select_event = new CustomEvent("elementSelected", {
          detail: {
-            id: sui.id,
+            id: scui.id,
          },
       });
-      sui.operate_event = new CustomEvent("elementOperated", {
+      scui.operate_event = new CustomEvent("elementOperated", {
          detail: {
-            id: sui.id,
+            id: scui.id,
          },
       });
-      sui.hover_event = new CustomEvent("elementHovered", {
+      scui.hover_event = new CustomEvent("elementHovered", {
          detail: {
-            id: sui.id,
+            id: scui.id,
          },
       });
-      sui.zoom_current = 1;
-      sui.zoom_min = zoom_min;
-      sui.zoom_max = zoom_max;
-      sui.zoom_step = zoom_step;
-      sui.clip = clip;
-      sui.default_png_scale = default_png_scale;
+      scui.zoom_current = 1;
+      scui.zoom_min = zoom_min;
+      scui.zoom_max = zoom_max;
+      scui.zoom_step = zoom_step;
+      scui.clip = clip;
+      scui.default_png_scale = default_png_scale;
 
       // Update ui elements
       if(ui_elements){
          for (let i = 0; i < ui_elements.id.length; i++) {
             let id = ui_elements.id[i];
             if(ui_elements.ui_type[i] == "selectable"){
-               sui.selectable.push(id);
+               scui.selectable.push(id);
             }
             if (ui_elements.ui_type[i] == "button") {
-               sui.buttons.push(id);
+               scui.buttons.push(id);
             }
             let element = svg.getElementById(id);
             for(let pname in ui_elements){
@@ -298,34 +301,85 @@ function Sui(element_id){
             var h = bcr.height;
             var vb = 0 + " " + 0 + " " + w + " " + h;
             svg.setAttribute("viewBox", vb);
-            sui.ori_viewBox = vb;
+            scui.ori_viewBox = vb;
          });
       //
 
       // Display Events
       svg.addEventListener("wheel", function(event){
-         sui.wheel_zoom(event);
+         scui.wheel_zoom(event);
       });
 
       svg.addEventListener("mousedown", function(event){
-         sui.mouse_move(event);
+         scui.mouse_move(event);
       });
 
       // Interaction Events
       var mouse_move_timer;
       svg.addEventListener("mousemove", function (event) {
+
+         var target = event.target;
+         var target_ids = get_ancestors_ids(target);
+         var hovered = array_intersect(
+            target_ids,
+            scui.ui_elements.id
+         )[0];
+         var existing = svg.getElementById("hovered_shape");
+         if(hovered){
+            var renew = false;
+            if(existing){
+               if(hovered == existing.getAttribute("data-element")){
+                  renew = false;
+               }else{
+                  scui.sel_group.removeChild(existing);
+                  renew = true;
+               }
+            }else{
+               renew = true;
+            }
+            if (renew) {
+               var element_category = "none";
+               var set = new Set(scui.selectable);
+               if (set.has(hovered)){
+                  element_category = "selectable";
+               }
+               set = new Set(scui.buttons);
+               if (set.has(hovered)) {
+                  element_category = "button";
+               }
+               var color = hover_color[element_category];
+               if(color){
+                  var to_add = svg.getElementById(hovered).cloneNode(true);
+                  to_add.setAttribute("data-element", hovered);
+                  to_add.id = "hovered_shape";
+                  to_add.style.fill = "none";
+                  to_add.style.stroke = color;
+                  to_add.style.visibility = "visible";
+                  to_add.style.strokeWidth = to_add.style.strokeWidth + 4;
+                  to_add.style.strokeOpacity = 1;
+                  to_add.style.opacity = 0.5;
+                  to_add.style.pointerEvents = 'none';
+                  scui.sel_group.appendChild(to_add);
+               }
+            }
+         }else{
+            if(existing){
+               scui.sel_group.removeChild(existing);
+            }
+         }
+
          clearTimeout(mouse_move_timer);
          mouse_move_timer = setTimeout(function(){
-            var target = event.target;
-            var target_ids = get_ancestors_ids(target);
-            var hovered = array_intersect(
-               target_ids,
-               sui.ui_elements.id
-            )[0];
-            sui.hovered = hovered;
-            sui.clientX = event.clientX;
-            sui.clientY = event.clientY;
-            svg.dispatchEvent(sui.hover_event)
+            // var target = event.target;
+            // var target_ids = get_ancestors_ids(target);
+            // var hovered = array_intersect(
+            //    target_ids,
+            //    scui.ui_elements.id
+            // )[0];
+            scui.hovered = hovered;
+            scui.clientX = event.clientX;
+            scui.clientY = event.clientY;
+            svg.dispatchEvent(scui.hover_event)
          }, hover_timeout)
       });
 
@@ -337,34 +391,34 @@ function Sui(element_id){
       container.appendChild(tooltip);
       tooltip.addEventListener("mouseover", function (event) {
          clearTimeout(mouse_move_timer);
-         sui.hovered = tooltip.getAttribute("data-element");
+         scui.hovered = tooltip.getAttribute("data-element");
       })
       svg.addEventListener("elementHovered", function (event) {
-         if (sui.hovered) {
+         if (scui.hovered) {
             var exists = false;
             if (tooltip.style.visibility == "visible") {
-               if (tooltip.getAttribute("data-element") != sui.hovered) {
+               if (tooltip.getAttribute("data-element") != scui.hovered) {
                   tooltip.style.visibility = "hidden";
                } else {
                   exists = true
                }
             }
             if (!exists) {
-               var ind = sui.ui_elements.id.indexOf(sui.hovered);
-               var title = sui.ui_elements.title[ind];
+               var ind = scui.ui_elements.id.indexOf(scui.hovered);
+               var title = scui.ui_elements.title[ind];
                if (title) {
                   tooltip.innerHTML = title;
-                  var x = sui.clientX -
+                  var x = scui.clientX -
                      container.getBoundingClientRect().left +
-                     container.scrollLeft + 5;
-                  var y = sui.clientY -
+                     container.scrollLeft + 10;
+                  var y = scui.clientY -
                      container.getBoundingClientRect().top +
-                     container.scrollTop + 5;
+                     container.scrollTop + 15;
                   tooltip.style.left = x + "px";
                   tooltip.style.top = y + "px";
                   tooltip.style.display = "block";
                   tooltip.style.position = "absolute";
-                  tooltip.setAttribute("data-element", sui.hovered);
+                  tooltip.setAttribute("data-element", scui.hovered);
                   tooltip.style.visibility = "visible";
                }
             }
@@ -375,60 +429,64 @@ function Sui(element_id){
 
       var clickTimer;
       svg.addEventListener("click", function(event){
-         if(sui.moved){
-            console.log("moving");
+         if(scui.moved){
+            // console.log("moving");
          }else{
             var target = event.target;
             var target_ids = get_ancestors_ids(target);
             var to_update = array_intersect(
                target_ids,
-               sui.selectable
+               scui.selectable
             )[0];
             //
             var to_trigger = array_intersect(
                target_ids,
-               sui.buttons
+               scui.buttons
             )[0];
             if(to_trigger){
                clearTimeout(clickTimer);
                clickTimer = setTimeout(function () {
                   console.log(to_trigger);
                   console.log("single click");
+                  scui.button.n = scui.button.n + 1
+                  scui.button.id = to_trigger;
+                  scui.button.click = "single";
                   // trigger event
+                  svg.dispatchEvent(scui.operate_event);
                }, dblclick_timeout);
             }else{
                if (!event.ctrlKey) {
                   if (!to_update) {
-                     sui.selected = [];
+                     scui.selected = [];
                   } else {
-                     sui.selected = [to_update];
+                     scui.selected = [to_update];
                   }
                } else {
                   if (to_update) {
-                     let ind = sui.selected.indexOf(to_update);
+                     let ind = scui.selected.indexOf(to_update);
                      if (ind == -1) {
-                        sui.selected.push(to_update);
+                        scui.selected.push(to_update);
                      } else {
-                        sui.selected.splice(ind, 1);
+                        scui.selected.splice(ind, 1);
                      }
                   }
                }
                // trigger event
-               svg.dispatchEvent(sui.select_event);
+               svg.dispatchEvent(scui.select_event);
             }
          }
       });
 
       svg.addEventListener("elementSelected", function(event){
-         var disp_sel = sui.sel_group.children;
+         var disp_sel = scui.sel_group.children;
          var disp_identifiers = [];
          Array.from(disp_sel).forEach(element => {
             disp_identifiers.push(element.id);
-            if(!sui.selected.includes(element.id)){
-               sui.sel_group.removeChild(element);
+            if(!scui.selected.includes(element.id)){
+               scui.sel_group.removeChild(element);
             }
          });
-         sui.selected.forEach(id => {
+         scui.selected.forEach(id => {
             if(!disp_identifiers.includes(id)){
                var to_add = svg.getElementById(id).cloneNode(true);
                to_add.id = "selection.-_-." + to_add.id;
@@ -439,25 +497,27 @@ function Sui(element_id){
                to_add.style.strokeOpacity = 1;
                to_add.style.opacity = 0.5;
                to_add.style.pointerEvents = 'none';
-               sui.sel_group.appendChild(to_add);
+               scui.sel_group.appendChild(to_add);
             }
          })
       });
 
       svg.addEventListener("dblclick", function (event) {
-         if (sui.moved) {
-            console.log("moving");
+         if (scui.moved) {
+            // console.log("moving");
          } else {
             clearTimeout(clickTimer);
             var target = event.target;
             var target_ids = get_ancestors_ids(target);
             var to_trigger = array_intersect(
                target_ids,
-               sui.buttons
+               scui.buttons
             )[0];
-            console.log(to_trigger);
-            console.log("double click");
+            scui.button.n = scui.button.n + 1
+            scui.button.id = to_trigger;
+            scui.button.click = "double";
             // trigger event
+            svg.dispatchEvent(scui.operate_event);
          }
       });
 
@@ -470,10 +530,10 @@ function Sui(element_id){
     *
     */
    this.reset_view = function(){
-      var sui = this;
-      var svg = sui.svg;
-      svg.setAttribute("viewBox", sui.ori_viewBox);
-      sui.zoom_current = 1;
+      var scui = this;
+      var svg = scui.svg;
+      svg.setAttribute("viewBox", scui.ori_viewBox);
+      scui.zoom_current = 1;
    };
 
    //////////////////////////////////
@@ -482,8 +542,8 @@ function Sui(element_id){
     *
     */
    this.zoom_in = function(){
-      var sui = this;
-      var svg = sui.svg;
+      var scui = this;
+      var svg = scui.svg;
       var viewBox = svg.getAttribute("viewBox").split(" ");
       var vbx = Number(viewBox[0]);
       var vby = Number(viewBox[1]);
@@ -491,17 +551,17 @@ function Sui(element_id){
       var vbh = Number(viewBox[3]);
       var neww, newh;
 
-      var zf = sui.zoom_step;
-      var new_zoom = sui.zoom_current * zf;
-      if(new_zoom > sui.zoom_max || new_zoom < sui.zoom_min){
+      var zf = scui.zoom_step;
+      var new_zoom = scui.zoom_current * zf;
+      if(new_zoom > scui.zoom_max || new_zoom < scui.zoom_min){
          return;
       }
-      if(sui.clip && Math.abs(Math.log10(new_zoom)) < 0.001){
-         sui.zoom_current = 1;
-         svg.setAttribute("viewBox", sui.ori_viewBox);
+      if(scui.clip && Math.abs(Math.log10(new_zoom)) < 0.001){
+         scui.zoom_current = 1;
+         svg.setAttribute("viewBox", scui.ori_viewBox);
          return;
       }
-      sui.zoom_current = new_zoom;
+      scui.zoom_current = new_zoom;
       neww = vbw / zf;
       newh = vbh / zf;
       svg.setAttribute(
@@ -516,8 +576,8 @@ function Sui(element_id){
     *
     */
    this.zoom_out = function(){
-      var sui = this;
-      var svg = sui.svg;
+      var scui = this;
+      var svg = scui.svg;
       var viewBox = svg.getAttribute("viewBox").split(" ");
       var vbx = Number(viewBox[0]);
       var vby = Number(viewBox[1]);
@@ -525,17 +585,17 @@ function Sui(element_id){
       var vbh = Number(viewBox[3]);
       var neww, newh;
 
-      var zf = 1/sui.zoom_step;
-      var new_zoom = sui.zoom_current * zf;
-      if(new_zoom > sui.zoom_max || new_zoom < sui.zoom_min){
+      var zf = 1/scui.zoom_step;
+      var new_zoom = scui.zoom_current * zf;
+      if(new_zoom > scui.zoom_max || new_zoom < scui.zoom_min){
          return;
       }
-      if(sui.clip && Math.abs(Math.log10(new_zoom)) < 0.001){
-         sui.zoom_current = 1;
-         svg.setAttribute("viewBox", sui.ori_viewBox);
+      if(scui.clip && Math.abs(Math.log10(new_zoom)) < 0.001){
+         scui.zoom_current = 1;
+         svg.setAttribute("viewBox", scui.ori_viewBox);
          return;
       }
-      sui.zoom_current = new_zoom;
+      scui.zoom_current = new_zoom;
       neww = vbw / zf;
       newh = vbh / zf;
       svg.setAttribute(
@@ -552,12 +612,12 @@ function Sui(element_id){
     *
     */
    this.wheel_zoom = function(event){
-      var sui = this;
-      if(sui.stop_zoom){
-         sui.stop_zoom = false;
+      var scui = this;
+      if(scui.stop_zoom){
+         scui.stop_zoom = false;
          return;
       }
-      var svg = sui.svg;
+      var svg = scui.svg;
       var lcp = {x:event.clientX, y:event.clientY};
       var orip = point_to_area_ref(lcp, svg);
       var viewBox = svg.getAttribute("viewBox").split(" ");
@@ -567,21 +627,21 @@ function Sui(element_id){
       var vbh = Number(viewBox[3]);
       var neww, newh;
       var svw = svg.getBoundingClientRect().width;
-      var zf = sui.zoom_step;
+      var zf = scui.zoom_step;
       if(event.deltaY > 0){
          zf = 1/zf
       }
-      var new_zoom = sui.zoom_current * zf;
-      if(new_zoom > sui.zoom_max || new_zoom < sui.zoom_min){
+      var new_zoom = scui.zoom_current * zf;
+      if(new_zoom > scui.zoom_max || new_zoom < scui.zoom_min){
          return;
       }
-      if(sui.clip && Math.abs(Math.log10(new_zoom)) < 0.001){
-         sui.zoom_current = 1;
-         sui.stop_zoom = true;
-         svg.setAttribute("viewBox", sui.ori_viewBox);
+      if(scui.clip && Math.abs(Math.log10(new_zoom)) < 0.001){
+         scui.zoom_current = 1;
+         scui.stop_zoom = true;
+         svg.setAttribute("viewBox", scui.ori_viewBox);
          return;
       }
-      sui.zoom_current = new_zoom;
+      scui.zoom_current = new_zoom;
       neww = vbw / zf;
       newh = vbh / zf;
       svg.setAttribute(
@@ -607,17 +667,17 @@ function Sui(element_id){
     *
     */
    this.mouse_move = function(event){
-      var sui = this;
-      sui.moved = false;
+      var scui = this;
+      scui.moved = false;
 
       if(
          event.button != 0 ||
-         (sui.clip && sui.zoom_current == 1)
+         (scui.clip && scui.zoom_current == 1)
       ){
          return;
       }
 
-      var svg = sui.svg;
+      var svg = scui.svg;
 
       function move_viewBox(event){
          var curEvent = event;
@@ -639,7 +699,7 @@ function Sui(element_id){
                var nx = x + rel_dx;
                var ny = y + rel_dy;
                svg.setAttribute("viewBox", nx + " " + ny + " " + w + " " + h);
-               sui.moved = true;
+               scui.moved = true;
                lcp = cp;
                scheduled = false;
             }, 40);
@@ -684,11 +744,11 @@ function Sui(element_id){
    this.save_svg = function(){
       var fileName = "image.svg";
 
-      var sui = this;
-      var svg = sui.svg;
+      var scui = this;
+      var svg = scui.svg;
 
       var tosave = svg.cloneNode(true);
-      tosave.setAttribute("viewBox", sui.ori_viewBox);
+      tosave.setAttribute("viewBox", scui.ori_viewBox);
 
       var imgsrc = tosave.outerHTML;
       imgsrc = 'data:image/svg+xml;base64,'+
@@ -714,18 +774,18 @@ function Sui(element_id){
    this.save_png = function(){
       var fileName = "image.png";
 
-      var sui = this;
-      var svgOri = sui.svg;
+      var scui = this;
+      var svgOri = scui.svg;
 
       var svg = svgOri.cloneNode(true);
       svg.setAttribute("version", 1.1);
       svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 
-      var scale = Number(sui.png_scale.value);
+      var scale = Number(scui.png_scale.value);
       if(!scale){
-         scale = sui.default_png_scale;
+         scale = scui.default_png_scale;
       }
-      var viewBox = sui.ori_viewBox.split(" ");
+      var viewBox = scui.ori_viewBox.split(" ");
       var vbx = Number(viewBox[0]);
       var vby = Number(viewBox[1]);
       var vbw = Number(viewBox[2]);

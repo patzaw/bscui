@@ -30,12 +30,25 @@ ui <- function(req){
       fluidRow(
          column(
             6,
-            bscuiOutput("org_interface", height="94vh"),
-            style = "
-               margin: 10px;
-               padding: 5px;
-               border: solid black;
-            "
+            tags$div(
+               bscuiOutput("org_interface", height="94vh"),
+               style = "
+                  margin-top: 10px;
+                  margin-bottom: 10px;
+                  padding: 5px;
+                  border: solid black;
+               "
+            )
+         ),
+         column(
+            6,
+            tags$h3("Values"),
+            tags$h4("Hovered over (not immediately updated"),
+            verbatimTextOutput("hovered_org"),
+            tags$h4("Selected (selectable elements)"),
+            verbatimTextOutput("selected_org"),
+            tags$h4("Operated (button elements)"),
+            verbatimTextOutput("operated_org")
          )
       )
    )
@@ -68,7 +81,8 @@ server <- function(input, output, session){
             "liver", "small_intestine", "stomach", "pancreas"
          )
       ) %>%
-      mutate(ui_type = ifelse(label == "brain", "button", "selectable")) %>%
+      mutate(ui_type = ifelse(label == "stomach", "none", ui_type)) %>%
+      mutate(ui_type = ifelse(label == "brain", "button", ui_type)) %>%
       mutate(title = ifelse(label == "brain", NA, title))
 
    output$org_interface <- renderBscui({
@@ -77,16 +91,23 @@ server <- function(input, output, session){
             gsub("<title[^<]*</title>", "", .),
          elements,
          menu_width="30px",
+         # hover_color=list(button="pink", selectable="cyan", none="green"),
          selection_color="red"
       )
    })
-   observe({
-      message("selected")
-      print(input$org_interface_selected)
+   output$selected_org <- renderPrint({
+      paste(input$org_interface_selected, collapse=", ")
    })
-   observe({
-      message("hovered")
-      print(input$org_interface_hovered)
+   output$hovered_org <- renderPrint({
+      input$org_interface_hovered
+   })
+   output$operated_org <- renderPrint({
+      sprintf(
+         "%s click on %s (%s)",
+         input$org_interface_operated$click,
+         input$org_interface_operated$id,
+         input$org_interface_operated$n
+      )
    })
 }
 
