@@ -136,8 +136,7 @@ bscui <- function(
 #' - [add_elements]: add SVG elements to the UI
 #' - [remove_elements]: remove SVG elements from the UI
 #' - [update_elements]: update attributes of UI elements
-#' - [select_elements]: add elements to the selection
-#' - [deselect_element]: remove elements from the selection
+#' - [select_elements]: chose selected elements (replace current selection)
 #' - [click_on_element]: trigger a single or double click on a UI element
 #'
 #' @export

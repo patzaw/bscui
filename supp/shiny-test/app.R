@@ -50,7 +50,13 @@ ui <- function(req){
             tags$h4("Operated (button elements)"),
             verbatimTextOutput("operated_org"),
             tags$h5("Test selection"),
-            shiny::actionButton("add_to_sel", "Add heart to selection")
+            shiny::actionButton(
+               "unique_predefined_sel", "Use predefined selection (1)"
+            ),
+            shiny::actionButton(
+               "predefined_sel", "Use predefined selection (2)"
+            ),
+            shiny::actionButton("clear_sel", "Clear selection")
          )
       )
    )
@@ -112,8 +118,14 @@ server <- function(input, output, session){
       )
    })
    ui_prox <- bscuiProxy("org_interface")
-   observeEvent(input$add_to_sel, {
+   observeEvent(input$unique_predefined_sel, {
       select_elements(ui_prox, "UBERON_0000948")
+   })
+   observeEvent(input$predefined_sel, {
+      select_elements(ui_prox, c("UBERON_0000948", "UBERON_0002107"))
+   })
+   observeEvent(input$clear_sel, {
+      select_elements(ui_prox, c())
    })
 }
 

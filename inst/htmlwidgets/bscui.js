@@ -52,10 +52,8 @@ HTMLWidgets.widget({
 
                // Listen
                Shiny.addCustomMessageHandler("bscuiShinySelect", function(data){
-                  // TO UPDATE to take into account multiple identifiers at once !!
-                  if(scui.id == data.id && scui.selectable.has(data.element_ids)){
-                     scui.selected.add(data.element_ids);
-                     scui.svg.dispatchEvent(scui.select_event);
+                  if(scui.id == data.id){
+                     scui.update_selection(data.element_ids);
                   }
                })
             }

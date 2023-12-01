@@ -527,6 +527,23 @@ function Scui(element_id){
     * Reset view
     *
     */
+   this.update_selection = function (elements) {
+      var scui = this;
+      var svg = scui.svg;
+      scui.selected = new Set(array_intersect(
+         elements,
+         scui.selectable
+      ));
+      // trigger event
+      svg.dispatchEvent(scui.select_event);
+   };
+
+
+   //////////////////////////////////
+   /**
+    * Reset view
+    *
+    */
    this.reset_view = function(){
       var scui = this;
       var svg = scui.svg;
