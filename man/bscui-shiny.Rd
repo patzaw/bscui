@@ -4,11 +4,14 @@
 \alias{bscui-shiny}
 \alias{bscuiOutput}
 \alias{renderBscui}
+\alias{bscuiProxy}
 \title{Shiny bindings for bscui}
 \usage{
 bscuiOutput(outputId, width = "100\%", height = "400px")
 
 renderBscui(expr, env = parent.frame(), quoted = FALSE)
+
+bscuiProxy(shinyId, session = shiny::getDefaultReactiveDomain())
 }
 \arguments{
 \item{outputId}{output variable to read from}
@@ -23,7 +26,24 @@ string and have \code{'px'} appended.}
 
 \item{quoted}{Is \code{expr} a quoted expression (with \code{quote()})? This
 is useful if you want to save an expression in a variable.}
+
+\item{shinyId}{single-element character vector indicating the shiny output ID
+of the UI to modify}
+
+\item{session}{the Shiny session object to which the UI belongs; usually the
+default value will suffice}
 }
 \description{
 Output and render functions for using bscui within Shiny applications.
+}
+\details{
+The UI can be updated with \code{bscuiProxy}, using different methods:
+\itemize{
+\item \link{add_elements}: add SVG elements to the UI
+\item \link{remove_elements}: remove SVG elements from the UI
+\item \link{update_elements}: update attributes of UI elements
+\item \link{select_elements}: add elements to the selection
+\item \link{deselect_element}: remove elements from the selection
+\item \link{click_on_element}: trigger a single or double click on a UI element
+}
 }

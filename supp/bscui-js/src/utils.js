@@ -66,6 +66,8 @@ function get_ancestors_ids(element) {
  *
  */
 function array_intersect(array1, array2) {
-   const set2 = new Set(array2);
-   return(array1.filter(element => set2.has(element)));
+   // Convert in Set to ensure uniqueness
+   var set1 = new Set(array1);
+   var set2 = new Set(array2);
+   return([...set1].filter(element => set2.has(element)));
 }

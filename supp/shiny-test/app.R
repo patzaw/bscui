@@ -48,7 +48,9 @@ ui <- function(req){
             tags$h4("Selected (selectable elements)"),
             verbatimTextOutput("selected_org"),
             tags$h4("Operated (button elements)"),
-            verbatimTextOutput("operated_org")
+            verbatimTextOutput("operated_org"),
+            tags$h5("Test selection"),
+            shiny::actionButton("add_to_sel", "Add heart to selection")
          )
       )
    )
@@ -108,6 +110,10 @@ server <- function(input, output, session){
          input$org_interface_operated$id,
          input$org_interface_operated$n
       )
+   })
+   ui_prox <- bscuiProxy("org_interface")
+   observeEvent(input$add_to_sel, {
+      select_elements(ui_prox, "UBERON_0000948")
    })
 }
 

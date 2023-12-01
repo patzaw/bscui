@@ -123,8 +123,22 @@ bscui <- function(
 #' @param env The environment in which to evaluate `expr`.
 #' @param quoted Is `expr` a quoted expression (with `quote()`)? This
 #'   is useful if you want to save an expression in a variable.
+#' @param shinyId single-element character vector indicating the shiny output ID
+#'   of the UI to modify
+#' @param session the Shiny session object to which the UI belongs; usually the
+#'   default value will suffice
 #'
 #' @name bscui-shiny
+#'
+#' @details
+#'
+#' The UI can be updated with `bscuiProxy`, using different methods:
+#' - [add_elements]: add SVG elements to the UI
+#' - [remove_elements]: remove SVG elements from the UI
+#' - [update_elements]: update attributes of UI elements
+#' - [select_elements]: add elements to the selection
+#' - [deselect_element]: remove elements from the selection
+#' - [click_on_element]: trigger a single or double click on a UI element
 #'
 #' @export
 #'
@@ -140,8 +154,23 @@ bscuiOutput <- function(outputId, width = '100%', height = '400px'){
 #' @export
 #'
 renderBscui <- function(expr, env = parent.frame(), quoted = FALSE) {
-   if(!quoted) {
+   if(!quoted){
       expr <- substitute(expr)
    } # force quoted
    htmlwidgets::shinyRenderWidget(expr, bscuiOutput, env, quoted = TRUE)
+}
+
+###############################################################################@
+#' @name bscui-shiny
+#'
+#' @export
+bscuiProxy <- function(shinyId,  session = shiny::getDefaultReactiveDomain()){
+   if(is.null(session)){
+      stop(
+         "bscuiProxy must be called from the server function of a Shiny app"
+      )
+   }
+   object <- list(id = shinyId, session = session)
+   class(object) <- "bscui_Proxy"
+   object
 }

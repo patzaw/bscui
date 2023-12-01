@@ -21,12 +21,12 @@ function Scui(element_id){
    this.main_group = null;
    this.sel_group = null;
    this.ui_elements = null;
-   this.selectable = [];
-   this.buttons = [];
+   this.selectable = new Set();
+   this.buttons = new Set();
    this.select_event = null;
    this.operate_event = null;
    this.hover_event = null;
-   this.selected = [];
+   this.selected = new Set();
    this.hovered = null;
    this.clientX = null;
    this.clientY = null;
@@ -246,10 +246,10 @@ function Scui(element_id){
          for (let i = 0; i < ui_elements.id.length; i++) {
             let id = ui_elements.id[i];
             if(ui_elements.ui_type[i] == "selectable"){
-               scui.selectable.push(id);
+               scui.selectable.add(id);
             }
             if (ui_elements.ui_type[i] == "button") {
-               scui.buttons.push(id);
+               scui.buttons.add(id);
             }
             let element = svg.getElementById(id);
             for(let pname in ui_elements){
@@ -339,12 +339,10 @@ function Scui(element_id){
             }
             if (renew) {
                var element_category = "none";
-               var set = new Set(scui.selectable);
-               if (set.has(hovered)){
+               if (scui.selectable.has(hovered)){
                   element_category = "selectable";
                }
-               set = new Set(scui.buttons);
-               if (set.has(hovered)) {
+               if (scui.buttons.has(hovered)) {
                   element_category = "button";
                }
                var color = hover_color[element_category];
@@ -457,17 +455,17 @@ function Scui(element_id){
             }else{
                if (!event.ctrlKey) {
                   if (!to_update) {
-                     scui.selected = [];
+                     scui.selected.clear() ;
                   } else {
-                     scui.selected = [to_update];
+                     scui.selected.clear();
+                     scui.selected.add(to_update);
                   }
                } else {
                   if (to_update) {
-                     let ind = scui.selected.indexOf(to_update);
-                     if (ind == -1) {
-                        scui.selected.push(to_update);
+                     if (scui.selected.has(to_update)) {
+                        scui.selected.delete(to_update);
                      } else {
-                        scui.selected.splice(ind, 1);
+                        scui.selected.add(to_update);
                      }
                   }
                }
@@ -482,7 +480,7 @@ function Scui(element_id){
          var disp_identifiers = [];
          Array.from(disp_sel).forEach(element => {
             disp_identifiers.push(element.id);
-            if(!scui.selected.includes(element.id)){
+            if(!scui.selected.has(element.id)){
                scui.sel_group.removeChild(element);
             }
          });

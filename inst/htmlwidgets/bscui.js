@@ -33,8 +33,10 @@ HTMLWidgets.widget({
 
             // Shiny
             if(window.Shiny){
+
+               // Talk
                scui.svg.addEventListener("elementSelected", function(event){
-                  Shiny.setInputValue(el.id + '_selected', scui.selected);
+                  Shiny.setInputValue(el.id + '_selected', [...scui.selected]);
                });
                scui.svg.addEventListener("elementHovered", function(event){
                   var toRet = [] ;
@@ -47,6 +49,15 @@ HTMLWidgets.widget({
                   var toRet = scui.button;
                   Shiny.setInputValue(el.id + '_operated', toRet);
                });
+
+               // Listen
+               Shiny.addCustomMessageHandler("bscuiShinySelect", function(data){
+                  // TO UPDATE to take into account multiple identifiers at once !!
+                  if(scui.id == data.id && scui.selectable.has(data.element_ids)){
+                     scui.selected.add(data.element_ids);
+                     scui.svg.dispatchEvent(scui.select_event);
+                  }
+               })
             }
 
          },
