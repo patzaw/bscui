@@ -84,22 +84,20 @@ server <- function(input, output, session){
          strokeWidth = 0.5,
          strokeOpacity = 1
       )
+   elements_to_show <- c(
+      "brain", "heart", "lung",
+      "liver", "small_intestine", "stomach", "pancreas"
+   )
    ui_elements <- elements %>%
       mutate(
+         ui_type = ifelse(label %in% elements_to_show, "selectable", "none"),
          ui_type = ifelse(label == "stomach", "none", ui_type),
-         ui_type = ifelse(label == "brain", "button", "selectable")
+         ui_type = ifelse(label == "brain", "button", ui_type)
       ) %>%
       select(id, ui_type, title)
    element_styles <- elements %>%
       mutate(
-         visibility = ifelse(
-            label %in% c(
-               "brain", "heart", "lung",
-               "liver", "small_intestine", "stomach", "pancreas"
-            ),
-            "visible",
-            "hidden"
-         ),
+         visibility = ifelse(label %in% elements_to_show, "visible", "hidden"),
          title = ifelse(label == "brain", NA, title)
       ) %>%
       select(-ui_type, -title, -label)

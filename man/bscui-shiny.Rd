@@ -48,7 +48,7 @@ position)
 \item \link{set_element_styles}: set style of UI elements
 (e.g. "visibility", "fillOpacity")
 \item \link{select_elements}: chose selected elements (replace current selection)
-\item \link{get_svg}: get the displayed svg
+\item \link{get_displayed_svg}: get the displayed svg
 \item \link{click_on_element}: trigger a single or double click on a UI element
 }
 }

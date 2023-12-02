@@ -126,9 +126,19 @@ function Scui(element_id){
       );
       menu.appendChild(menu_items);
 
-      var msep_elt = create_html_element('p');
-      msep_elt.setAttribute("height", "20px");
+      var msep_elt = create_html_element('div');
+      msep_elt.style.height = "20px";
+
+      //
       menu_items.appendChild(msep_elt);
+      var select_all_button = create_svg_icon("select_all", "Select all");
+      menu_items.appendChild(select_all_button);
+
+      var invert_sel_button = create_svg_icon("invert_sel", "Invert selection");
+      menu_items.appendChild(invert_sel_button);
+
+      //
+      menu_items.appendChild(msep_elt.cloneNode(true));
 
       var reset_button = create_svg_icon("fit", "Reset view");
       menu_items.appendChild(reset_button);
@@ -185,6 +195,13 @@ function Scui(element_id){
             menu_items.style.display = "none";
          }
       });
+      select_all_button.addEventListener("click", function (event) {
+         scui.update_selection(scui.selectable);
+      });
+      invert_sel_button.addEventListener("click", function (event) {
+         let new_sel = array_setdiff(scui.selectable, scui.selected);
+         scui.update_selection(new_sel);
+      });
       reset_button.addEventListener("click", function(event){
          scui.reset_view();
       });
@@ -204,12 +221,21 @@ function Scui(element_id){
          var v = menu_items.style.display;
          scalepng_button.style.display = "none";
          scalepng_ui.style.display = "block";
+         png_scale.focus();
       });
       closeui_button.addEventListener("click", function(event){
          var v = menu_items.style.display;
          scalepng_ui.style.display = "none";
          scalepng_button.style.display = "block";
       });
+      // png_scale.addEventListener('focus', function () {
+         png_scale.addEventListener("keydown", function(event){
+            if(event.key == "Enter"){
+               let clickEvent = new Event("click");
+               closeui_button.dispatchEvent(clickEvent);
+            }
+         });
+      // });
 
       // Add to the document
       el.appendChild(div);

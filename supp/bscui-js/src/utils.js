@@ -71,3 +71,21 @@ function array_intersect(array1, array2) {
    var set2 = new Set(array2);
    return([...set1].filter(element => set2.has(element)));
 }
+
+////////////////////////////////////////////////////////////////////////////////
+/**
+ * Get the difference between arrays
+ *
+ * @param {Array} array1 first array
+ * @param {Array} array2 second array
+ * 
+ * @returns {Array} array1 - array2
+ *
+ */
+function array_setdiff(array1, array2) {
+   // Convert in Set to ensure uniqueness
+   var set1 = new Set(array1);
+   var set2 = new Set(array2);
+   return ([...set1].filter(element => !set2.has(element)));
+}
+
