@@ -55,21 +55,32 @@ elements <- get_element_titles(svg) %>%
       visibility = "visible",
       opacity = 0.5,
       fill = "#000080",
-      fill_opacity = 0.5,
+      fillOpacity = 0.5,
       stroke = "#000080",
-      stroke_width = 0.5,
-      stroke_opacity = 1
+      strokeWidth = 0.5,
+      strokeOpacity = 1
    )
-bscui(
-   svg %>%
-      gsub("<title[^<]*</title>", "", .),
-   elements %>%
-      filter(
+ui_elements <- elements %>%
+   mutate(
+      ui_type = ifelse(label == "brain", "button", "selectable")
+   ) %>%
+   select(id, ui_type, title)
+element_styles <- elements %>%
+   mutate(
+      visibility = ifelse(
          label %in% c(
             "brain", "heart", "lung",
             "liver", "small_intestine", "stomach", "pancreas"
-         )
-      ) %>%
-      mutate(ui_type = ifelse(label == "brain", "button", "selectable")) %>%
-      mutate(title = ifelse(label == "brain", NA, title))
+         ),
+         "visible",
+         "hidden"
+      ),
+      title = ifelse(label == "brain", NA, title)
+   ) %>%
+   select(-ui_type, -title, -label)
+bscui(
+   svg = svg %>%
+      gsub("<title[^<]*</title>", "", .),
+   ui_elements = ui_elements,
+   element_styles = element_styles
 )

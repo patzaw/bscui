@@ -7,21 +7,9 @@
 #'    - **ui_type**: either "selectable" (several elements can be selected),
 #'    "button" (action will be triggered on click), "none" (no ui)
 #'    - **title**: a description of the element to display on mouseover event
-#'    (support html tags). If NA, no description will be displayed.
-#'    - **visibility**: the css visibility of the element. NA values
-#'    are interpreted as "hidden".
-#'    - **opacity**: the opacity of the element between 0 and 1
-#'    (if NA, the value in the svg is kept)
-#'    - **fill**: the color used to fill the element
-#'    (if NA, the value in the svg is kept)
-#'    - **fill_opacity**: opacity of fill
-#'    (if NA, the value in the svg is kept)
-#'    - **stroke**: the color used for element border
-#'    (if NA, the value in the svg is kept)
-#'    - **stroke_width**: the width of the element border
-#'    (if NA, the value in the svg is kept)
-#'    - **stroke_opacity**: opacity of stroke
-#'    (if NA, the value in the svg is kept)
+#' @param element_styles NULL or a data frame with an **id** column providing
+#' the element identifier and one column per style attribute. Column names
+#' should correspond to a style name in camel case (e.g., "strokeOpacity").
 #' @param selection_color the color with which selected elements will be
 #' highlighted
 #'
@@ -47,7 +35,8 @@
 #'
 bscui <- function(
       svg,
-      ui_elements=NULL,
+      ui_elements = NULL,
+      element_styles = NULL,
       show_menu = TRUE,
       menu_width = "20px",
       zoom_min = 0.5,
@@ -96,6 +85,7 @@ bscui <- function(
    x = list(
       svg_txt = svg_txt,
       ui_elements = ui_elements,
+      element_styles = element_styles,
       show_menu = show_menu,
       menu_width = menu_width,
       zoom_min = zoom_min,
@@ -145,8 +135,16 @@ bscui <- function(
 #' The UI can be updated with `bscuiProxy`, using different methods:
 #' - [add_elements]: add SVG elements to the UI
 #' - [remove_elements]: remove SVG elements from the UI
-#' - [update_elements]: update attributes of UI elements
+#' - [move_elements] (where=c("front", "back", "forward", "backward"))
+#' - [set_element_attributes] set attributes of UI elements
+#' (e.g. "d" for changing path of a shape or "cx", "cy" for changing circle
+#' position)
+#' - [set_element_styles]: set style of UI elements
+#' (e.g. "visibility", "fillOpacity")
+#'
 #' - [select_elements]: chose selected elements (replace current selection)
+#' - [get_displayed_svg]: get the displayed svg
+#'
 #' - [click_on_element]: trigger a single or double click on a UI element
 #'
 #' @export

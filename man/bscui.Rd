@@ -7,6 +7,7 @@
 bscui(
   svg,
   ui_elements = NULL,
+  element_styles = NULL,
   show_menu = TRUE,
   menu_width = "20px",
   zoom_min = 0.5,
@@ -32,22 +33,11 @@ bscui(
 \item \strong{ui_type}: either "selectable" (several elements can be selected),
 "button" (action will be triggered on click), "none" (no ui)
 \item \strong{title}: a description of the element to display on mouseover event
-(support html tags). If NA, no description will be displayed.
-\item \strong{visibility}: the css visibility of the element. NA values
-are interpreted as "hidden".
-\item \strong{opacity}: the opacity of the element between 0 and 1
-(if NA, the value in the svg is kept)
-\item \strong{fill}: the color used to fill the element
-(if NA, the value in the svg is kept)
-\item \strong{fill_opacity}: opacity of fill
-(if NA, the value in the svg is kept)
-\item \strong{stroke}: the color used for element border
-(if NA, the value in the svg is kept)
-\item \strong{stroke_width}: the width of the element border
-(if NA, the value in the svg is kept)
-\item \strong{stroke_opacity}: opacity of stroke
-(if NA, the value in the svg is kept)
 }}
+
+\item{element_styles}{NULL or a data frame with an \strong{id} column providing
+the element identifier and one column per style attribute. Column names
+should correspond to a style name in camel case (e.g., "strokeOpacity").}
 
 \item{show_menu}{if TRUE (default) control menu will be available}
 

@@ -18,6 +18,7 @@ HTMLWidgets.widget({
             scui.init(
                svg_txt = x.svg_txt,
                ui_elements= x.ui_elements,
+               element_styles = x.element_styles,
                show_menu = x.show_menu,
                menu_width = x.menu_width,
                zoom_min = x.zoom_min,
@@ -61,6 +62,12 @@ HTMLWidgets.widget({
                         element_ids = [element_ids];
                      }
                      scui.update_selection(element_ids);
+                  }
+               })
+               Shiny.addCustomMessageHandler("bscuiShinyGetSvg", function(data){
+                  if(scui.id == data.id){
+                     toRet = scui.svg;
+                     Shiny.setInputValue(el.id + '_svg', toRet.outerHTML);
                   }
                })
             }

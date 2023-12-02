@@ -49,14 +49,16 @@ ui <- function(req){
             verbatimTextOutput("selected_org"),
             tags$h4("Operated (button elements)"),
             verbatimTextOutput("operated_org"),
-            tags$h5("Test selection"),
+            tags$h3("Test selection"),
             shiny::actionButton(
                "unique_predefined_sel", "Use predefined selection (1)"
             ),
             shiny::actionButton(
                "predefined_sel", "Use predefined selection (2)"
             ),
-            shiny::actionButton("clear_sel", "Clear selection")
+            shiny::actionButton("clear_sel", "Clear selection"),
+            tags$h3("Test get SVG"),
+            shiny::actionButton("getSvg", "Get SVG")
          )
       )
    )
@@ -77,26 +79,36 @@ server <- function(input, output, session){
          visibility = "visible",
          opacity = 0.5,
          fill = "#000080",
-         fill_opacity = 0.5,
+         fillOpacity = 0.5,
          stroke = "#000080",
-         stroke_width = 0.5,
-         stroke_opacity = 1
-      )%>%
-      filter(
-         label %in% c(
-            "brain", "heart", "lung",
-            "liver", "small_intestine", "stomach", "pancreas"
-         )
+         strokeWidth = 0.5,
+         strokeOpacity = 1
+      )
+   ui_elements <- elements %>%
+      mutate(
+         ui_type = ifelse(label == "stomach", "none", ui_type),
+         ui_type = ifelse(label == "brain", "button", "selectable")
       ) %>%
-      mutate(ui_type = ifelse(label == "stomach", "none", ui_type)) %>%
-      mutate(ui_type = ifelse(label == "brain", "button", ui_type)) %>%
-      mutate(title = ifelse(label == "brain", NA, title))
-
+      select(id, ui_type, title)
+   element_styles <- elements %>%
+      mutate(
+         visibility = ifelse(
+            label %in% c(
+               "brain", "heart", "lung",
+               "liver", "small_intestine", "stomach", "pancreas"
+            ),
+            "visible",
+            "hidden"
+         ),
+         title = ifelse(label == "brain", NA, title)
+      ) %>%
+      select(-ui_type, -title, -label)
    output$org_interface <- renderBscui({
       bscui(
          svg %>%
             gsub("<title[^<]*</title>", "", .),
-         elements,
+         ui_elements = ui_elements,
+         element_styles = element_styles,
          menu_width="30px",
          # hover_color=list(button="pink", selectable="cyan", none="green"),
          selection_color="red"
@@ -125,6 +137,16 @@ server <- function(input, output, session){
    })
    observeEvent(input$clear_sel, {
       select_elements(ui_prox, c())
+   })
+
+   observeEvent(input$getSvg, {
+      get_displayed_svg(ui_prox)
+   })
+   observe({
+      svg <- input$org_interface_svg
+      req(svg)
+      svg <- read_xml(svg)
+      assign("saved_svg", svg, envir=.GlobalEnv)
    })
 }
 

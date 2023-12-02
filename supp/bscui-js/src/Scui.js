@@ -47,6 +47,10 @@ function Scui(element_id){
     * Initialize the Scui object
     *
     * @param {string} svg_txt string with svg code
+    * @param {object} ui_elements a data frame with "id", "ui_type" and "title"
+    *    columns
+    * @param {object} element_styles a data frame with an "id" column and
+    *    column per style to apply
     * @param {binary} show_menu show the menu
     * @param {string} menu_width css width value
     * @param {number} zoom_min smallest zoom value
@@ -65,6 +69,7 @@ function Scui(element_id){
    this.init = function(
       svg_txt,
       ui_elements,
+      element_styles,
       show_menu = true,
       menu_width = "20px",
       zoom_min = 0.5, zoom_max = 20,
@@ -251,26 +256,15 @@ function Scui(element_id){
             if (ui_elements.ui_type[i] == "button") {
                scui.buttons.add(id);
             }
+         }
+      }
+      // Update element styles
+      if (element_styles) {
+         for (let i = 0; i < element_styles.id.length; i++) {
+            let id = element_styles.id[i];
             let element = svg.getElementById(id);
-            for(let pname in ui_elements){
-               if (pname == "opacity") {
-                  element.style.opacity = ui_elements.opacity[i];
-               }
-               if(pname == "fill"){
-                  element.style.fill = ui_elements.fill[i];
-               }
-               if (pname == "fill_opacity") {
-                  element.style.fillOpacity = ui_elements.fill_opacity[i];
-               }
-               if (pname == "stroke") {
-                  element.style.stroke = ui_elements.stroke[i];
-               }
-               if (pname == "stroke_width") {
-                  element.style.strokeWidth = ui_elements.stroke_width[i];
-               }
-               if (pname == "stroke_opacity") {
-                  element.style.strokeOpacity = ui_elements.stroke_opacity[i];
-               }
+            for(let pname in element_styles){
+               element.style[pname] = element_styles[pname][i];
             }
          }
       }
@@ -368,12 +362,6 @@ function Scui(element_id){
 
          clearTimeout(mouse_move_timer);
          mouse_move_timer = setTimeout(function(){
-            // var target = event.target;
-            // var target_ids = get_ancestors_ids(target);
-            // var hovered = array_intersect(
-            //    target_ids,
-            //    scui.ui_elements.id
-            // )[0];
             scui.hovered = hovered;
             scui.clientX = event.clientX;
             scui.clientY = event.clientY;

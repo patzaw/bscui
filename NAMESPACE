@@ -3,6 +3,7 @@
 export(bscui)
 export(bscuiOutput)
 export(bscuiProxy)
+export(get_displayed_svg)
 export(renderBscui)
 export(select_elements)
 import(htmlwidgets)
