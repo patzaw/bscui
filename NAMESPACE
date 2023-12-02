@@ -3,7 +3,7 @@
 export(bscui)
 export(bscuiOutput)
 export(bscuiProxy)
-export(read_svg_lines)
 export(renderBscui)
 export(select_elements)
 import(htmlwidgets)
+import(xml2)

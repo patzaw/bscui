@@ -1,7 +1,7 @@
 ###############################################################################@
 #' Build SVG/Shiny custom user interface
 #'
-#' @param svg_txt character string with svg code
+#' @param svg an `xml_document` or a character with svg code
 #' @param ui_elements NULL or a data frame with the following columns:
 #'    - **id**: the element identifier
 #'    - **ui_type**: either "selectable" (several elements can be selected),
@@ -46,7 +46,7 @@
 #' @export
 #'
 bscui <- function(
-      svg_txt,
+      svg,
       ui_elements=NULL,
       show_menu = TRUE,
       menu_width = "20px",
@@ -65,22 +65,32 @@ bscui <- function(
 ) {
 
    ## Prepare SVG ----
-   cont <- regmatches(svg_txt, gregexpr("<svg[^>]*>", svg_txt))[[1]]
-   if(length(cont) != 1){
-      cont <- '<svg xmlns="http://www.w3.org/2000/svg" version="1.1">'
+   if(is.character(svg)){
+      svg_txt <- paste(svg, collapse = "\n")
+      cont <- regmatches(svg_txt, gregexpr("<svg[^>]*>", svg_txt))[[1]]
+      if(length(cont) != 1){
+         cont <- '<svg xmlns="http://www.w3.org/2000/svg" version="1.1">'
+      }
+      svg_txt <- sub(
+         '.*<svg\n[^>]*>', '', svg_txt
+      )
+      svg_txt <- sub(
+         '</svg>.*', '', svg_txt
+      )
+      svg_txt <- sprintf(
+         '<g>%s</g>',
+         svg_txt
+      )
+      svg_txt <- paste0(cont, svg_txt,'</svg>')
+   }else{
+      g <- read_xml('<g></g>')
+      for(child in xml_children(svg)){
+         xml2::xml_add_child(g, child)
+         xml2::xml_remove(child)
+      }
+      xml2::xml_add_child(svg, g)
+      svg_txt <- as.character(svg)
    }
-   svg_txt <- sub(
-      '.*<svg\n[^>]*>', '', svg_txt
-   )
-   svg_txt <- sub(
-      '</svg>.*', '', svg_txt
-   )
-   svg_txt <- sprintf(
-      '<g>%s</g>',
-      svg_txt
-   )
-   svg_txt <- paste0(cont, svg_txt,'</svg>')
-
 
    ## forward options using x
    x = list(

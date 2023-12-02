@@ -63,12 +63,11 @@ ui <- function(req){
 }
 
 server <- function(input, output, session){
-   svg <- paste(readLines(system.file(
+   svg <- read_xml(system.file(
       "svg-examples", "homo_sapiens.male.svg",
       package="bscui"
-   )), collapse="\n")
-   xml <- read_xml(svg)
-   elements <- get_element_titles(xml) %>%
+   ))
+   elements <- get_element_titles(svg) %>%
       mutate(
          ui_type = "selectable",
          title = sprintf(

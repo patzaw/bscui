@@ -5,7 +5,7 @@
 \title{Build SVG/Shiny custom user interface}
 \usage{
 bscui(
-  svg_txt,
+  svg,
   ui_elements = NULL,
   show_menu = TRUE,
   menu_width = "20px",
@@ -24,7 +24,7 @@ bscui(
 )
 }
 \arguments{
-\item{svg_txt}{character string with svg code}
+\item{svg}{an \code{xml_document} or a character with svg code}
 
 \item{ui_elements}{NULL or a data frame with the following columns:
 \itemize{

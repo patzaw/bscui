@@ -43,7 +43,6 @@ The UI can be updated with \code{bscuiProxy}, using different methods:
 \item \link{remove_elements}: remove SVG elements from the UI
 \item \link{update_elements}: update attributes of UI elements
 \item \link{select_elements}: chose selected elements (replace current selection)
-\item \link{deselect_element}: remove elements from the selection
 \item \link{click_on_element}: trigger a single or double click on a UI element
 }
 }

@@ -53,7 +53,14 @@ HTMLWidgets.widget({
                // Listen
                Shiny.addCustomMessageHandler("bscuiShinySelect", function(data){
                   if(scui.id == data.id){
-                     scui.update_selection(data.element_ids);
+                     var element_ids = data.element_ids;
+                     if(!element_ids){
+                        element_ids = [];
+                     }
+                     if(!Array.isArray(element_ids)){
+                        element_ids = [element_ids];
+                     }
+                     scui.update_selection(element_ids);
                   }
                })
             }
