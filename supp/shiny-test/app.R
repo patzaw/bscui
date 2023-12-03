@@ -1,8 +1,8 @@
 library(shiny)
 library(bscui)
 library(xml2)
-library(magrittr)
 library(dplyr)
+library(stringr)
 
 get_element_titles <- function(x){
    id <- xml_attr(x, "id")
@@ -14,12 +14,12 @@ get_element_titles <- function(x){
       if(xml_name(child) == "title"){
          label <- xml_attr(child, "id")
       }else{
-         children_titles <- children_titles %>%
+         children_titles <- children_titles |>
             bind_rows(get_element_titles(child))
       }
    }
-   toRet <- tibble(id = id, label = label) %>%
-      bind_rows(children_titles) %>%
+   toRet <- tibble(id = id, label = label) |>
+      bind_rows(children_titles) |>
       filter(!is.na(id))
    return(toRet)
 }
@@ -69,7 +69,7 @@ server <- function(input, output, session){
       "svg-examples", "homo_sapiens.male.svg",
       package="bscui"
    ))
-   elements <- get_element_titles(svg) %>%
+   elements <- get_element_titles(svg) |>
       mutate(
          ui_type = "selectable",
          title = sprintf(
@@ -88,23 +88,25 @@ server <- function(input, output, session){
       "brain", "heart", "lung",
       "liver", "small_intestine", "stomach", "pancreas"
    )
-   ui_elements <- elements %>%
+   ui_elements <- elements |>
       mutate(
          ui_type = ifelse(label %in% elements_to_show, "selectable", "none"),
          ui_type = ifelse(label == "stomach", "none", ui_type),
          ui_type = ifelse(label == "brain", "button", ui_type)
-      ) %>%
+      ) |>
       select(id, ui_type, title)
-   element_styles <- elements %>%
+   element_styles <- elements |>
       mutate(
          visibility = ifelse(label %in% elements_to_show, "visible", "hidden"),
          title = ifelse(label == "brain", NA, title)
-      ) %>%
+      ) |>
       select(-ui_type, -title, -label)
    output$org_interface <- renderBscui({
       bscui(
-         svg %>%
-            gsub("<title[^<]*</title>", "", .),
+         svg |>
+            as.character() |>
+            str_remove_all("<title[^<]*</title>") |>
+            read_xml(),
          ui_elements = ui_elements,
          element_styles = element_styles,
          menu_width="30px",

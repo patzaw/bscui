@@ -1,8 +1,7 @@
 library(bscui)
-library(here)
 library(xml2)
 library(dplyr)
-library(magrittr)
+library(stringr)
 
 svg <- read_xml(system.file(
    "svg-examples", "homo_sapiens.male.svg",
@@ -21,7 +20,7 @@ bscui(svg)
 # # xml_add_sibling(children[[length(children)]], image, where = "after")
 # bscui(svg)
 
-# svg <- read_xml(here("supp/logo/bscui.svg"))
+# svg <- read_xml(here::here("supp/logo/bscui.svg"))
 # bscui(svg)
 
 
@@ -36,16 +35,16 @@ get_element_titles <- function(x){
       if(xml_name(child) == "title"){
          label <- xml_attr(child, "id")
       }else{
-         children_titles <- children_titles %>%
+         children_titles <- children_titles |>
             bind_rows(get_element_titles(child))
       }
    }
-   toRet <- tibble(id = id, label = label) %>%
-      bind_rows(children_titles) %>%
+   toRet <- tibble(id = id, label = label)  |>
+      bind_rows(children_titles) |>
       filter(!is.na(id))
    return(toRet)
 }
-elements <- get_element_titles(svg) %>%
+elements <- get_element_titles(svg) |>
    mutate(
       ui_type = "selectable",
       title = sprintf(
@@ -64,22 +63,24 @@ elements_to_show <- c(
    "brain", "heart", "lung",
    "liver", "small_intestine", "stomach", "pancreas"
 )
-ui_elements <- elements %>%
+ui_elements <- elements |>
    mutate(
       ui_type = ifelse(label %in% elements_to_show, "selectable", "none"),
       ui_type = ifelse(label == "brain", "button", ui_type)
-   ) %>%
+   ) |>
    select(id, ui_type, title)
-element_styles <- elements %>%
+element_styles <- elements |>
    mutate(
       visibility = ifelse(label %in% elements_to_show, "visible", "hidden"),
       title = ifelse(label == "brain", NA, title)
-   ) %>%
+   ) |>
    select(-ui_type, -title, -label)
 bscui(
-   svg = svg %>%
-      gsub("<title[^<]*</title>", "", .),
+   svg = svg |>
+      as.character() |>
+      str_remove_all("<title[^<]*</title>") |>
+      read_xml(),
    ui_elements = ui_elements,
    element_styles = element_styles
-) %>%
+) |>
    print()
