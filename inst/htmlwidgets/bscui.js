@@ -64,6 +64,11 @@ HTMLWidgets.widget({
                      scui.update_selection(element_ids);
                   }
                })
+               Shiny.addCustomMessageHandler("bscuiShinyClick", function(data){
+                  if(scui.id == data.id){
+                     scui.click_element(data.element_id, data.dbl_click);
+                  }
+               })
                Shiny.addCustomMessageHandler("bscuiShinyGetSvg", function(data){
                   if(scui.id == data.id){
                      toRet = scui.svg;

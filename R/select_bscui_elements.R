@@ -7,10 +7,11 @@
 #'
 #' @export
 #'
-select_elements <- function(bscui, element_ids){
+select_bscui_elements <- function(bscui, element_ids){
    if(!any(class(bscui) %in% "bscui_Proxy")){
       stop(
-         "You can use select_elements only within shiny & using bscui_Proxy"
+         "You can use select_bscui_elements only within shiny and ",
+         "using bscui_Proxy"
       )
    }
    data <- list(id = bscui$id, element_ids = element_ids)

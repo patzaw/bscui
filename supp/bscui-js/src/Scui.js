@@ -460,9 +460,7 @@ function Scui(element_id){
                clickTimer = setTimeout(function () {
                   console.log(to_trigger);
                   console.log("single click");
-                  scui.button.n = scui.button.n + 1
-                  scui.button.id = to_trigger;
-                  scui.button.click = "single";
+                  scui.click_element(to_trigger, false)
                   // trigger event
                   svg.dispatchEvent(scui.operate_event);
                }, dblclick_timeout);
@@ -525,9 +523,7 @@ function Scui(element_id){
                target_ids,
                scui.buttons
             )[0];
-            scui.button.n = scui.button.n + 1
-            scui.button.id = to_trigger;
-            scui.button.click = "double";
+            scui.click_element(to_trigger, true)
             // trigger event
             svg.dispatchEvent(scui.operate_event);
          }
@@ -538,7 +534,9 @@ function Scui(element_id){
 
    //////////////////////////////////
    /**
-    * Reset view
+    * Update selection
+    * 
+    * @param {Array} elements element identifiers to select
     *
     */
    this.update_selection = function (elements) {
@@ -550,6 +548,30 @@ function Scui(element_id){
       ));
       // trigger event
       svg.dispatchEvent(scui.select_event);
+   };
+
+   //////////////////////////////////
+   /**
+    * Click on an element
+    * 
+    * @param {string} element identifier of the element to click on
+    * @param {boolean} dbl_click if true double click
+    *
+    */
+   this.click_element = function (element, dbl_click) {
+      var scui = this;
+      var svg = scui.svg;
+      if (scui.buttons.has(element) && typeof(dbl_click)==="boolean") {
+         scui.button.n = scui.button.n + 1
+         scui.button.id = element;
+         if(dbl_click){
+            scui.button.click = "double";
+         }else{
+            scui.button.click = "single";
+         }
+         // trigger event
+         svg.dispatchEvent(scui.operate_event);
+      }
    };
 
 

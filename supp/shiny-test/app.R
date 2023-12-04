@@ -57,6 +57,20 @@ ui <- function(req){
                "predefined_sel", "Use predefined selection (2)"
             ),
             shiny::actionButton("clear_sel", "Clear selection"),
+            tags$h3("Test click"),
+            fluidRow(
+               column(
+                  12,
+                  tags$div(
+                     shiny::actionButton("click_test", "Click on brain"),
+                     style="display:inline-block;"
+                  ),
+                  tags$div(
+                     shiny::checkboxInput("click_test_dbl", "Double click"),
+                     style="display:inline-block;"
+                  )
+               )
+            ),
             tags$h3("Test get SVG"),
             shiny::actionButton("getSvg", "Get SVG")
          )
@@ -130,17 +144,22 @@ server <- function(input, output, session){
    })
    ui_prox <- bscuiProxy("org_interface")
    observeEvent(input$unique_predefined_sel, {
-      select_elements(ui_prox, "UBERON_0000948")
+      select_bscui_elements(ui_prox, "UBERON_0000948")
    })
    observeEvent(input$predefined_sel, {
-      select_elements(ui_prox, c("UBERON_0000948", "UBERON_0002107"))
+      select_bscui_elements(ui_prox, c("UBERON_0000948", "UBERON_0002107"))
    })
    observeEvent(input$clear_sel, {
-      select_elements(ui_prox, c())
+      select_bscui_elements(ui_prox, c())
+   })
+
+   observeEvent(input$click_test, {
+      dbl_click <- as.logical(input$click_test_dbl)
+      click_bscui_element(ui_prox, "UBERON_0000955", dbl_click)
    })
 
    observeEvent(input$getSvg, {
-      get_displayed_svg(ui_prox)
+      get_bscui_svg(ui_prox)
    })
    observe({
       svg <- input$org_interface_svg
