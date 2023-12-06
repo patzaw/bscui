@@ -16,7 +16,11 @@ bscui(
   clip = FALSE,
   default_png_scale = 1,
   selection_color = "orange",
-  hover_color = list(button = "yellow", selectable = "grey"),
+  selection_opacity = 0.5,
+  hover_color = list(button = "yellow", selectable = "cyan"),
+  hover_opacity = 0.5,
+  structure_shapes = c("rect", "circle", "ellipse", "line", "polyline", "polygon",
+    "path"),
   dblclick_timeout = 250,
   hover_timeout = 500,
   width = NULL,
@@ -56,8 +60,12 @@ automatically set to its original state (the drawing cannot be moved)}
 
 \item{selection_color}{color used to highlight selection}
 
+\item{selection_opacity}{opacity of selection highlight}
+
 \item{hover_color}{color used to highlight hovered element
 (one for "button", one for "selectable", one for "none")}
+
+\item{hover_opacity}{opacity of hovered highlight}
 
 \item{dblclick_timeout}{minimum time between 2 independant clicks}
 
@@ -68,6 +76,9 @@ automatically set to its original state (the drawing cannot be moved)}
 string and have \code{'px'} appended.}
 
 \item{elementId}{hmtl identifier of the widget}
+
+\item{{Array}}{structure_shapes SVG shapes to consider within an element
+during hover and selection events}
 }
 \description{
 Build SVG/Shiny custom user interface

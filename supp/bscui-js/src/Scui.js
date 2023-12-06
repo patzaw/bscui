@@ -60,8 +60,12 @@ function Scui(element_id){
     *    automatically set to its original state (the drawing cannot be moved)
     * @param {number} default_png_scale default value for scaling PNG export
     * @param {string} selection_color color used to highlight selection
+    * @param {number} selection_opacity opacity of selection highlight
     * @param {string} hover_color color used to highlight hovered element
     *    (one for "button", one for "selectable", one for "none")
+    * @param {number} hover_opacity opacity of hovered highlight
+    * @param {Array} structure_shapes SVG shapes to consider within an element
+    * during hover and selection events
     * @param {number} dblclick_timeout minimum time between 2 independant clicks
     * @param {number} hover_timeout time before update hovered element
     *
@@ -77,7 +81,13 @@ function Scui(element_id){
       clip=false,
       default_png_scale = 1,
       selection_color = "orange",
-      hover_color = {button:"yellow", selectable: "grey"},
+      selection_opacity = 0.5,
+      hover_color = {button:"yellow", selectable: "cyan"},
+      hover_opacity = 0.5,
+      structure_shapes = [
+         "rect", "circle", "ellipse", "line", "polyline",
+         "polygon", "path"
+      ],
       dblclick_timeout = 250,
       hover_timeout = 400,
    ){
@@ -249,7 +259,11 @@ function Scui(element_id){
       scui.svg = svg;
       scui.main_group = main_group;
       scui.sel_group = sel_group;
-      scui.ui_elements = ui_elements;
+      if(ui_elements){
+         scui.ui_elements = ui_elements;
+      }else{
+         scui.ui_elements = {id:[], ui_type:[], title:[]};
+      }
       scui.select_event = new CustomEvent("elementSelected", {
          detail: {
             id: scui.id,
@@ -375,8 +389,21 @@ function Scui(element_id){
                   to_add.style.visibility = "visible";
                   to_add.style.strokeWidth = to_add.style.strokeWidth + 4;
                   to_add.style.strokeOpacity = 1;
-                  to_add.style.opacity = 0.5;
+                  to_add.style.opacity = hover_opacity;
                   to_add.style.pointerEvents = 'none';
+                  structure_shapes.forEach(shape => {
+                     let selected_elements = to_add.getElementsByTagName(shape);
+                     Array.from(selected_elements).forEach(to_mod => {
+                        to_mod.id = null;
+                        to_mod.style.fill = "none";
+                        to_mod.style.stroke = color;
+                        to_mod.style.visibility = "visible";
+                        to_mod.style.strokeWidth = to_mod.style.strokeWidth + 4;
+                        to_mod.style.strokeOpacity = 1;
+                        to_mod.style.opacity = hover_opacity;
+                        to_mod.style.pointerEvents = 'none';
+                     });
+                  });
                   scui.sel_group.appendChild(to_add);
                }
             }
@@ -497,16 +524,30 @@ function Scui(element_id){
             }
          });
          scui.selected.forEach(id => {
-            if(!disp_identifiers.includes(id)){
-               var to_add = svg.getElementById(id).cloneNode(true);
+            var current = svg.getElementById(id);
+            if(!disp_identifiers.includes(id) && current){
+               var to_add = current.cloneNode(true);
                to_add.id = "selection.-_-." + to_add.id;
                to_add.style.fill = "none";
                to_add.style.stroke = selection_color;
                to_add.style.visibility = "visible";
-               to_add.style.strokeWidth = to_add.style.strokeWidth +2;
+               to_add.style.strokeWidth = to_add.style.strokeWidth + 4;
                to_add.style.strokeOpacity = 1;
-               to_add.style.opacity = 0.5;
+               to_add.style.opacity = selection_opacity;
                to_add.style.pointerEvents = 'none';
+               structure_shapes.forEach(shape => {
+                  let selected_elements = to_add.getElementsByTagName(shape);
+                  Array.from(selected_elements).forEach(to_mod => {
+                     to_mod.id = null;
+                     to_mod.style.fill = "none";
+                     to_mod.style.stroke = selection_color;
+                     to_mod.style.visibility = "visible";
+                     to_mod.style.strokeWidth = to_mod.style.strokeWidth + 4;
+                     to_mod.style.strokeOpacity = 1;
+                     to_mod.style.opacity = selection_opacity;
+                     to_mod.style.pointerEvents = 'none';
+                  });
+               });
                scui.sel_group.appendChild(to_add);
             }
          })

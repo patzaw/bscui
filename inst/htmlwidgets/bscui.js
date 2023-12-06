@@ -15,6 +15,12 @@ HTMLWidgets.widget({
          renderValue: function(x) {
 
             // Init bscui
+            if(!x.structure_shapes){
+               x.structure_shapes = [];
+            }
+            if(!Array.isArray(x.structure_shapes)){
+               x.structure_shapes = [x.structure_shapes];
+            }
             scui.init(
                svg_txt = x.svg_txt,
                ui_elements= x.ui_elements,
@@ -27,7 +33,10 @@ HTMLWidgets.widget({
                clip = x.clip,
                default_png_scale = x.default_png_scale,
                selection_color = x.selection_color,
+               selection_opacity = x.selection_opacity,
                hover_color = x.hover_color,
+               hover_opacity = x.hover_opacity,
+               structure_shapes = x.structure_shapes,
                dblclick_timeout = x.dblclick_timeout,
                hover_timeout = x.hover_timeout
             );

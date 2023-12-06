@@ -26,6 +26,7 @@ Suggests:
    knitr,
    rmarkdown,
    dplyr,
+   readr,
    stringr,
    glue,
    shiny,
