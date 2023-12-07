@@ -89,3 +89,36 @@ function array_setdiff(array1, array2) {
    return ([...set1].filter(element => !set2.has(element)));
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/**
+ * Get the ids of all descendants of an elements
+ *
+ * @param {Object} element
+ * 
+ * @returns {Array} ids
+ *
+ */
+function get_all_descendant_ids(element) {
+   // Initialize an array to store the identifiers
+   var toRet = [];
+
+   // Function to recursively traverse descendants
+   function traverse_descendants(node) {
+      // Check if the current node has an ID
+      if (node.id) {
+         // Add the ID to the array
+         toRet.push(node.id);
+      }
+
+      // Recursively traverse child nodes
+      for (var i = 0; i < node.childNodes.length; i++) {
+         traverse_descendants(node.childNodes[i]);
+      }
+   }
+
+   // Start traversing from the given element
+   traverse_descendants(element);
+
+   // Return the array of descendant IDs
+   return(toRet);
+}

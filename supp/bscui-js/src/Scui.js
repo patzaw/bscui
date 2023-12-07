@@ -485,26 +485,39 @@ function Scui(element_id){
             if(to_trigger){
                clearTimeout(clickTimer);
                clickTimer = setTimeout(function () {
-                  console.log(to_trigger);
-                  console.log("single click");
                   scui.click_element(to_trigger, false)
                   // trigger event
                   svg.dispatchEvent(scui.operate_event);
                }, dblclick_timeout);
             }else{
+               var empty_sel = true;
+               if(to_update){
+                  empty_sel = false;
+                  var p = to_update;
+                  var sel_element = svg.getElementById(to_update);
+                  to_update = [to_update];
+                  to_update.push(...get_all_descendant_ids(sel_element));
+                  to_update = array_intersect(to_update, scui.selectable);
+               }
                if (!event.ctrlKey) {
-                  if (!to_update) {
+                  if (empty_sel) {
                      scui.selected.clear() ;
                   } else {
                      scui.selected.clear();
-                     scui.selected.add(to_update);
+                     for(let tu of to_update){
+                        scui.selected.add(tu)
+                     };
                   }
                } else {
-                  if (to_update) {
-                     if (scui.selected.has(to_update)) {
-                        scui.selected.delete(to_update);
-                     } else {
-                        scui.selected.add(to_update);
+                  if (!empty_sel) {
+                     if(scui.selected.has(p)){
+                        for (let tu of to_update) {
+                           scui.selected.delete(tu)
+                        }
+                     }else{
+                        for (let tu of to_update) {
+                           scui.selected.add(tu)
+                        }
                      }
                   }
                }
@@ -515,17 +528,23 @@ function Scui(element_id){
       });
 
       svg.addEventListener("elementSelected", function(event){
-         var disp_sel = scui.sel_group.children;
+         var disp_sel = scui.sel_group.getElementsByTagName("*");
          var disp_identifiers = [];
+         var selid = [];
+         scui.selected.forEach(e => { selid.push("selection.-_-." + e) })
+         var allid = [];
+         scui.selectable.forEach(e => { allid.push("selection.-_-." + e) })
          Array.from(disp_sel).forEach(element => {
-            disp_identifiers.push(element.id);
-            if(!scui.selected.has(element.id)){
-               scui.sel_group.removeChild(element);
+            if(allid.includes(element.id)){
+               disp_identifiers.push(element.id);
+               if(!selid.includes(element.id)){
+                  element.parentElement.removeChild(element);
+               }
             }
          });
          scui.selected.forEach(id => {
             var current = svg.getElementById(id);
-            if(!disp_identifiers.includes(id) && current){
+            if (!disp_identifiers.includes("selection.-_-." + id) && current){
                var to_add = current.cloneNode(true);
                to_add.id = "selection.-_-." + to_add.id;
                to_add.style.fill = "none";
@@ -538,7 +557,7 @@ function Scui(element_id){
                structure_shapes.forEach(shape => {
                   let selected_elements = to_add.getElementsByTagName(shape);
                   Array.from(selected_elements).forEach(to_mod => {
-                     to_mod.id = null;
+                     // to_mod.id = "selection.-_-." + to_mod.id;
                      to_mod.style.fill = "none";
                      to_mod.style.stroke = selection_color;
                      to_mod.style.visibility = "visible";
@@ -548,9 +567,28 @@ function Scui(element_id){
                      to_mod.style.pointerEvents = 'none';
                   });
                });
+               var di = array_intersect(
+                  get_all_descendant_ids(to_add),
+                  scui.selectable
+               );
+               Array.from(to_add.getElementsByTagName("*")).forEach(e => {
+                  if(di.includes(e.id)){
+                     e.id = "selection.-_-." + e.id;
+                  }
+               });
+               disp_identifiers.push(id);
+               disp_identifiers.push(...di);
                scui.sel_group.appendChild(to_add);
             }
          })
+         var disp_sel = scui.sel_group.getElementsByTagName("*");
+         Array.from(disp_sel).forEach(element => {
+            if (allid.includes(element.id)) {
+               if (!selid.includes(element.id)) {
+                  element.parentElement.removeChild(element);
+               }
+            }
+         });
       });
 
       svg.addEventListener("dblclick", function (event) {

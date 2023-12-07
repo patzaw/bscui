@@ -27,6 +27,7 @@ get_element_titles <- function(x){
 ui <- function(req){
    fluidPage(
       title= "Test bscui",
+      tags$head(tags$link(rel="icon", type="image/png", href="bscui-ico.png")),
       fluidRow(
          column(
             6,

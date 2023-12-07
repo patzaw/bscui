@@ -2,6 +2,7 @@ library(bscui)
 library(xml2)
 library(dplyr)
 library(stringr)
+library(glue)
 library(readr)
 
 svg <- read_xml(system.file(
