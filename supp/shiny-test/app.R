@@ -88,8 +88,8 @@ server <- function(input, output, session){
       mutate(
          ui_type = "selectable",
          title = sprintf(
-            '<div style="background:#FFFF0080; padding:5px;">This is <strong>%s</strong><div>',
-            label
+            '<div style="background:#FFFF0080; padding:5px;">%s<div>',
+            sprintf('This is <strong>%s</strong>', label)
          ),
          visibility = "visible",
          opacity = 0.5,
@@ -117,11 +117,14 @@ server <- function(input, output, session){
       ) |>
       select(-ui_type, -title, -label)
    output$org_interface <- renderBscui({
+      ## Remove title elements
+      xml_ns_strip(svg)
+      titles <- xml_find_all(svg, "//title")
+      for(to_remove in titles){
+         xml_remove(to_remove)
+      }
       bscui(
-         svg |>
-            as.character() |>
-            str_remove_all("<title[^<]*</title>") |>
-            read_xml(),
+         svg |> as.character(),
          ui_elements = ui_elements,
          element_styles = element_styles,
          menu_width="30px",

@@ -1,7 +1,7 @@
 ###############################################################################@
 #' Build SVG/Shiny custom user interface
 #'
-#' @param svg an `xml_document` or a character with svg code
+#' @param svg_txt a character with svg code
 #' @param ui_elements NULL or a data frame with the following columns:
 #'    - **id**: the element identifier
 #'    - **ui_type**: either "selectable" (several elements can be selected),
@@ -38,7 +38,7 @@
 #' @export
 #'
 bscui <- function(
-      svg,
+      svg_txt,
       ui_elements = NULL,
       element_styles = NULL,
       show_menu = TRUE,
@@ -63,31 +63,11 @@ bscui <- function(
 ) {
 
    ## Prepare SVG ----
-   if(is.character(svg)){
-      svg_txt <- paste(svg, collapse = "\n")
-      cont <- regmatches(svg_txt, gregexpr("<svg[^>]*>", svg_txt))[[1]]
-      if(length(cont) != 1){
-         cont <- '<svg xmlns="http://www.w3.org/2000/svg" version="1.1">'
-      }
-      svg_txt <- sub(
-         '.*<svg\n[^>]*>', '', svg_txt
-      )
-      svg_txt <- sub(
-         '</svg>.*', '', svg_txt
-      )
-      svg_txt <- sprintf(
-         '<g>%s</g>',
-         svg_txt
-      )
+   svg_txt <- paste(svg_txt, collapse = "\n")
+   cont <- regmatches(svg_txt, gregexpr("<svg[^>]*>", svg_txt))[[1]]
+   if(length(cont) != 1){
+      cont <- '<svg xmlns="http://www.w3.org/2000/svg" version="1.1">'
       svg_txt <- paste0(cont, svg_txt,'</svg>')
-   }else{
-      g <- read_xml('<g></g>')
-      for(child in xml_children(svg)){
-         xml2::xml_add_child(g, child)
-         xml2::xml_remove(child)
-      }
-      xml2::xml_add_child(svg, g)
-      svg_txt <- as.character(svg)
    }
 
    ## forward options using x
@@ -149,8 +129,6 @@ bscui <- function(
 #' - [remove_elements]: remove SVG elements from the UI
 #' - [order_bscui_elements] (where=c("front", "back", "forward", "backward"))
 #'
-#' - [get_bscui_attributes]: get attributes of UI elements
-#' - [get_bscui_styles]: get bscui styles of UI elements
 #' - [set_bscui_attributes] set attributes of UI elements
 #' (e.g. "d" for changing path of a shape or "cx", "cy" for changing circle
 #' position)

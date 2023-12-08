@@ -30,9 +30,14 @@ ui_elements <- elements |>
       )
    ) |>
    select(id, ui_type, title)
-svg |>
-   as.character() |>
-   str_remove_all("<text[^<]*</text>") |>
-   read_xml() |>
+
+## Remove text elements
+xml_ns_strip(svg)
+texts <- xml_find_all(svg, "//text")
+for(to_remove in texts){
+   xml_remove(to_remove)
+}
+
+svg |> as.character() |>
    bscui(ui_elements=ui_elements, hover_color=list(selectable="yellow", button="red")) |>
    print()

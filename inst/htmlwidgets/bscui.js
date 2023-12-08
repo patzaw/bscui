@@ -80,7 +80,7 @@ HTMLWidgets.widget({
                })
                Shiny.addCustomMessageHandler("bscuiShinyGetSvg", function(data){
                   if(scui.id == data.id){
-                     toRet = scui.svg;
+                     toRet = scui.get_core_svg();
                      Shiny.setInputValue(el.id + '_svg', toRet.outerHTML);
                   }
                })

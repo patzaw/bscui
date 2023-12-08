@@ -109,6 +109,17 @@ function Scui(element_id){
       svg.setAttribute("width", "100%");
       svg.setAttribute("height", "100%");
 
+      var main_group = create_svg_element("g");
+      console.log(svg);
+      console.log(svg.children);
+      var svg_elements = Array.from(svg.children);
+      svg_elements.forEach(child => {
+         main_group.appendChild(child);
+      });
+      console.log(main_group);
+      svg.appendChild(main_group);
+
+
       // Menu
       var xmlns = "http://www.w3.org/2000/svg";
       var menu = create_html_element('div');
@@ -250,8 +261,7 @@ function Scui(element_id){
       // Add to the document
       el.appendChild(div);
 
-      // SVG groups
-      var main_group = svg.querySelector("g");
+      // Selection group
       var sel_group = create_svg_element("g");
       svg.appendChild(sel_group);
 
@@ -866,6 +876,26 @@ function Scui(element_id){
       event.preventDefault();
    };
 
+
+   //////////////////////////////////
+   /**
+    * Get core SVG (without extra elements used for interaction)
+    *
+    */
+   this.get_core_svg = function(){
+      var scui = this;
+      var svg = scui.svg;
+      var toRet = svg.cloneNode(true);
+      toRet.setAttribute("viewBox", scui.ori_viewBox);
+      toRet.removeChild(toRet.children[1]);
+      var mg = toRet.children[0];
+      while (mg.firstChild) {
+         toRet.appendChild(mg.firstChild);
+      }
+      toRet.removeChild(mg);
+      return(toRet)
+   }
+
    //////////////////////////////////
    /**
     * Save SVG file
@@ -875,10 +905,7 @@ function Scui(element_id){
       var fileName = "image.svg";
 
       var scui = this;
-      var svg = scui.svg;
-
-      var tosave = svg.cloneNode(true);
-      tosave.setAttribute("viewBox", scui.ori_viewBox);
+      var tosave = scui.get_core_svg();
 
       var imgsrc = tosave.outerHTML;
       imgsrc = 'data:image/svg+xml;base64,'+

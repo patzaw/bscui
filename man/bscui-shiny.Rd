@@ -42,8 +42,6 @@ The UI can be updated with \code{bscuiProxy}, using different methods:
 \item \link{add_elements}: add SVG elements to the UI
 \item \link{remove_elements}: remove SVG elements from the UI
 \item \link{order_bscui_elements} (where=c("front", "back", "forward", "backward"))
-\item \link{get_bscui_attributes}: get attributes of UI elements
-\item \link{get_bscui_styles}: get bscui styles of UI elements
 \item \link{set_bscui_attributes} set attributes of UI elements
 (e.g. "d" for changing path of a shape or "cx", "cy" for changing circle
 position)

@@ -20,11 +20,11 @@ BugReports: https://github.com/patzaw/bscui/issues
 Depends:
    R (>= 4.1)
 Import:
-   htmlwidgets,
-   xml2
+   htmlwidgets
 Suggests:
    knitr,
    rmarkdown,
+   xml2,
    dplyr,
    readr,
    stringr,

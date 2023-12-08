@@ -7,7 +7,9 @@ svg <- read_xml(system.file(
    "svg-examples", "homo_sapiens.male.svg",
    package="bscui"
 ))
-bscui(svg)
+svg |>
+   as.character() |>
+   bscui()
 # bscui(svg, zoom_max=1000, show_menu=FALSE)
 # bscui(svg, width="100%", height="91vh")
 # bscui(svg, show_menu=FALSE, zoom_min=1, zoom_max=1, clip=TRUE) # no view mod
@@ -48,8 +50,8 @@ elements <- get_element_titles(svg) |>
    mutate(
       ui_type = "selectable",
       title = sprintf(
-         '<div style="background:#FFFF0080; padding:5px;">This is <strong>%s</strong><div>',
-         label
+         '<div style="background:#FFFF0080; padding:5px;">%s<div>',
+         sprintf('This is <strong>%s</strong>', label)
       ),
       visibility = "visible",
       opacity = 0.5,
@@ -75,11 +77,16 @@ element_styles <- elements |>
       title = ifelse(label == "brain", NA, title)
    ) |>
    select(-ui_type, -title, -label)
+
+## Remove title elements
+xml_ns_strip(svg)
+titles <- xml_find_all(svg, "//title")
+for(to_remove in titles){
+   xml_remove(to_remove)
+}
+
 bscui(
-   svg = svg |>
-      as.character() |>
-      str_remove_all("<title[^<]*</title>") |>
-      read_xml(),
+   svg = svg |> as.character(),
    ui_elements = ui_elements,
    element_styles = element_styles
 ) |>
