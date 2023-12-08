@@ -1,3 +1,26 @@
+////////////////////////////////////////////////////////////////////////////////
+/**
+ * Check a value to be an Array and make an array if necessary
+ *
+ * @param {object} value the value to check
+ * @param {Array} default_value an array to use as default value if the provided
+ * object is null
+ *
+ * @return {Array} the provided value, the default_value or an Array with
+ * the provided value as the only element
+ *
+ */
+var check_array = function(value, default_value=[]){
+   if(value == null){
+      value = default_value;
+   }
+   if(!Array.isArray(value)){
+      value = [value];
+   }
+   return(value)
+}
+
+////////////////////////////////////////////////////////////////////////////////
 HTMLWidgets.widget({
 
    name: 'bscui',
@@ -63,13 +86,7 @@ HTMLWidgets.widget({
                // Listen
                Shiny.addCustomMessageHandler("bscuiShinySelect", function(data){
                   if(scui.id == data.id){
-                     var element_ids = data.element_ids;
-                     if(!element_ids){
-                        element_ids = [];
-                     }
-                     if(!Array.isArray(element_ids)){
-                        element_ids = [element_ids];
-                     }
+                     var element_ids = check_array(data.element_ids);
                      scui.update_selection(element_ids);
                   }
                })
@@ -88,25 +105,23 @@ HTMLWidgets.widget({
                   "bscuiShinyElementStyles",
                   function(data){
                      if(scui.id == data.id){
-                        var to_ignore = data.to_ignore;
-                        if(!to_ignore){
-                           to_ignore = [];
+                        var targeted_tags = check_array(
+                           data.targeted_tags,
+                           default_value = scui.structure_shapes
+                        );
+                        if('id' in data.element_styles){
+                           var to_ignore = check_array(data.to_ignore);
+                           scui.set_element_styles(
+                              element_styles = data.element_styles,
+                              to_ignore = to_ignore,
+                              targeted_tags = targeted_tags
+                           )
+                        }else{
+                           scui.set_selection_styles(
+                              element_styles = data.element_styles,
+                              targeted_tags = targeted_tags
+                           )
                         }
-                        if(!Array.isArray(to_ignore)){
-                           to_ignore = [to_ignore];
-                        }
-                        var targeted_tags = data.targeted_tags;
-                        if(!targeted_tags){
-                           targeted_tags = scui.structure_shapes;
-                        }
-                        if(!Array.isArray(targeted_tags)){
-                           targeted_tags = [targeted_tags];
-                        }
-                        scui.set_element_styles(
-                           element_styles = data.element_styles,
-                           to_ignore = to_ignore,
-                           targeted_tags = targeted_tags
-                        )
                      }
                   }
                )

@@ -72,6 +72,7 @@ ui <- function(req){
                   )
                )
             ),
+            uiOutput("format_sel"),
             tags$h3("Test get SVG"),
             shiny::actionButton("getSvg", "Get SVG")
          )
@@ -170,6 +171,29 @@ server <- function(input, output, session){
       req(svg)
       svg <- read_xml(svg)
       assign("saved_svg", svg, envir=.GlobalEnv)
+   })
+
+   output$format_sel <- renderUI({
+      selected <- input$org_interface_selected
+      req(selected)
+      tagList(
+         textInput("fill", "Fill", "#000000"),
+         numericInput("fill_opacity", "Fill opacity", value=0.5, min=0, max=1),
+         textInput("stroke", "Stroke", "#000000"),
+         numericInput("stroke_opacity", "Stroke opacity", value=0.5, min=0, max=1),
+         actionButton("apply_styles", "Apply changes")
+      )
+   })
+   observeEvent(input$apply_styles, {
+      set_bscui_element_styles(
+         ui_prox,
+         element_styles = tibble(
+            fill=input$fill,
+            fillOpacity=input$fill_opacity,
+            stroke = input$stroke,
+            strokeOpacity = input$stroke_opacity
+         ),
+      )
    })
 }
 

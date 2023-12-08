@@ -454,7 +454,7 @@ function Scui(element_id){
                   tooltip.innerHTML = title;
                   var x = scui.clientX -
                      container.getBoundingClientRect().left +
-                     container.scrollLeft + 10;
+                     container.scrollLeft + 20;
                   var y = scui.clientY -
                      container.getBoundingClientRect().top +
                      container.scrollTop + 15;
@@ -666,7 +666,7 @@ function Scui(element_id){
     * Set element styles
     * 
     * @param {object} element_styles a data frame with an "id" column and
-    *    column per style to apply
+    * column per style to apply
     * @param {Array} to_ignore identifiers of elements to ignore:
     * if those elements are children of elements to update they won't be updated
     * @param {Array} targeted_tags affected tag names
@@ -702,6 +702,35 @@ function Scui(element_id){
             let element = svg.getElementById(id);
             set_by_node(element, i)
          }
+      }
+   }
+
+   //////////////////////////////////
+   /**
+    * Set style of selected elements
+    * 
+    * @param {object} element_styles a data frame without an "id" column and
+    * column per style to apply
+    * @param {Array} targeted_tags affected tag names
+    * (by default: structure_shapes of the scui object)
+    *
+    */
+   this.set_selection_styles = function (
+      element_styles, to_ignore = [], targeted_tags = this.structure_shapes
+   ) {
+      var scui = this;
+      if(scui.selected.size > 0){
+         for(let name in element_styles){
+            while(element_styles[name].length < scui.selected.size){
+               element_styles[name].push(element_styles[name][0]);
+            }
+         }
+         element_styles.id = [...scui.selected];
+         scui.set_element_styles(
+            element_styles,
+            to_ignore = array_setdiff(scui.selectable, scui.selected),
+            targeted_tags = targeted_tags
+         );
       }
    }
 

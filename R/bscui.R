@@ -134,9 +134,9 @@ bscui <- function(
 #' - [set_bscui_attributes] set attributes of a UI element
 #' (e.g. "d" for changing path of a shape or "cx", "cy" for changing circle
 #' position)
-#' - [set_bscui_styles]: set style of UI elements
-#' (e.g. "visibility", "fillOpacity")
 #'
+#' - [set_bscui_element_styles]: set style of UI elements
+#' (e.g. "visibility", "fillOpacity")
 #' - [select_bscui_elements]: chose selected elements (replace current selection)
 #' - [click_bscui_element]: trigger a single or double click on a UI element
 #' - [get_bscui_svg]: get the displayed svg

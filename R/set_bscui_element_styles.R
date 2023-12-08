@@ -3,9 +3,12 @@
 #'
 #' @param bscui a [`bscui_Proxy`] object
 #' @param element_styles a data frame with an "id" column and
-#' column per style to apply
+#' one column per style to apply. If the "id" column is missing, then the
+#' modifications apply to the svg selected elements.
 #' @param to_ignore of elements to ignore: if those elements are
-#' children of elements to update they won't be updated
+#' children of elements to update they won't be updated. This parameter
+#' is not taken into account when there is no "id" column in the element_styles
+#' data frame.
 #' @param targeted_tags affected tag names. If NULL (default),
 #' the structure_shapes of the [`bscui`] object
 #'

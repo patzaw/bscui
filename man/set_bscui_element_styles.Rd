@@ -15,10 +15,13 @@ set_bscui_element_styles(
 \item{bscui}{a \code{\link{bscui_Proxy}} object}
 
 \item{element_styles}{a data frame with an "id" column and
-column per style to apply}
+one column per style to apply. If the "id" column is missing, then the
+modifications apply to the svg selected elements.}
 
 \item{to_ignore}{of elements to ignore: if those elements are
-children of elements to update they won't be updated}
+children of elements to update they won't be updated. This parameter
+is not taken into account when there is no "id" column in the element_styles
+data frame.}
 
 \item{targeted_tags}{affected tag names. If NULL (default),
 the structure_shapes of the \code{\link{bscui}} object}
