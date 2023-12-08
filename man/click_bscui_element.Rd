@@ -11,6 +11,9 @@ click_bscui_element(bscui, element_id, dbl_click = FALSE)
 
 \item{element_id}{element identifier on which the click will be triggered}
 }
+\value{
+the provided bscui object
+}
 \description{
 Trigger a click event on a clickable element
 }

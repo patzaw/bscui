@@ -12,6 +12,9 @@ select_bscui_elements(bscui, element_ids)
 \item{element_ids}{element identifiers to add to the selection; empty clear
 the selection}
 }
+\value{
+the provided bscui object
+}
 \description{
 Replace current selection with given element identifiers
 }

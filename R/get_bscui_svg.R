@@ -3,6 +3,8 @@
 #'
 #' @param bscui a [`bscui_Proxy`] object
 #'
+#' @return the provided bscui object
+#'
 #' @export
 #'
 get_bscui_svg <- function(bscui){

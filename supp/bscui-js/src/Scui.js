@@ -30,7 +30,11 @@ function Scui(element_id){
    this.hovered = null;
    this.clientX = null;
    this.clientY = null;
-   this.button = {n: 0, id: null, click: null};
+   this.button = { n: 0, id: null, click: null };
+   this.structure_shapes = new Set([
+      "rect", "circle", "ellipse", "line", "polyline",
+      "polygon", "path"
+   ]);
 
    // View
    this.ori_viewBox = null;
@@ -64,8 +68,8 @@ function Scui(element_id){
     * @param {string} hover_color color used to highlight hovered element
     *    (one for "button", one for "selectable", one for "none")
     * @param {number} hover_opacity opacity of hovered highlight
-    * @param {Array} structure_shapes SVG shapes to consider within an element
-    * during hover and selection events
+    * @param {Array} structure_shapes SVG shapes to considered as concrete
+    * drawing ("text" excluded by default)
     * @param {number} dblclick_timeout minimum time between 2 independant clicks
     * @param {number} hover_timeout time before update hovered element
     *
@@ -110,13 +114,10 @@ function Scui(element_id){
       svg.setAttribute("height", "100%");
 
       var main_group = create_svg_element("g");
-      console.log(svg);
-      console.log(svg.children);
       var svg_elements = Array.from(svg.children);
       svg_elements.forEach(child => {
          main_group.appendChild(child);
       });
-      console.log(main_group);
       svg.appendChild(main_group);
 
 
@@ -269,6 +270,7 @@ function Scui(element_id){
       scui.svg = svg;
       scui.main_group = main_group;
       scui.sel_group = sel_group;
+      scui.structure_shapes = new Set(structure_shapes);
       if(ui_elements){
          scui.ui_elements = ui_elements;
       }else{
@@ -308,16 +310,7 @@ function Scui(element_id){
             }
          }
       }
-      // Update element styles
-      if (element_styles) {
-         for (let i = 0; i < element_styles.id.length; i++) {
-            let id = element_styles.id[i];
-            let element = svg.getElementById(id);
-            for(let pname in element_styles){
-               element.style[pname] = element_styles[pname][i];
-            }
-         }
-      }
+      scui.set_element_styles(element_styles);
 
       // Adapt viewbox
       function wait_for_svg_to_be_rendered(widget_id) {
@@ -394,14 +387,16 @@ function Scui(element_id){
                   var to_add = svg.getElementById(hovered).cloneNode(true);
                   to_add.setAttribute("data-element", hovered);
                   to_add.id = "hovered_shape";
-                  to_add.style.fill = "none";
-                  to_add.style.stroke = color;
                   to_add.style.visibility = "visible";
-                  to_add.style.strokeWidth = to_add.style.strokeWidth + 4;
-                  to_add.style.strokeOpacity = 1;
-                  to_add.style.opacity = hover_opacity;
                   to_add.style.pointerEvents = 'none';
-                  structure_shapes.forEach(shape => {
+                  if(scui.structure_shapes.has(to_add.tagName)){
+                     to_add.style.fill = "none";
+                     to_add.style.stroke = color;
+                     to_add.style.strokeWidth = to_add.style.strokeWidth + 4;
+                     to_add.style.strokeOpacity = 1;
+                     to_add.style.opacity = hover_opacity;
+                  }
+                  scui.structure_shapes.forEach(shape => {
                      let selected_elements = to_add.getElementsByTagName(shape);
                      Array.from(selected_elements).forEach(to_mod => {
                         to_mod.id = null;
@@ -557,14 +552,16 @@ function Scui(element_id){
             if (!disp_identifiers.includes("selection.-_-." + id) && current){
                var to_add = current.cloneNode(true);
                to_add.id = "selection.-_-." + to_add.id;
-               to_add.style.fill = "none";
-               to_add.style.stroke = selection_color;
                to_add.style.visibility = "visible";
-               to_add.style.strokeWidth = to_add.style.strokeWidth + 4;
-               to_add.style.strokeOpacity = 1;
-               to_add.style.opacity = selection_opacity;
                to_add.style.pointerEvents = 'none';
-               structure_shapes.forEach(shape => {
+               if (scui.structure_shapes.has(to_add.tagName)) {
+                  to_add.style.fill = "none";
+                  to_add.style.stroke = selection_color;
+                  to_add.style.strokeWidth = to_add.style.strokeWidth + 4;
+                  to_add.style.strokeOpacity = 1;
+                  to_add.style.opacity = selection_opacity;
+               }
+               scui.structure_shapes.forEach(shape => {
                   let selected_elements = to_add.getElementsByTagName(shape);
                   Array.from(selected_elements).forEach(to_mod => {
                      // to_mod.id = "selection.-_-." + to_mod.id;
@@ -662,6 +659,51 @@ function Scui(element_id){
          svg.dispatchEvent(scui.operate_event);
       }
    };
+
+
+   //////////////////////////////////
+   /**
+    * Set element styles
+    * 
+    * @param {object} element_styles a data frame with an "id" column and
+    *    column per style to apply
+    * @param {Array} to_ignore identifiers of elements to ignore:
+    * if those elements are children of elements to update they won't be updated
+    * @param {Array} targeted_tags affected tag names
+    * (by default: structure_shapes of the scui object)
+    *
+    */
+   this.set_element_styles = function (
+      element_styles, to_ignore = [], targeted_tags = this.structure_shapes
+   ){
+      var scui = this;
+      var svg = scui.svg;
+      targeted_tags = new Set(targeted_tags);
+
+      var set_by_node = function(node, i){
+         if(to_ignore.includes(node.id)){
+            return;
+         }
+         if(targeted_tags.has(node.tagName)){
+            for (let pname in element_styles) {
+               if(pname != "id"){
+                  node.style[pname] = element_styles[pname][i];
+               }
+            }
+         }
+         Array.from(node.children).forEach(child => {
+            set_by_node(child, i)
+         })
+      }
+
+      if (element_styles) {
+         for (let i = 0; i < element_styles.id.length; i++) {
+            let id = element_styles.id[i];
+            let element = svg.getElementById(id);
+            set_by_node(element, i)
+         }
+      }
+   }
 
 
    //////////////////////////////////

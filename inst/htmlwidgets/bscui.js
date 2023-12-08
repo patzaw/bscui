@@ -84,6 +84,32 @@ HTMLWidgets.widget({
                      Shiny.setInputValue(el.id + '_svg', toRet.outerHTML);
                   }
                })
+               Shiny.addCustomMessageHandler(
+                  "bscuiShinyElementStyles",
+                  function(data){
+                     if(scui.id == data.id){
+                        var to_ignore = data.to_ignore;
+                        if(!to_ignore){
+                           to_ignore = [];
+                        }
+                        if(!Array.isArray(to_ignore)){
+                           to_ignore = [to_ignore];
+                        }
+                        var targeted_tags = data.targeted_tags;
+                        if(!targeted_tags){
+                           targeted_tags = scui.structure_shapes;
+                        }
+                        if(!Array.isArray(targeted_tags)){
+                           targeted_tags = [targeted_tags];
+                        }
+                        scui.set_element_styles(
+                           element_styles = data.element_styles,
+                           to_ignore = to_ignore,
+                           targeted_tags = targeted_tags
+                        )
+                     }
+                  }
+               )
             }
 
          },

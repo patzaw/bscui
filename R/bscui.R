@@ -26,14 +26,16 @@
 #' @param hover_color color used to highlight hovered element
 #' (one for "button", one for "selectable", one for "none")
 #' @param hover_opacity opacity of hovered highlight
-#' @param {Array} structure_shapes SVG shapes to consider within an element
-#' during hover and selection events
+#' @param structure_shapes SVG shapes to considered as concrete
+#' drawing ("text" excluded by default)
 #' @param dblclick_timeout minimum time between 2 independant clicks
 #' @param hover_timeout time before update hovered element
 #' @param width,height widget width: must be a valid CSS unit (like `'100\%'`,
 #'   `'400px'`, `'auto'`) or a number, which will be coerced to a
 #'   string and have `'px'` appended.
 #' @param elementId hmtl identifier of the widget
+#'
+#' @return An `htmlwidget` object
 #'
 #' @export
 #'
@@ -129,7 +131,7 @@ bscui <- function(
 #' - [remove_elements]: remove SVG elements from the UI
 #' - [order_bscui_elements] (where=c("front", "back", "forward", "backward"))
 #'
-#' - [set_bscui_attributes] set attributes of UI elements
+#' - [set_bscui_attributes] set attributes of a UI element
 #' (e.g. "d" for changing path of a shape or "cx", "cy" for changing circle
 #' position)
 #' - [set_bscui_styles]: set style of UI elements
@@ -160,7 +162,8 @@ renderBscui <- function(expr, env = parent.frame(), quoted = FALSE) {
 }
 
 ###############################################################################@
-#' @name bscui-shiny
+#' @rdname bscui-shiny
+#' @alias bscui_Proxy
 #'
 #' @export
 bscuiProxy <- function(shinyId,  session = shiny::getDefaultReactiveDomain()){

@@ -67,6 +67,9 @@ automatically set to its original state (the drawing cannot be moved)}
 
 \item{hover_opacity}{opacity of hovered highlight}
 
+\item{structure_shapes}{SVG shapes to considered as concrete
+drawing ("text" excluded by default)}
+
 \item{dblclick_timeout}{minimum time between 2 independant clicks}
 
 \item{hover_timeout}{time before update hovered element}
@@ -76,9 +79,9 @@ automatically set to its original state (the drawing cannot be moved)}
 string and have \code{'px'} appended.}
 
 \item{elementId}{hmtl identifier of the widget}
-
-\item{{Array}}{structure_shapes SVG shapes to consider within an element
-during hover and selection events}
+}
+\value{
+An \code{htmlwidget} object
 }
 \description{
 Build SVG/Shiny custom user interface

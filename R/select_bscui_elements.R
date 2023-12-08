@@ -5,6 +5,8 @@
 #' @param element_ids element identifiers to add to the selection; empty clear
 #' the selection
 #'
+#' @return the provided bscui object
+#'
 #' @export
 #'
 select_bscui_elements <- function(bscui, element_ids){

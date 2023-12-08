@@ -9,6 +9,9 @@ get_bscui_svg(bscui)
 \arguments{
 \item{bscui}{a \code{\link{bscui_Proxy}} object}
 }
+\value{
+the provided bscui object
+}
 \description{
 Get the displayed SVG
 }

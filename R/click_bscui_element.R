@@ -4,6 +4,8 @@
 #' @param bscui a [`bscui_Proxy`] object
 #' @param element_id element identifier on which the click will be triggered
 #'
+#' @return the provided bscui object
+#'
 #' @export
 #'
 click_bscui_element <- function(bscui, element_id, dbl_click=FALSE){
