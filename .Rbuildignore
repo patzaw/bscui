@@ -1,2 +1,14 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^supp$
+^doc$
+^docs$
+^Meta$
+^LICENSE$
+^NEWS.md$
+^NEWS.html$
+^README.Rmd$
+^README.md$
+^README.html$
+^_pkgdown\.yml$
+^pkgdown$

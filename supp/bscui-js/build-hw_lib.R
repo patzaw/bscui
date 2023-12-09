@@ -3,6 +3,11 @@ library(magrittr)
 library(jsonlite)
 library(glue)
 
+###############################################################################@
+## This script is used to build the javascript bscui minified library
+###############################################################################@
+
+###############################################################################@
 ## Sources ----
 js_package <- read_json(here("supp/bscui-js/package.json"))
 js_src_dir <- here("supp/bscui-js/src/")
@@ -22,6 +27,7 @@ hw_yaml <- glue(
 ')
 writeLines(hw_yaml, hw_yaml_file)
 
+###############################################################################@
 ## htmlwidgets min lib ----
 hw_js_path <- here(glue(
    "inst/htmlwidgets/lib/{pname}-{pversion}/{pname}.min.js"

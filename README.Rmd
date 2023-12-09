@@ -1,0 +1,81 @@
+---
+output:
+  rmarkdown::github_document:
+    number_sections: false
+    toc: false
+    toc_depth: 2
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+library(knitr)
+library(bscui)
+library(base64enc)
+library(htmltools)
+library(dplyr)
+library(xml2)
+cranRef <- function(x){
+  sprintf(
+    "[%s](https://CRAN.R-project.org/package=%s): %s",
+    x, x, packageDescription(x)$Title
+  )
+}
+logo64 <- dataURI(file=here("supp/logo/bscui-medium.png"))
+```
+
+# bscui `r img(src=logo64, alt="logo", align="right", width="120px")`
+
+<!--
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bscui)](https://cran.r-project.org/package=bsui)
+[![](http://cranlogs.r-pkg.org/badges/bsui)](https://cran.r-project.org/package=bsui)
+-->
+
+Produce interactive SVG figures with selectable and clickable user
+interface elements. These figures can be integrated in markdown documents or
+in shiny applications reacting to events triggered on them.
+Features also include moving, zoom in/out and export in SVG or PNG formats.
+
+## Installation
+
+<!--
+
+## From CRAN
+
+```{r, eval=FALSE}
+install.packages("bscui")
+```
+
+-->
+
+### Dependencies
+
+The following R packages available on CRAN are required:
+
+```{r, echo=FALSE, results='asis'}
+deps <- desc::desc_get_deps()
+sdeps <- filter(deps, type %in% c("Depends", "Imports") & package!="R")
+for(p in sdeps$package){
+   cat(paste("-", cranRef(p)), sep="\n")
+}
+```
+
+And those are suggested:
+
+```{r, echo=FALSE, results='asis'}
+wdeps <- filter(deps, type=="Suggests" & package!="R")
+for(p in wdeps$package){
+   cat(paste("-", cranRef(p)), sep="\n")
+}
+```
+
+### From github
+
+```{r, eval=FALSE}
+devtools::install_github("patzaw/bscui")
+```
+
+## Usage
+
+- Interactive figures: link to vignette
+- Shiny applications: links (webR?)

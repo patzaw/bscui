@@ -1,6 +1,6 @@
 Package: bscui
 Type: Package
-Title: Build SVG custom user interface
+Title: Build SVG Custom User Interface
 Version: 0.1.0
 Authors@R: c(
     person(
@@ -19,7 +19,7 @@ URL:
 BugReports: https://github.com/patzaw/bscui/issues
 Depends:
    R (>= 4.1)
-Import:
+Imports:
    htmlwidgets
 Suggests:
    knitr,
@@ -33,5 +33,6 @@ Suggests:
    DT
 License: GPL-3
 Encoding: UTF-8
+VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3

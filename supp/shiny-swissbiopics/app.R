@@ -2,7 +2,9 @@ library(shiny)
 library(bscui)
 library(xml2)
 library(dplyr)
+library(readr)
 library(stringr)
+library(glue)
 
 ui <- function(req){
    addResourcePath(

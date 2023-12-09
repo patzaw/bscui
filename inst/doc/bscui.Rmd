@@ -1,0 +1,52 @@
+---
+title: "Build SVG Custom User Interface"
+author: "Patrice Godard"
+date:  "`r format(Sys.time(), '%B %d, %Y')`"
+package: "bscui (version `r packageVersion('bscui')`)"
+output:
+   rmarkdown::html_document:
+      number_sections: yes
+      self_contained: true
+      theme: cerulean
+      toc: yes
+      toc_float: yes
+      fig_width: 7
+      fig_height: 5
+vignette: >
+   %\VignetteIndexEntry{bscui}
+   %\VignetteEncoding{UTF-8}
+   %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, message=FALSE, echo=FALSE, include=FALSE, cache=FALSE}
+library(knitr)
+opts_chunk$set(
+   include=TRUE,
+   echo=TRUE,
+   message=TRUE,
+   warning=TRUE,
+   cache=FALSE,
+   cache.lazy=FALSE
+)
+library(bscui)
+library(dplyr)
+library(xml2)
+```
+
+
+How to use it: 
+
+```{r}
+svg <- xml2::read_xml(system.file(
+   "svg-examples", "Epithelial_cells.svg",
+   package="bscui"
+))
+xml2::xml_ns_strip(svg)
+texts <- xml2::xml_find_all(svg, "//text")
+for(to_remove in texts){
+   xml2::xml_remove(to_remove)
+}
+bscui(svg, menu_width="30px")
+```

@@ -10,6 +10,9 @@ click_bscui_element(bscui, element_id, dbl_click = FALSE)
 \item{bscui}{a \code{\link{bscui_Proxy}} object}
 
 \item{element_id}{element identifier on which the click will be triggered}
+
+\item{dbl_click}{logical indicating the type of click
+(default: FALSE => single click is triggered)}
 }
 \value{
 the provided bscui object

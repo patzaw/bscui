@@ -3,6 +3,8 @@
 #'
 #' @param bscui a [`bscui_Proxy`] object
 #' @param element_id element identifier on which the click will be triggered
+#' @param dbl_click logical indicating the type of click
+#' (default: FALSE => single click is triggered)
 #'
 #' @return the provided bscui object
 #'

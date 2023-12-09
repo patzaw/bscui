@@ -5,6 +5,7 @@
 \alias{bscuiOutput}
 \alias{renderBscui}
 \alias{bscuiProxy}
+\alias{bscui_Proxy}
 \title{Shiny bindings for bscui}
 \usage{
 bscuiOutput(outputId, width = "100\%", height = "400px")

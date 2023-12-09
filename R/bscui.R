@@ -163,7 +163,7 @@ renderBscui <- function(expr, env = parent.frame(), quoted = FALSE) {
 
 ###############################################################################@
 #' @rdname bscui-shiny
-#' @alias bscui_Proxy
+#' @aliases bscui_Proxy
 #'
 #' @export
 bscuiProxy <- function(shinyId,  session = shiny::getDefaultReactiveDomain()){
