@@ -5,9 +5,18 @@ library(dplyr)
 library(stringr)
 
 ui <- function(req){
+   addResourcePath(
+      "www",
+      system.file("www", package="bscui")
+   )
    fluidPage(
       title= "Test bscui",
-      tags$head(tags$link(rel="icon", type="image/png", href="bscui-ico.png")),
+      tags$head(
+         tags$link(
+            rel="icon",
+            href='www/bscui-ico.png'
+         )
+      ),
       fluidRow(
          column(
             6,
