@@ -93,7 +93,7 @@ function Scui(element_id){
          "polygon", "path"
       ],
       dblclick_timeout = 250,
-      hover_timeout = 100,
+      hover_timeout = 100
    ){
       var scui = this;
       var el = document.getElementById(scui.id);
