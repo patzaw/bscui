@@ -93,7 +93,7 @@ function Scui(element_id){
          "polygon", "path"
       ],
       dblclick_timeout = 250,
-      hover_timeout = 400,
+      hover_timeout = 100,
    ){
       var scui = this;
       var el = document.getElementById(scui.id);
@@ -361,35 +361,113 @@ function Scui(element_id){
             target_ids,
             scui.ui_elements.id
          )[0];
+         // var existing = svg.getElementById("hovered_shape");
+         // if(hovered){
+         //    var renew = false;
+         //    if(existing){
+         //       if(hovered == existing.getAttribute("data-element")){
+         //          renew = false;
+         //       }else{
+         //          scui.sel_group.removeChild(existing);
+         //          renew = true;
+         //       }
+         //    }else{
+         //       renew = true;
+         //    }
+         //    if (renew) {
+         //       var element_category = "none";
+         //       if (scui.selectable.has(hovered)){
+         //          element_category = "selectable";
+         //       }
+         //       if (scui.buttons.has(hovered)) {
+         //          element_category = "button";
+         //       }
+         //       var color = hover_color[element_category];
+         //       if(color){
+         //          var to_add = svg.getElementById(hovered).cloneNode(true);
+         //          to_add.setAttribute("data-element", hovered);
+         //          to_add.id = "hovered_shape";
+         //          to_add.style.visibility = "visible";
+         //          to_add.style.pointerEvents = 'none';
+         //          if(scui.structure_shapes.has(to_add.tagName)){
+         //             to_add.style.fill = "none";
+         //             to_add.style.stroke = color;
+         //             to_add.style.strokeWidth = to_add.style.strokeWidth + 4;
+         //             to_add.style.strokeOpacity = 1;
+         //             to_add.style.opacity = hover_opacity;
+         //          }
+         //          scui.structure_shapes.forEach(shape => {
+         //             let selected_elements = to_add.getElementsByTagName(shape);
+         //             Array.from(selected_elements).forEach(to_mod => {
+         //                to_mod.id = null;
+         //                to_mod.style.fill = "none";
+         //                to_mod.style.stroke = color;
+         //                to_mod.style.visibility = "visible";
+         //                to_mod.style.strokeWidth = to_mod.style.strokeWidth + 4;
+         //                to_mod.style.strokeOpacity = 1;
+         //                to_mod.style.opacity = hover_opacity;
+         //                to_mod.style.pointerEvents = 'none';
+         //             });
+         //          });
+         //          scui.sel_group.appendChild(to_add);
+         //       }
+         //    }
+         // }else{
+         //    if(existing){
+         //       scui.sel_group.removeChild(existing);
+         //    }
+         // }
+
+         clearTimeout(mouse_move_timer);
+         mouse_move_timer = setTimeout(function(){
+            scui.hovered = hovered;
+            scui.clientX = event.clientX;
+            scui.clientY = event.clientY;
+            svg.dispatchEvent(scui.hover_event)
+         }, hover_timeout)
+      });
+
+      var container = svg.parentElement;
+      var ttid = el.id + "..ui_tooltip";
+      var tooltip = create_html_element("div");
+      tooltip.id = ttid;
+      tooltip.style.visibility = "hidden";
+      container.appendChild(tooltip);
+      tooltip.addEventListener("mouseover", function (event) {
+         clearTimeout(mouse_move_timer);
+         scui.hovered = tooltip.getAttribute("data-element");
+      })
+      svg.addEventListener("elementHovered", function (event) {
          var existing = svg.getElementById("hovered_shape");
-         if(hovered){
+         if (scui.hovered) {
+
             var renew = false;
-            if(existing){
-               if(hovered == existing.getAttribute("data-element")){
+            if (existing) {
+               if (scui.hovered == existing.getAttribute("data-element")) {
                   renew = false;
-               }else{
+               } else {
                   scui.sel_group.removeChild(existing);
                   renew = true;
                }
-            }else{
+            } else {
                renew = true;
             }
             if (renew) {
                var element_category = "none";
-               if (scui.selectable.has(hovered)){
+               if (scui.selectable.has(scui.hovered)) {
                   element_category = "selectable";
                }
-               if (scui.buttons.has(hovered)) {
+               if (scui.buttons.has(scui.hovered)) {
                   element_category = "button";
                }
                var color = hover_color[element_category];
-               if(color){
-                  var to_add = svg.getElementById(hovered).cloneNode(true);
-                  to_add.setAttribute("data-element", hovered);
+               if (color) {
+                  var to_add = svg.getElementById(scui.hovered).cloneNode(true);
+                  to_add.setAttribute("data-element", scui.hovered);
                   to_add.id = "hovered_shape";
                   to_add.style.visibility = "visible";
                   to_add.style.pointerEvents = 'none';
-                  if(scui.structure_shapes.has(to_add.tagName)){
+                  if (scui.structure_shapes.has(to_add.tagName)) {
                      to_add.style.fill = "none";
                      to_add.style.stroke = color;
                      to_add.style.strokeWidth = to_add.style.strokeWidth + 4;
@@ -412,33 +490,7 @@ function Scui(element_id){
                   scui.sel_group.appendChild(to_add);
                }
             }
-         }else{
-            if(existing){
-               scui.sel_group.removeChild(existing);
-            }
-         }
 
-         clearTimeout(mouse_move_timer);
-         mouse_move_timer = setTimeout(function(){
-            scui.hovered = hovered;
-            scui.clientX = event.clientX;
-            scui.clientY = event.clientY;
-            svg.dispatchEvent(scui.hover_event)
-         }, hover_timeout)
-      });
-
-      var container = svg.parentElement;
-      var ttid = el.id + "..ui_tooltip";
-      var tooltip = create_html_element("div");
-      tooltip.id = ttid;
-      tooltip.style.visibility = "hidden";
-      container.appendChild(tooltip);
-      tooltip.addEventListener("mouseover", function (event) {
-         clearTimeout(mouse_move_timer);
-         scui.hovered = tooltip.getAttribute("data-element");
-      })
-      svg.addEventListener("elementHovered", function (event) {
-         if (scui.hovered) {
             var exists = false;
             if (tooltip.style.visibility == "visible") {
                if (tooltip.getAttribute("data-element") != scui.hovered) {
@@ -467,8 +519,12 @@ function Scui(element_id){
                }
             }
          } else {
+            if (existing) {
+               scui.sel_group.removeChild(existing);
+            }
             tooltip.style.visibility = "hidden";
          }
+
       });
 
       var clickTimer;

@@ -180,7 +180,7 @@ server <- function(input, output, session){
          textInput("fill", "Fill", "#000000"),
          numericInput("fill_opacity", "Fill opacity", value=0.5, min=0, max=1),
          textInput("stroke", "Stroke", "#000000"),
-         numericInput("stroke_opacity", "Stroke opacity", value=0.5, min=0, max=1),
+         numericInput("stroke_opacity", "Stroke opacity", value=1, min=0, max=1),
          actionButton("apply_styles", "Apply changes")
       )
    })

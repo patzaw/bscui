@@ -22,7 +22,7 @@ bscui(
   structure_shapes = c("rect", "circle", "ellipse", "line", "polyline", "polygon",
     "path"),
   dblclick_timeout = 250,
-  hover_timeout = 500,
+  hover_timeout = 100,
   width = NULL,
   height = NULL,
   elementId = NULL

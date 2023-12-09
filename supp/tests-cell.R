@@ -39,5 +39,9 @@ for(to_remove in texts){
 }
 
 svg |> as.character() |>
-   bscui(ui_elements=ui_elements, hover_color=list(selectable="yellow", button="red")) |>
+   bscui(
+      ui_elements=ui_elements,
+      hover_color=list(selectable="yellow", button="red"),
+      hover_timeout=100
+      ) |>
    print()
