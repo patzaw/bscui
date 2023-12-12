@@ -1,10 +1,9 @@
 ---
-title: "Build SVG Custom User Interface"
-author: "Patrice Godard"
-date:  "`r format(Sys.time(), '%B %d, %Y')`"
+title: "Introduction to bscui"
 package: "bscui (version `r packageVersion('bscui')`)"
 output:
    rmarkdown::html_document:
+      code_folding: show
       number_sections: yes
       self_contained: true
       theme: cerulean
@@ -35,12 +34,56 @@ library(dplyr)
 library(xml2)
 ```
 
+```{js, echo=FALSE}
+function toggleCollapse(id) {
+   var content = document.querySelector('#'+id);
+   if(content.style.display === 'none' || content.style.display === ''){
+      content.style.display = 'block';
+   }else{
+      content.style.display = 'none';
+   }
+}
+```
 
-How to use it: 
+```{css, echo=FALSE}
+/* Hide the content of the collapsible div by default */
+.collapsible {
+   display: none;
+   border: solid 1px black;
+   background-color: #FAFA000F;
+   margin: 5px 0px 5px 0px;
+   padding: 5px;
+}
+
+.collapse-button {
+   border: solid 1px black;
+   border-radius: 3px;
+   background-color: #CFCFCF;
+}
+```
+
+
+# Installation and requirements
+
+<!-- Collapsible sessionInfo -->
+<button class="collapse-button" onclick="toggleCollapse('sessionInfo')">
+Display session info
+</button>
+
+::: {#sessionInfo class="collapsible" style="margin-top:10px; margin-bottom:10px;"}
+
+Built on `r Sys.Date()` 
+
+```{r, class.source='fold-hide'}
+sessionInfo()
+```
+:::
+
+# Simple use
 
 ```{r}
 svg <- xml2::read_xml(system.file(
-   "svg-examples", "Epithelial_cells.svg",
+   "svg-examples", "Animal_cells.svg",
    package="bscui"
 ))
 xml2::xml_ns_strip(svg)
@@ -48,5 +91,5 @@ texts <- xml2::xml_find_all(svg, "//text")
 for(to_remove in texts){
    xml2::xml_remove(to_remove)
 }
-bscui(svg, menu_width="30px")
+bscui(svg)
 ```

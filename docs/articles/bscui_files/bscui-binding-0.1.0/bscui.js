@@ -61,7 +61,8 @@ HTMLWidgets.widget({
                hover_opacity = x.hover_opacity,
                structure_shapes = x.structure_shapes,
                dblclick_timeout = x.dblclick_timeout,
-               hover_timeout = x.hover_timeout
+               hover_timeout = x.hover_timeout,
+               sanitize_attributes = x.sanitize_attributes
             );
 
             // Shiny

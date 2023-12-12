@@ -30,6 +30,12 @@
 <li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/web_only/SVG-examples.html">Preparing SVG: examples, tips and tricks</a>
+  </div>
+</li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
@@ -65,7 +71,7 @@
 <span>  ui_elements <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  element_styles <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  show_menu <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  menu_width <span class="op">=</span> <span class="st">"20px"</span>,</span>
+<span>  menu_width <span class="op">=</span> <span class="st">"30px"</span>,</span>
 <span>  zoom_min <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  zoom_max <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>  zoom_step <span class="op">=</span> <span class="fl">1.1</span>,</span>
@@ -79,6 +85,7 @@
 <span>    <span class="st">"path"</span><span class="op">)</span>,</span>
 <span>  dblclick_timeout <span class="op">=</span> <span class="fl">250</span>,</span>
 <span>  hover_timeout <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  sanitize_attributes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  height <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  elementId <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -162,6 +169,11 @@ drawing ("text" excluded by default)</p></dd>
 
 <dt>hover_timeout</dt>
 <dd><p>time before update hovered element</p></dd>
+
+
+<dt>sanitize_attributes</dt>
+<dd><p>logical indicating if
+'&lt;' and '&gt;' characters in element attributes must be replaced by text</p></dd>
 
 
 <dt>width, height</dt>

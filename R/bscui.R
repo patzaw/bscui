@@ -30,6 +30,8 @@
 #' drawing ("text" excluded by default)
 #' @param dblclick_timeout minimum time between 2 independant clicks
 #' @param hover_timeout time before update hovered element
+#' @param sanitize_attributes logical indicating if
+#' '<' and '>' characters in element attributes must be replaced by text
 #' @param width,height widget width: must be a valid CSS unit (like `'100\%'`,
 #'   `'400px'`, `'auto'`) or a number, which will be coerced to a
 #'   string and have `'px'` appended.
@@ -44,7 +46,7 @@ bscui <- function(
       ui_elements = NULL,
       element_styles = NULL,
       show_menu = TRUE,
-      menu_width = "20px",
+      menu_width = "30px",
       zoom_min = 0.5,
       zoom_max = 20,
       zoom_step = 1.1,
@@ -61,6 +63,7 @@ bscui <- function(
       ),
       dblclick_timeout = 250,
       hover_timeout = 100,
+      sanitize_attributes = TRUE,
       width = NULL, height = NULL, elementId = NULL
 ) {
 
@@ -90,7 +93,8 @@ bscui <- function(
       hover_opacity = hover_opacity,
       structure_shapes = structure_shapes,
       dblclick_timeout = dblclick_timeout,
-      hover_timeout = hover_timeout
+      hover_timeout = hover_timeout,
+      sanitize_attributes = sanitize_attributes
    )
 
    # create widget

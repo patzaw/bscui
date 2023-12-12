@@ -72,6 +72,9 @@ function Scui(element_id){
     * drawing ("text" excluded by default)
     * @param {number} dblclick_timeout minimum time between 2 independant clicks
     * @param {number} hover_timeout time before update hovered element
+    * @param {boolean} sanitize_attributes logical indicating if
+    * '<' and '>' characters in element attributes must be replaced by text
+    * Default value TRUE makes '&' replaced' by '&amp;'.
     *
     */
    this.init = function(
@@ -79,7 +82,7 @@ function Scui(element_id){
       ui_elements,
       element_styles,
       show_menu = true,
-      menu_width = "20px",
+      menu_width = "30px",
       zoom_min = 0.5, zoom_max = 20,
       zoom_step = 1.1,
       clip=false,
@@ -93,7 +96,8 @@ function Scui(element_id){
          "polygon", "path"
       ],
       dblclick_timeout = 250,
-      hover_timeout = 100
+      hover_timeout = 100,
+      sanitize_attributes = true,
    ){
       var scui = this;
       var el = document.getElementById(scui.id);
@@ -109,6 +113,12 @@ function Scui(element_id){
       // SVG
       div.innerHTML = svg_txt;
       var svg = div.children[0];
+      if (sanitize_attributes) {
+         var all_elements = svg.getElementsByTagName("*");
+         Array.from(all_elements).forEach(e => {
+            sanitize_attr(e);
+         });
+      }
       svg.removeAttribute("viewBox");
       svg.setAttribute("width", "100%");
       svg.setAttribute("height", "100%");
@@ -1036,10 +1046,10 @@ function Scui(element_id){
 
       var imgsrc = tosave.outerHTML;
       imgsrc = 'data:image/svg+xml;base64,'+
-      btoa(
-         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
-         imgsrc
-      );
+         customBtoa(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+            imgsrc
+         );
 
       var body = document.querySelector("body");
       var a = body.appendChild(create_html_element("a"));
@@ -1082,7 +1092,7 @@ function Scui(element_id){
       );
 
       var imgsrc = svg.outerHTML;
-      imgsrc = 'data:image/svg+xml;base64,'+ btoa(imgsrc);
+      imgsrc = 'data:image/svg+xml;base64,' + customBtoa(imgsrc);
       var w = vbw*scale;
       var h = vbh*scale;
       var canvas = create_html_element("canvas");

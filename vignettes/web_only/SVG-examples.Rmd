@@ -1,0 +1,238 @@
+---
+title: "Preparing SVG: examples, tips and tricks"
+package: "bscui (version `r packageVersion('bscui')`)"
+output:
+   rmarkdown::html_document:
+      code_folding: show
+      number_sections: yes
+      self_contained: true
+      theme: cerulean
+      toc: yes
+      toc_float: yes
+      fig_width: 7
+      fig_height: 5
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r setup, message=FALSE, echo=FALSE, include=FALSE, cache=FALSE}
+library(knitr)
+opts_chunk$set(
+   include=TRUE,
+   echo=TRUE,
+   message=TRUE,
+   warning=TRUE,
+   cache=FALSE,
+   cache.lazy=FALSE
+)
+library(dplyr)
+library(here)
+```
+
+```{js, echo=FALSE}
+function toggleCollapse(id) {
+   var content = document.querySelector('#'+id);
+   if(content.style.display === 'none' || content.style.display === ''){
+      content.style.display = 'block';
+   }else{
+      content.style.display = 'none';
+   }
+}
+```
+
+```{css, echo=FALSE}
+/* Hide the content of the collapsible div by default */
+.collapsible {
+   display: none;
+   border: solid 1px black;
+   background-color: #FAFA000F;
+   margin: 5px 0px 5px 0px;
+   padding: 5px;
+}
+
+.collapse-button {
+   border: solid 1px black;
+   border-radius: 3px;
+   background-color: #CFCFCF;
+}
+```
+
+
+# Installation and requirements
+
+The following packages will be used.
+
+```{r}
+library(bscui)
+library(xml2)
+library(dplyr)
+```
+
+<!-- Collapsible sessionInfo -->
+<button class="collapse-button" onclick="toggleCollapse('sessionInfo')">
+Display session info
+</button>
+
+::: {#sessionInfo class="collapsible" style="margin-top:10px; margin-bottom:10px;"}
+
+Built on `r Sys.Date()` 
+
+```{r, class.source='fold-hide'}
+sessionInfo()
+```
+:::
+
+# Reading anatomograms
+
+## Original SVG
+
+From: https://github.com/ebi-gene-expression-group/anatomogram
+
+```{r}
+file_name <- "homo_sapiens.female.svg"
+svg <- read_xml(file.path(
+   "https://raw.githubusercontent.com",
+   "ebi-gene-expression-group/anatomogram",
+   "master/src/svg",
+   file_name
+))
+```
+
+## Extract element titles from the SVG
+
+```{r}
+get_element_titles <- function(x){
+   id <- xml_attr(x, "id")
+   children <- xml_children(x)
+   children_titles <- tibble(id=character(), label=character())
+   label <- character()
+   if(length(children) > 0) for(i in 1:length(children)){
+      child <- children[[i]]
+      if(xml_name(child) == "title"){
+         label <- xml_attr(child, "id")
+      }else{
+         children_titles <- children_titles |>
+            bind_rows(get_element_titles(child))
+      }
+   }
+   toRet <- tibble(id = id, label = label)  |>
+      bind_rows(children_titles) |>
+      filter(!is.na(id))
+   return(toRet)
+}
+element_titles <- get_element_titles(svg)
+```
+
+```{r}
+head(element_titles)
+```
+
+## Remove title elements from SVG
+
+```{r}
+namespace_element_nodes <- xml_find_all(
+   svg, "//namespace::*[name()='']/parent::*"
+)
+xml_attr(namespace_element_nodes, "xmlns") <- NULL
+titles <- xml_find_all(svg, "//title")
+for(to_remove in titles){
+   xml_remove(to_remove)
+}
+xml_attr(namespace_element_nodes[1], "xmlns") <- "http://www.w3.org/2000/svg"
+```
+
+```{r}
+write_xml(svg, file.path(here("inst/svg-examples"), file_name))
+```
+
+```{r}
+bscui(svg)
+```
+
+# Reading swissbiopics
+
+## Read original SVG
+
+From: https://www.swissbiopics.org/
+
+```{r}
+file_name <- "Animal_cells.svg"
+svg <- read_xml(file.path(
+   "https://www.swissbiopics.org/",
+   "api/image",
+   file_name
+))
+```
+
+## Remove text elements from SVG
+
+```{r}
+namespace_element_nodes <- xml_find_all(
+   svg, "//namespace::*[name()='']/parent::*"
+)
+xml_attr(namespace_element_nodes, "xmlns") <- NULL
+titles <- xml_find_all(svg, "//text")
+for(to_remove in titles){
+   xml_remove(to_remove)
+}
+xml_attr(namespace_element_nodes[1], "xmlns") <- "http://www.w3.org/2000/svg"
+```
+
+
+```{r}
+write_xml(svg, file.path(here("inst/svg-examples"), file_name))
+```
+
+
+```{r}
+bscui(svg)
+```
+
+# Read wikipathways
+
+## Read original SVG
+
+From: https://www.wikipathways.org/
+
+```{r}
+pid <- "WP4657"
+# pid <- "WP521"
+file_name <- paste0(pid, ".svg")
+svg <- read_xml(file.path(
+   "https://www.wikipathways.org",
+   "wikipathways-assets/pathways",
+   pid,
+   file_name
+))
+```
+
+## Extract href
+
+```{r}
+namespace_element_nodes <- xml_find_all(
+   svg, "//namespace::*[name()='']/parent::*"
+)
+xml_attr(namespace_element_nodes, "xmlns") <- NULL
+a <- xml_find_all(svg, "//a")
+href <- tibble(
+   id = xml_attr(a, "id"),
+   href = xml_attr(a, "href")
+)
+xml_attr(a, "target") <- NULL
+xml_attr(namespace_element_nodes[1], "xmlns") <- "http://www.w3.org/2000/svg"
+svg <- as.character(svg) |>
+   stringr::str_remove_all('xlink:href="https?://[^"]*"') |>
+   read_xml()
+```
+
+
+```{r}
+write_xml(svg, file.path(here("inst/svg-examples"), file_name))
+```
+
+
+
+```{r}
+bscui(svg)
+```

@@ -12,3 +12,4 @@
 ^README.html$
 ^_pkgdown\.yml$
 ^pkgdown$
+vignettes/web_only

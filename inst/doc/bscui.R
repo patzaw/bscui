@@ -12,9 +12,12 @@ library(bscui)
 library(dplyr)
 library(xml2)
 
+## ----class.source='fold-hide'-------------------------------------------------
+sessionInfo()
+
 ## -----------------------------------------------------------------------------
 svg <- xml2::read_xml(system.file(
-   "svg-examples", "Epithelial_cells.svg",
+   "svg-examples", "Animal_cells.svg",
    package="bscui"
 ))
 xml2::xml_ns_strip(svg)
@@ -22,5 +25,5 @@ texts <- xml2::xml_find_all(svg, "//text")
 for(to_remove in texts){
    xml2::xml_remove(to_remove)
 }
-bscui(svg, menu_width="30px")
+bscui(svg)
 

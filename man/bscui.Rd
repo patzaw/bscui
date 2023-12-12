@@ -9,7 +9,7 @@ bscui(
   ui_elements = NULL,
   element_styles = NULL,
   show_menu = TRUE,
-  menu_width = "20px",
+  menu_width = "30px",
   zoom_min = 0.5,
   zoom_max = 20,
   zoom_step = 1.1,
@@ -23,6 +23,7 @@ bscui(
     "path"),
   dblclick_timeout = 250,
   hover_timeout = 100,
+  sanitize_attributes = TRUE,
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -73,6 +74,9 @@ drawing ("text" excluded by default)}
 \item{dblclick_timeout}{minimum time between 2 independant clicks}
 
 \item{hover_timeout}{time before update hovered element}
+
+\item{sanitize_attributes}{logical indicating if
+'<' and '>' characters in element attributes must be replaced by text}
 
 \item{width, height}{widget width: must be a valid CSS unit (like \code{'100\\\%'},
 \code{'400px'}, \code{'auto'}) or a number, which will be coerced to a

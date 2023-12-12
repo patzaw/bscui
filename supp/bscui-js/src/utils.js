@@ -122,3 +122,44 @@ function get_all_descendant_ids(element) {
    // Return the array of descendant IDs
    return(toRet);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+/**
+ * Get b64 representation of a string with special characters
+ *
+ * @param {string} str string to convert
+ * 
+ * @returns {string} base64 converted string
+ *
+ */
+function customBtoa(str) {
+   str = str.replace(/[\u00A0-\u2666]/g, function (c) {
+      return '&#' + c.charCodeAt(0) + ';';
+   });
+   return(btoa(str));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/**
+ * Remove '>' and '<' character from attribtue values
+ *
+ * @param {object} element object to sanitize
+ * 
+ */
+function sanitize_attr(element) {
+   // Check if the element has attributes
+   if (element.nodeType === 1 && element.hasAttributes()) {
+      // Loop through each attribute of the element
+      for (let i = 0; i < element.attributes.length; i++) {
+         const attribute = element.attributes[i];
+
+         // Replace the string in the attribute value
+         attribute.value = attribute.value.replace(
+            /\s*<\s*/g, ' less than '
+         );
+         attribute.value = attribute.value.replace(
+            /\s*>\s*/g, ' greater than '
+         );
+      }
+   }
+}

@@ -9,6 +9,7 @@ editor_options:
 ---
 
 ```{r setup, include = FALSE}
+library(here)
 library(knitr)
 library(bscui)
 library(base64enc)
@@ -24,14 +25,14 @@ cranRef <- function(x){
 logo64 <- dataURI(file=here("supp/logo/bscui-medium.png"))
 ```
 
-# bscui `r img(src=logo64, alt="logo", align="right", width="120px")`
+# Build SVG Custom User Interface `r img(src=logo64, alt="logo", align="right", width="120px")`
 
 <!--
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bscui)](https://cran.r-project.org/package=bsui)
 [![](http://cranlogs.r-pkg.org/badges/bsui)](https://cran.r-project.org/package=bsui)
 -->
 
-Produce interactive SVG figures with selectable and clickable user
+Render SVG as interactive figures with selectable and clickable user
 interface elements. These figures can be integrated in markdown documents or
 in shiny applications reacting to events triggered on them.
 Features also include moving, zoom in/out and export in SVG or PNG formats.
@@ -60,7 +61,7 @@ for(p in sdeps$package){
 }
 ```
 
-And those are suggested:
+And those are suggested for building the vignettes and running some examples:
 
 ```{r, echo=FALSE, results='asis'}
 wdeps <- filter(deps, type=="Suggests" & package!="R")
