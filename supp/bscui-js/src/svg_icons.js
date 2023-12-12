@@ -172,6 +172,7 @@ function create_svg_icon(icon, title, fill = "#FFFFFF00"){
    </g>
    `;
    toRet.setAttribute("viewBox", icons[i].viewBox);
+   toRet.style.cursor= "pointer";
 
    return(toRet);
 };
