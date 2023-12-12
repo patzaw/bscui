@@ -26,8 +26,13 @@ opts_chunk$set(
    cache=FALSE,
    cache.lazy=FALSE
 )
-library(dplyr)
 library(here)
+library(bscui)
+library(xml2)
+library(dplyr)
+library(readr)
+##
+data_dir <- here("inst/svg-examples")
 ```
 
 ```{js, echo=FALSE}
@@ -67,6 +72,7 @@ The following packages will be used.
 library(bscui)
 library(xml2)
 library(dplyr)
+library(readr)
 ```
 
 <!-- Collapsible sessionInfo -->
@@ -142,8 +148,8 @@ for(to_remove in titles){
 xml_attr(namespace_element_nodes[1], "xmlns") <- "http://www.w3.org/2000/svg"
 ```
 
-```{r}
-write_xml(svg, file.path(here("inst/svg-examples"), file_name))
+```{r, echo=FALSE}
+write_xml(svg, file.path(data_dir, file_name))
 ```
 
 ```{r}
@@ -180,13 +186,31 @@ xml_attr(namespace_element_nodes[1], "xmlns") <- "http://www.w3.org/2000/svg"
 ```
 
 
-```{r}
-write_xml(svg, file.path(here("inst/svg-examples"), file_name))
+```{r, echo=FALSE}
+write_xml(svg, file.path(data_dir, file_name))
 ```
-
 
 ```{r}
 bscui(svg)
+```
+
+## Get cellular location information
+
+```{r}
+tmp_file <- tempfile(fileext=".txt.gz")
+info <- download.file(
+   url = "https://rest.uniprot.org/locations/stream?compressed=true&fields=id%2Cname%2Ccategory%2Cdefinition%2Ccontent%2Cgene_ontologies&format=tsv&query=%28*%29",
+   destfile = tmp_file
+)
+info <- readr::read_tsv(
+   tmp_file,
+   col_types = strrep("c", 6)
+)
+```
+
+```{r, echo=FALSE}
+file_name <- "uniprot_cellular_locations.txt.gz"
+readr::write_tsv(info, file=file.path(data_dir, file_name))
 ```
 
 # Read wikipathways
@@ -227,8 +251,8 @@ svg <- as.character(svg) |>
 ```
 
 
-```{r}
-write_xml(svg, file.path(here("inst/svg-examples"), file_name))
+```{r, echo=FALSE}
+write_xml(svg, file.path(data_dir, file_name))
 ```
 
 

@@ -961,6 +961,7 @@ function Scui(element_id){
          if(!scheduled){
             scheduled = true;
             setTimeout(function() {
+               svg.style.cursor = "grabbing";
                var viewBox = svg.getAttribute("viewBox").split(" ");
                var x = Number(viewBox[0]);
                var y = Number(viewBox[1]);
@@ -1006,6 +1007,7 @@ function Scui(element_id){
       svg.addEventListener("mousemove", move_viewBox);
       svg.addEventListener("mouseup", function(event){
          svg.removeEventListener("mousemove", move_viewBox);
+         svg.style.cursor = "auto";
          event.stopPropagation();
          event.preventDefault();
       });

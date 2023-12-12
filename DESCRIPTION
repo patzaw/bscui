@@ -9,10 +9,11 @@ Authors@R: c(
         email = "patrice.godard@gmail.com"
     )
     )
-Description: Render SVG as interactive figures with selectable and clickable
-   user interface elements. These figures can be integrated in markdown
+Description: Render SVG as interactive figures to diplay contextual information,
+   with selectable and clickable user interface elements.
+   These figures can be integrated in markdown
    documents or in shiny applications reacting to events triggered on them.
-   Features also include moving, zoom in/out and export in SVG or PNG formats.
+   Features also include pan, zoom in/out and export in SVG or PNG formats.
 URL:
    https://patzaw.github.io/bscui/,
    https://github.com/patzaw/bscui/
@@ -30,6 +31,7 @@ Suggests:
    readr,
    stringr,
    glue,
+   htmltools,
    shiny,
    DT,
    colourpicker

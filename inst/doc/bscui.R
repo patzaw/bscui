@@ -11,6 +11,27 @@ opts_chunk$set(
 library(bscui)
 library(dplyr)
 library(xml2)
+library(dplyr)
+library(readr)
+library(htmltools)
+library(stringr)
+library(glue)
+library(DT)
+
+## ----eval = FALSE-------------------------------------------------------------
+#  ## Dependencies
+#  install.packages("htmlwidgets")
+#  ## Install from github
+#  devtools::install_github("patzaw/bscui")
+
+## ----eval = FALSE-------------------------------------------------------------
+#  library(xml2)
+#  library(dplyr)
+#  library(readr)
+#  library(htmltools)
+#  library(stringr)
+#  library(glue)
+#  library(DT)
 
 ## ----class.source='fold-hide'-------------------------------------------------
 sessionInfo()
@@ -20,10 +41,61 @@ svg <- xml2::read_xml(system.file(
    "svg-examples", "Animal_cells.svg",
    package="bscui"
 ))
-xml2::xml_ns_strip(svg)
-texts <- xml2::xml_find_all(svg, "//text")
-for(to_remove in texts){
-   xml2::xml_remove(to_remove)
-}
-bscui(svg)
+
+## -----------------------------------------------------------------------------
+figure <- bscui(svg)
+figure
+
+## -----------------------------------------------------------------------------
+info <- readr::read_tsv(system.file(
+   "svg-examples", "uniprot_cellular_locations.txt.gz",
+   package="bscui"
+), col_types=strrep("c", 6)) |> 
+   mutate(id = str_remove(`Subcellular location ID`, "-"))
+
+## -----------------------------------------------------------------------------
+ui_elements <- info |> 
+   mutate(
+      ui_type = "selectable",
+      title = glue(
+         '<div style="width:300px; height:100px; overflow:auto; padding:5px;',
+         'border:black 1px solid; background:#FFFFF0AA;">',
+         "<strong>{Name}</strong>: {Description}",
+         "</div>",
+         .sep=" "
+      )
+      # title = glue(
+      #    '<div style="background:#FFFF0080; padding:5px;">',
+      #    '{Name}<div>'
+      # )
+   ) |>
+   select(id, ui_type, title)
+
+## -----------------------------------------------------------------------------
+bscui(svg, ui_elements = ui_elements)
+# figure <- figure |> 
+#    bscuiElements(ui_elements)
+# figure
+
+## -----------------------------------------------------------------------------
+element_styles <- bind_rows(
+   info |>
+      filter(Name == "Cytosol") |>
+      mutate(fill = "#FF7F7F"),
+   info |>
+      filter(Name == "Nucleoplasm") |>
+      mutate(fill = "#7F7FFF"),
+   info |>
+      filter(Name == "Endosome") |>
+      mutate(stroke = "yellow", strokeWidth = "2px")
+) |> 
+   select(
+      id, fill, stroke, strokeWidth
+   )
+
+## -----------------------------------------------------------------------------
+bscui(svg, ui_elements = ui_elements, element_styles = element_styles)
+# figure <- figure |> 
+#    bscuiStyles(elements)
+# figure
 

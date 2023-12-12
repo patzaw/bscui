@@ -32,6 +32,12 @@ opts_chunk$set(
 library(bscui)
 library(dplyr)
 library(xml2)
+library(dplyr)
+library(readr)
+library(htmltools)
+library(stringr)
+library(glue)
+library(DT)
 ```
 
 ```{js, echo=FALSE}
@@ -59,11 +65,69 @@ function toggleCollapse(id) {
    border: solid 1px black;
    border-radius: 3px;
    background-color: #CFCFCF;
+   margin-top: 10px;
+   margin-bottom: 20px;
 }
 ```
 
+The aim of the 'bscui' R package is to use any SVG image as an interactive figure
+on which contextual information can be displayed.
+These figures can be integrated
+in [R Markdown](https://rmarkdown.rstudio.com/)/[Quarto](https://quarto.org/)
+documents or in [Shiny](https://shiny.posit.co/) applications.
+
+Here are the main features of 'bscui' figures:
+
+   - Interactive view: pan, zoom in/out
+   - Update the style (e.g., color, stroke, opacity...) of SVG elements
+   - Update the attribute (e.g., path) of SVG elements
+   - Add or remove SVG elements
+   - Export the figure in SVG or PNG format
+   - Display contextual information when hovering over SVG elements
+   - Select one or multiple SVG elements (mainly used with Shiny)
+   - Click on elements (mainly used with Shiny)
+
+The main motivation behind the development of this package was to be able
+to leverage SVG images kindly shared in public knowledge resources
+(e.g.,
+[EBI anatomograms](https://ebi-gene-expression-group.github.io/anatomogram/),
+[SwissBioPics](https://www.swissbiopics.org/),
+or [wikipathways](https://www.wikipathways.org/)
+)
+to display and browse information in the relevant contexts.
+
+The package comes with several pre-processed
+examples used to demonstrate the available features, as shown in this document.
 
 # Installation and requirements
+
+The 'bscui' R package is currently available
+in [github](https://github.com/patzaw/bscui/).
+
+```{r, eval = FALSE}
+## Dependencies
+install.packages("htmlwidgets")
+## Install from github
+devtools::install_github("patzaw/bscui")
+```
+
+Hopefully 'bscui' will be available soon on [CRAN](https://cran.r-project.org/).
+
+## Vignette requirements
+
+The following packages are not dependencies of 'bscui' strictly speaking but 
+are required to run code examples discussed in this document.
+
+```{r, eval = FALSE}
+library(xml2)
+library(dplyr)
+library(readr)
+library(htmltools)
+library(stringr)
+library(glue)
+library(DT)
+```
+
 
 <!-- Collapsible sessionInfo -->
 <button class="collapse-button" onclick="toggleCollapse('sessionInfo')">
@@ -79,17 +143,125 @@ sessionInfo()
 ```
 :::
 
-# Simple use
+- [xml2](https://cran.r-project.org/package=xml2) is used to read SVG files
+- [readr](https://cran.r-project.org/package=readr),
+[dplyr](https://cran.r-project.org/package=readr) and
+[DT](https://cran.r-project.org/package=DT) are used to read, manipulate and
+show tables with information to display on figures
+- [stringr](https://cran.r-project.org/package=stringr),
+[glue](https://cran.r-project.org/package=glue) and
+[htmltools](https://cran.r-project.org/package=htmltools) are used to facilitate
+the creation of html tags
+
+# Simple use in R session or static documents
+
+The main function of the package is `bscui()`. It takes as main argument
+a character string with SVG code.
+The use of [xml2](https://cran.r-project.org/package=xml2) to read SVG files is
+not mandatory but it can be useful to validate the SVG and manipulate it before
+displaying it.
+
+## Animal cells example
+
+This example relies on a figure of animal cells taken
+from [SwissBioPics](https://www.swissbiopics.org/name/Animal_cell).
 
 ```{r}
 svg <- xml2::read_xml(system.file(
    "svg-examples", "Animal_cells.svg",
    package="bscui"
 ))
-xml2::xml_ns_strip(svg)
-texts <- xml2::xml_find_all(svg, "//text")
-for(to_remove in texts){
-   xml2::xml_remove(to_remove)
-}
-bscui(svg)
 ```
+
+The simplest way to display the figure is shown below.
+
+```{r}
+figure <- bscui(svg)
+figure
+```
+
+The figure can be grabbed with mouse and enlarged or shrunk using
+the mouse wheel. Clicking on the button at the top-left corner of
+the figure displays a menu with various functions, including
+resetting the view and exporting the figure in SVG or PNG format.
+Several configuration choices are made by default but can be changed,
+such as the zoom range or the width of the menu.
+
+## Defining UI elements
+
+User Interface (UI) elements are provided as a data frame with the following
+columns:
+
+   - **id**: the element identifier
+   - **ui_type**: either "selectable" (several elements can be selected),
+   "button" (action will be triggered on click), "none" (no ui)
+   - **title**: a description of the element to display on mouseover event
+
+```{r}
+info <- readr::read_tsv(system.file(
+   "svg-examples", "uniprot_cellular_locations.txt.gz",
+   package="bscui"
+), col_types=strrep("c", 6)) |> 
+   mutate(id = str_remove(`Subcellular location ID`, "-"))
+```
+
+```{r}
+ui_elements <- info |> 
+   mutate(
+      ui_type = "selectable",
+      title = glue(
+         '<div style="width:300px; height:100px; overflow:auto; padding:5px;',
+         'border:black 1px solid; background:#FFFFF0AA;">',
+         "<strong>{Name}</strong>: {Description}",
+         "</div>",
+         .sep=" "
+      )
+      # title = glue(
+      #    '<div style="background:#FFFF0080; padding:5px;">',
+      #    '{Name}<div>'
+      # )
+   ) |>
+   select(id, ui_type, title)
+```
+
+```{r}
+bscui(svg, ui_elements = ui_elements)
+# figure <- figure |> 
+#    bscuiElements(ui_elements)
+# figure
+```
+
+## Setting element styles
+
+```{r}
+element_styles <- bind_rows(
+   info |>
+      filter(Name == "Cytosol") |>
+      mutate(fill = "#FF7F7F"),
+   info |>
+      filter(Name == "Nucleoplasm") |>
+      mutate(fill = "#7F7FFF"),
+   info |>
+      filter(Name == "Endosome") |>
+      mutate(stroke = "yellow", strokeWidth = "2px")
+) |> 
+   select(
+      id, fill, stroke, strokeWidth
+   )
+```
+
+```{r}
+bscui(svg, ui_elements = ui_elements, element_styles = element_styles)
+# figure <- figure |> 
+#    bscuiStyles(elements)
+# figure
+```
+
+
+
+# Shiny applications
+
+## Reacting
+
+## Updating
+
