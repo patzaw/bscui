@@ -31,7 +31,6 @@ Suggests:
    readr,
    stringr,
    glue,
-   htmltools,
    shiny,
    DT,
    colourpicker

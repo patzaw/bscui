@@ -13,7 +13,6 @@ library(dplyr)
 library(xml2)
 library(dplyr)
 library(readr)
-library(htmltools)
 library(stringr)
 library(glue)
 library(DT)
@@ -59,15 +58,12 @@ ui_elements <- info |>
       ui_type = "selectable",
       title = glue(
          '<div style="width:300px; height:100px; overflow:auto; padding:5px;',
+         'font-size:75%;',
          'border:black 1px solid; background:#FFFFF0AA;">',
          "<strong>{Name}</strong>: {Description}",
          "</div>",
          .sep=" "
       )
-      # title = glue(
-      #    '<div style="background:#FFFF0080; padding:5px;">',
-      #    '{Name}<div>'
-      # )
    ) |>
    select(id, ui_type, title)
 
