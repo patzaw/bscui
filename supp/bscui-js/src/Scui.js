@@ -766,7 +766,9 @@ function Scui(element_id){
          for (let i = 0; i < element_styles.id.length; i++) {
             let id = element_styles.id[i];
             let element = svg.getElementById(id);
-            set_by_node(element, i)
+            if(element){
+               set_by_node(element, i)
+            }
          }
       }
    }
