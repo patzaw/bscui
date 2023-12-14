@@ -66,32 +66,29 @@ ui_elements <- info |>
       )
    ) |>
    select(id, ui_type, title)
+figure <- bscui(svg, ui_elements = ui_elements)
+figure
 
 ## -----------------------------------------------------------------------------
-bscui(svg, ui_elements = ui_elements)
-# figure <- figure |> 
-#    bscuiElements(ui_elements)
-# figure
-
-## -----------------------------------------------------------------------------
-element_styles <- bind_rows(
-   info |>
-      filter(Name == "Cytosol") |>
-      mutate(fill = "#FF7F7F"),
-   info |>
-      filter(Name == "Nucleoplasm") |>
-      mutate(fill = "#7F7FFF"),
-   info |>
-      filter(Name == "Endosome") |>
-      mutate(stroke = "yellow", strokeWidth = "2px")
-) |> 
-   select(
-      id, fill, stroke, strokeWidth
+figure <- figure |> 
+   set_bscui_styles(
+      bind_rows(
+         info |>
+            filter(Name == "Cytosol") |>
+            mutate(fill = "#FF7F7F"),
+         info |>
+            filter(Name == "Nucleoplasm") |>
+            mutate(fill = "#7F7FFF")
+      ) |> 
+         select(
+            id, fill
+         )
+   ) |> 
+   set_bscui_styles(
+      info |>
+         filter(Name == "Endosome") |>
+         mutate(stroke = "yellow", strokeWidth = "2px") |> 
+         select(id, stroke, strokeWidth)
    )
-
-## -----------------------------------------------------------------------------
-bscui(svg, ui_elements = ui_elements, element_styles = element_styles)
-# figure <- figure |> 
-#    bscuiStyles(elements)
-# figure
+figure
 

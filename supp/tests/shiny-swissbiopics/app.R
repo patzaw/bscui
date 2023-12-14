@@ -108,7 +108,7 @@ server <- function(input, output, session){
       )
    })
    observeEvent(input$apply_styles, {
-      set_bscui_element_styles(
+      update_bscui_styles(
          ui_prox,
          element_styles = tibble(
             fill=input$fill,

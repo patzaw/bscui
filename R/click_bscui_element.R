@@ -1,22 +1,22 @@
 ###############################################################################@
 #' Trigger a click event on a clickable element
 #'
-#' @param bscui a [`bscui_Proxy`] object
+#' @param proxy a [`bscui_Proxy`] object
 #' @param element_id element identifier on which the click will be triggered
 #' @param dbl_click logical indicating the type of click
 #' (default: FALSE => single click is triggered)
 #'
-#' @return the provided bscui object
+#' @return the provided proxy object
 #'
 #' @export
 #'
-click_bscui_element <- function(bscui, element_id, dbl_click=FALSE){
-   if(!any(class(bscui) %in% "bscui_Proxy")){
+click_bscui_element <- function(proxy, element_id, dbl_click=FALSE){
+   if(!any(class(proxy) %in% "bscui_Proxy")){
       stop(
          "You can use click_bscui_element only within shiny & using bscui_Proxy"
       )
    }
-   data <- list(id = bscui$id, element_id = element_id, dbl_click = dbl_click)
-   bscui$session$sendCustomMessage("bscuiShinyClick", data)
-   bscui
+   data <- list(id = proxy$id, element_id = element_id, dbl_click = dbl_click)
+   proxy$session$sendCustomMessage("bscuiShinyClick", data)
+   proxy
 }

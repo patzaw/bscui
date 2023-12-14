@@ -4,13 +4,13 @@
 \alias{get_bscui_svg}
 \title{Get the displayed SVG}
 \usage{
-get_bscui_svg(bscui)
+get_bscui_svg(proxy)
 }
 \arguments{
-\item{bscui}{a \code{\link{bscui_Proxy}} object}
+\item{proxy}{a \code{\link{bscui_Proxy}} object}
 }
 \value{
-the provided bscui object
+the provided proxy object
 }
 \description{
 Get the displayed SVG

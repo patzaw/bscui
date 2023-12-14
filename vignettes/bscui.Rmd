@@ -192,8 +192,12 @@ columns:
 
    - **id**: the element identifier
    - **ui_type**: either "selectable" (several elements can be selected),
-   "button" (action will be triggered on click), "none" (no ui)
-   - **title**: a description of the element to display on mouseover event
+   "button" (action will be triggered by clicking), "none" (no action on click)
+   - **title**: a description of the element to display the mouse hovers
+   over the element
+   
+Information about the different part of a cell were taken
+from [UniProt](https://www.uniprot.org/locations).
 
 ```{r}
 info <- readr::read_tsv(system.file(
@@ -202,6 +206,8 @@ info <- readr::read_tsv(system.file(
 ), col_types=strrep("c", 6)) |> 
    mutate(id = str_remove(`Subcellular location ID`, "-"))
 ```
+
+The title feature can take simple text or a valid html element as shown below. 
 
 ```{r}
 ui_elements <- info |> 
@@ -217,40 +223,40 @@ ui_elements <- info |>
       )
    ) |>
    select(id, ui_type, title)
-```
-
-```{r}
-bscui(svg, ui_elements = ui_elements)
-# figure <- figure |> 
-#    bscuiElements(ui_elements)
-# figure
+figure <- bscui(svg, ui_elements = ui_elements)
+figure
 ```
 
 ## Setting element styles
 
-```{r}
-element_styles <- bind_rows(
-   info |>
-      filter(Name == "Cytosol") |>
-      mutate(fill = "#FF7F7F"),
-   info |>
-      filter(Name == "Nucleoplasm") |>
-      mutate(fill = "#7F7FFF"),
-   info |>
-      filter(Name == "Endosome") |>
-      mutate(stroke = "yellow", strokeWidth = "2px")
-) |> 
-   select(
-      id, fill, stroke, strokeWidth
-   )
-```
+The style of the elements can be changed with the `set_bscui_styles()` function.
+This function can be called several times to change different elements or
+different options.
 
 ```{r}
-bscui(svg, ui_elements = ui_elements, element_styles = element_styles)
-# figure <- figure |> 
-#    bscuiStyles(elements)
-# figure
+figure <- figure |> 
+   set_bscui_styles(
+      bind_rows(
+         info |>
+            filter(Name == "Cytosol") |>
+            mutate(fill = "#FF7F7F"),
+         info |>
+            filter(Name == "Nucleoplasm") |>
+            mutate(fill = "#7F7FFF")
+      ) |> 
+         select(
+            id, fill
+         )
+   ) |> 
+   set_bscui_styles(
+      info |>
+         filter(Name == "Endosome") |>
+         mutate(stroke = "yellow", strokeWidth = "2px") |> 
+         select(id, stroke, strokeWidth)
+   )
+figure
 ```
+
 
 
 

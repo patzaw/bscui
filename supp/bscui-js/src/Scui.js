@@ -28,6 +28,7 @@ function Scui(element_id){
    this.hover_event = null;
    this.selected = new Set();
    this.hovered = null;
+   this.show_tooltips = true;
    this.clientX = null;
    this.clientY = null;
    this.button = { n: 0, id: null, click: null };
@@ -41,7 +42,7 @@ function Scui(element_id){
    this.png_scale = null;
    this.default_png_scale = null;
 
-   // State
+   // View state
    this.zoom_current = null;
    this.stop_zoom = false;
    this.moved = false;
@@ -181,6 +182,17 @@ function Scui(element_id){
       var zoomout_button = create_svg_icon("zoom_out", "Zoom out");
       menu_items.appendChild(zoomout_button);
 
+      var tooltips_button = create_svg_icon(
+         "hide_tooltips", "Hide tooltips"
+      );
+      menu_items.appendChild(tooltips_button);
+      var show_tooltips_button = create_svg_icon(
+         "show_tooltips", "Show tooltips"
+      );
+      var hide_tooltips_button = create_svg_icon(
+         "hide_tooltips", "Hide tooltips"
+      );
+
       //
       menu_items.appendChild(msep_elt.cloneNode(true));
 
@@ -243,6 +255,42 @@ function Scui(element_id){
       zoomout_button.addEventListener("click", function(event){
          scui.zoom_out();
       });
+      tooltips_button.addEventListener("click", function (event) {
+         scui.show_tooltips = !scui.show_tooltips;
+         if(scui.show_tooltips){
+            tooltips_button.getElementsByTagName("path")[0].setAttribute(
+               "d",
+               hide_tooltips_button.getElementsByTagName("path")[0].
+                  getAttribute("d")
+            );
+            tooltips_button.getElementsByTagName("title")[0].textContent =
+               hide_tooltips_button.getElementsByTagName("title")[0].
+                  textContent;
+            svg.dispatchEvent(scui.hover_event);
+         } else {
+            tooltips_button.getElementsByTagName("path")[0].setAttribute(
+               "d",
+               show_tooltips_button.getElementsByTagName("path")[0].
+                  getAttribute("d")
+            );
+            tooltips_button.getElementsByTagName("title")[0].textContent =
+               show_tooltips_button.getElementsByTagName("title")[0].
+                  textContent;
+            tooltip.style.visibility = "hidden";
+         }
+      });
+      var tooltips_key = function (event) {
+         if (event.key == "Escape") {
+            let clickEvent = new Event("click");
+            tooltips_button.dispatchEvent(clickEvent);
+         }
+      };
+      svg.addEventListener("mouseover", function(event){
+         document.addEventListener("keyup", tooltips_key)
+      })
+      svg.addEventListener("mouseout", function (event) {
+         document.removeEventListener("keyup", tooltips_key)
+      })
       savepng_button.addEventListener("click", function(event){
          scui.save_png();
       });
@@ -260,14 +308,12 @@ function Scui(element_id){
          scalepng_ui.style.display = "none";
          scalepng_button.style.display = "block";
       });
-      // png_scale.addEventListener('focus', function () {
-         png_scale.addEventListener("keydown", function(event){
-            if(event.key == "Enter"){
-               let clickEvent = new Event("click");
-               closeui_button.dispatchEvent(clickEvent);
-            }
-         });
-      // });
+      png_scale.addEventListener("keyup", function(event){
+         if(event.key == "Enter"){
+            let clickEvent = new Event("click");
+            closeui_button.dispatchEvent(clickEvent);
+         }
+      });
 
       // Add to the document
       el.appendChild(div);
@@ -320,7 +366,13 @@ function Scui(element_id){
             }
          }
       }
-      scui.set_element_styles(element_styles);
+      element_styles.forEach(es => {
+         scui.set_element_styles(
+            es.element_styles,
+            es.to_ignore,
+            es.targeted_tags
+         );
+      });
 
       // Adapt viewbox
       function wait_for_svg_to_be_rendered(widget_id) {
@@ -364,76 +416,18 @@ function Scui(element_id){
       // Interaction Events
       var mouse_move_timer;
       svg.addEventListener("mousemove", function (event) {
-
          var target = event.target;
          var target_ids = get_ancestors_ids(target);
          var hovered = array_intersect(
             target_ids,
             scui.ui_elements.id
          )[0];
-         // var existing = svg.getElementById("hovered_shape");
-         // if(hovered){
-         //    var renew = false;
-         //    if(existing){
-         //       if(hovered == existing.getAttribute("data-element")){
-         //          renew = false;
-         //       }else{
-         //          scui.sel_group.removeChild(existing);
-         //          renew = true;
-         //       }
-         //    }else{
-         //       renew = true;
-         //    }
-         //    if (renew) {
-         //       var element_category = "none";
-         //       if (scui.selectable.has(hovered)){
-         //          element_category = "selectable";
-         //       }
-         //       if (scui.buttons.has(hovered)) {
-         //          element_category = "button";
-         //       }
-         //       var color = hover_color[element_category];
-         //       if(color){
-         //          var to_add = svg.getElementById(hovered).cloneNode(true);
-         //          to_add.setAttribute("data-element", hovered);
-         //          to_add.id = "hovered_shape";
-         //          to_add.style.visibility = "visible";
-         //          to_add.style.pointerEvents = 'none';
-         //          if(scui.structure_shapes.has(to_add.tagName)){
-         //             to_add.style.fill = "none";
-         //             to_add.style.stroke = color;
-         //             to_add.style.strokeWidth = to_add.style.strokeWidth + 4;
-         //             to_add.style.strokeOpacity = 1;
-         //             to_add.style.opacity = hover_opacity;
-         //          }
-         //          scui.structure_shapes.forEach(shape => {
-         //             let selected_elements = to_add.getElementsByTagName(shape);
-         //             Array.from(selected_elements).forEach(to_mod => {
-         //                to_mod.id = null;
-         //                to_mod.style.fill = "none";
-         //                to_mod.style.stroke = color;
-         //                to_mod.style.visibility = "visible";
-         //                to_mod.style.strokeWidth = to_mod.style.strokeWidth + 4;
-         //                to_mod.style.strokeOpacity = 1;
-         //                to_mod.style.opacity = hover_opacity;
-         //                to_mod.style.pointerEvents = 'none';
-         //             });
-         //          });
-         //          scui.sel_group.appendChild(to_add);
-         //       }
-         //    }
-         // }else{
-         //    if(existing){
-         //       scui.sel_group.removeChild(existing);
-         //    }
-         // }
-
          clearTimeout(mouse_move_timer);
          mouse_move_timer = setTimeout(function(){
             scui.hovered = hovered;
             scui.clientX = event.clientX;
             scui.clientY = event.clientY;
-            svg.dispatchEvent(scui.hover_event)
+            svg.dispatchEvent(scui.hover_event);
          }, hover_timeout)
       });
 
@@ -501,31 +495,33 @@ function Scui(element_id){
                }
             }
 
-            var exists = false;
-            if (tooltip.style.visibility == "visible") {
-               if (tooltip.getAttribute("data-element") != scui.hovered) {
-                  tooltip.style.visibility = "hidden";
-               } else {
-                  exists = true
+            if(scui.show_tooltips){
+               var exists = false;
+               if (tooltip.style.visibility == "visible") {
+                  if (tooltip.getAttribute("data-element") != scui.hovered) {
+                     tooltip.style.visibility = "hidden";
+                  } else {
+                     exists = true
+                  }
                }
-            }
-            if (!exists) {
-               var ind = scui.ui_elements.id.indexOf(scui.hovered);
-               var title = scui.ui_elements.title[ind];
-               if (title) {
-                  tooltip.innerHTML = title;
-                  var x = scui.clientX -
-                     container.getBoundingClientRect().left +
-                     container.scrollLeft + 20;
-                  var y = scui.clientY -
-                     container.getBoundingClientRect().top +
-                     container.scrollTop + 15;
-                  tooltip.style.left = x + "px";
-                  tooltip.style.top = y + "px";
-                  tooltip.style.display = "block";
-                  tooltip.style.position = "absolute";
-                  tooltip.setAttribute("data-element", scui.hovered);
-                  tooltip.style.visibility = "visible";
+               if (!exists) {
+                  var ind = scui.ui_elements.id.indexOf(scui.hovered);
+                  var title = scui.ui_elements.title[ind];
+                  if (title) {
+                     tooltip.innerHTML = title;
+                     var x = scui.clientX -
+                        container.getBoundingClientRect().left +
+                        container.scrollLeft + 20;
+                     var y = scui.clientY -
+                        container.getBoundingClientRect().top +
+                        container.scrollTop + 15;
+                     tooltip.style.left = x + "px";
+                     tooltip.style.top = y + "px";
+                     tooltip.style.display = "block";
+                     tooltip.style.position = "absolute";
+                     tooltip.setAttribute("data-element", scui.hovered);
+                     tooltip.style.visibility = "visible";
+                  }
                }
             }
          } else {
@@ -747,8 +743,10 @@ function Scui(element_id){
       targeted_tags = new Set(targeted_tags);
 
       var set_by_node = function(node, i){
-         if(to_ignore.includes(node.id)){
-            return;
+         if(to_ignore){
+            if(to_ignore.includes(node.id)){
+               return;
+            }
          }
          if(targeted_tags.has(node.tagName)){
             for (let pname in element_styles) {

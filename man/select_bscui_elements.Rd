@@ -4,16 +4,16 @@
 \alias{select_bscui_elements}
 \title{Replace current selection with given element identifiers}
 \usage{
-select_bscui_elements(bscui, element_ids)
+select_bscui_elements(proxy, element_ids)
 }
 \arguments{
-\item{bscui}{a \code{\link{bscui_Proxy}} object}
+\item{proxy}{a \code{\link{bscui_Proxy}} object}
 
 \item{element_ids}{element identifiers to add to the selection; empty clear
 the selection}
 }
 \value{
-the provided bscui object
+the provided proxy object
 }
 \description{
 Replace current selection with given element identifiers

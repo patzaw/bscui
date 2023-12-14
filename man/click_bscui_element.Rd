@@ -4,10 +4,10 @@
 \alias{click_bscui_element}
 \title{Trigger a click event on a clickable element}
 \usage{
-click_bscui_element(bscui, element_id, dbl_click = FALSE)
+click_bscui_element(proxy, element_id, dbl_click = FALSE)
 }
 \arguments{
-\item{bscui}{a \code{\link{bscui_Proxy}} object}
+\item{proxy}{a \code{\link{bscui_Proxy}} object}
 
 \item{element_id}{element identifier on which the click will be triggered}
 
@@ -15,7 +15,7 @@ click_bscui_element(bscui, element_id, dbl_click = FALSE)
 (default: FALSE => single click is triggered)}
 }
 \value{
-the provided bscui object
+the provided proxy object
 }
 \description{
 Trigger a click event on a clickable element

@@ -79,7 +79,11 @@ bscui <- function(
    x = list(
       svg_txt = svg_txt,
       ui_elements = ui_elements,
-      element_styles = element_styles,
+      element_styles = list(list(
+         element_styles = element_styles,
+         to_ignore = NULL,
+         targeted_tags = structure_shapes
+      )),
       show_menu = show_menu,
       menu_width = menu_width,
       zoom_min = zoom_min,
@@ -135,11 +139,11 @@ bscui <- function(
 #' - [remove_elements]: remove SVG elements from the UI
 #' - [order_bscui_elements] (where=c("front", "back", "forward", "backward"))
 #'
-#' - [set_bscui_attributes] set attributes of a UI element
+#' - [update_bscui_attributes] set attributes of a UI element
 #' (e.g. "d" for changing path of a shape or "cx", "cy" for changing circle
 #' position)
 #'
-#' - [set_bscui_element_styles]: set style of UI elements
+#' - [update_bscui_styles]: set style of UI elements
 #' (e.g. "visibility", "fillOpacity")
 #' - [select_bscui_elements]: chose selected elements (replace current selection)
 #' - [click_bscui_element]: trigger a single or double click on a UI element
