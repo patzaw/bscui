@@ -223,7 +223,8 @@ ui_elements <- info |>
       )
    ) |>
    select(id, ui_type, title)
-figure <- bscui(svg, ui_elements = ui_elements)
+figure <- figure |> 
+   set_bscui_ui_elements(ui_elements)
 figure
 ```
 
@@ -257,8 +258,41 @@ figure <- figure |>
 figure
 ```
 
+## Setting element attributes
 
+Element attributes can also be changed with
+the `set_bscui_attributes()` function. The example below shows how to focus
+on the nucleus and its content starting from the original figure, by setting
+the "display" attribute of all other elements to "none". Also the size of the
+nucleolus is slightly increased.
 
+```{r}
+nucleus_part <- c(
+   "SL0191", "SL0190", "SL0182", "SL0188", "SL0494", "SL0180",
+   "SL0031", "SL0465", "SL0127", "SL0186"
+)
+figure <- figure |>
+   set_bscui_attributes(
+      info |>
+         filter(
+            !id %in% nucleus_part
+         ) |>
+         mutate(display="none") |>
+         select(id, display)
+   ) |> 
+   set_bscui_attributes(tibble(id="sib_copyright", display="none")) |>
+   set_bscui_attributes(tibble(id="SL0188", transform="scale(1.8 1.8)")) |> 
+   set_bscui_attributes(
+      tibble(id="SL0188", transform="translate(-237 -202)"),
+      append=TRUE
+   )
+figure |> 
+   set_bscui_options(show_menu=FALSE, zoom_min=1, zoom_max=1, clip=T)
+```
+
+In the example above the `set_bscui_options()` function is used to hide the
+menu and to disable view changes (zoom and pan). Other options can be changed
+with this function.
 
 # Shiny applications
 

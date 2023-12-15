@@ -8,7 +8,8 @@ set_bscui_styles(
   widget,
   element_styles,
   to_ignore = NULL,
-  targeted_tags = widget$x$structure_shapes
+  targeted_tags = widget$x$structure_shapes,
+  append = FALSE
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ if those elements are children of elements to update they won't be updated}
 
 \item{targeted_tags}{targeted_tags affected tag names
 (by default: structure_shapes of the scui object)}
+
+\item{append}{if TRUE the value will be concatenate with the existing value}
 }
 \value{
 The modified \code{\link{bscui}} object

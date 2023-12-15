@@ -6,23 +6,6 @@
 \usage{
 bscui(
   svg_txt,
-  ui_elements = NULL,
-  element_styles = NULL,
-  show_menu = TRUE,
-  menu_width = "30px",
-  zoom_min = 0.5,
-  zoom_max = 20,
-  zoom_step = 1.1,
-  clip = FALSE,
-  default_png_scale = 1,
-  selection_color = "orange",
-  selection_opacity = 0.5,
-  hover_color = list(button = "yellow", selectable = "cyan"),
-  hover_opacity = 0.5,
-  structure_shapes = c("rect", "circle", "ellipse", "line", "polyline", "polygon",
-    "path"),
-  dblclick_timeout = 250,
-  hover_timeout = 100,
   sanitize_attributes = TRUE,
   width = NULL,
   height = NULL,
@@ -31,49 +14,6 @@ bscui(
 }
 \arguments{
 \item{svg_txt}{a character with svg code}
-
-\item{ui_elements}{NULL or a data frame with the following columns:
-\itemize{
-\item \strong{id}: the element identifier
-\item \strong{ui_type}: either "selectable" (several elements can be selected),
-"button" (action will be triggered on click), "none" (no ui)
-\item \strong{title}: a description of the element to display on mouseover event
-}}
-
-\item{element_styles}{NULL or a data frame with an \strong{id} column providing
-the element identifier and one column per style name. Column names
-should correspond to a style name in camel case (e.g., "strokeOpacity").}
-
-\item{show_menu}{if TRUE (default) control menu will be available}
-
-\item{menu_width}{css width value}
-
-\item{zoom_min}{smallest zoom value}
-
-\item{zoom_max}{largest zoom value}
-
-\item{zoom_step}{zooming step: the larger the faster}
-
-\item{clip}{if true, when the current zoom is 1, the viewBox is
-automatically set to its original state (the drawing cannot be moved)}
-
-\item{default_png_scale}{default value for scaling PNG export}
-
-\item{selection_color}{color used to highlight selection}
-
-\item{selection_opacity}{opacity of selection highlight}
-
-\item{hover_color}{color used to highlight hovered element
-(one for "button", one for "selectable", one for "none")}
-
-\item{hover_opacity}{opacity of hovered highlight}
-
-\item{structure_shapes}{SVG shapes to considered as concrete
-drawing ("text" excluded by default)}
-
-\item{dblclick_timeout}{minimum time between 2 independant clicks}
-
-\item{hover_timeout}{time before update hovered element}
 
 \item{sanitize_attributes}{logical indicating if
 '<' and '>' characters in element attributes must be replaced by text}

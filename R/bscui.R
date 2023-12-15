@@ -2,34 +2,6 @@
 #' Build SVG/Shiny custom user interface
 #'
 #' @param svg_txt a character with svg code
-#' @param ui_elements NULL or a data frame with the following columns:
-#'    - **id**: the element identifier
-#'    - **ui_type**: either "selectable" (several elements can be selected),
-#'    "button" (action will be triggered on click), "none" (no ui)
-#'    - **title**: a description of the element to display on mouseover event
-#' @param element_styles NULL or a data frame with an **id** column providing
-#' the element identifier and one column per style name. Column names
-#' should correspond to a style name in camel case (e.g., "strokeOpacity").
-#' @param selection_color the color with which selected elements will be
-#' highlighted
-#'
-#' @param show_menu if TRUE (default) control menu will be available
-#' @param menu_width css width value
-#' @param zoom_min smallest zoom value
-#' @param zoom_max largest zoom value
-#' @param zoom_step zooming step: the larger the faster
-#' @param clip if true, when the current zoom is 1, the viewBox is
-#'    automatically set to its original state (the drawing cannot be moved)
-#' @param default_png_scale default value for scaling PNG export
-#' @param selection_color color used to highlight selection
-#' @param selection_opacity opacity of selection highlight
-#' @param hover_color color used to highlight hovered element
-#' (one for "button", one for "selectable", one for "none")
-#' @param hover_opacity opacity of hovered highlight
-#' @param structure_shapes SVG shapes to considered as concrete
-#' drawing ("text" excluded by default)
-#' @param dblclick_timeout minimum time between 2 independant clicks
-#' @param hover_timeout time before update hovered element
 #' @param sanitize_attributes logical indicating if
 #' '<' and '>' characters in element attributes must be replaced by text
 #' @param width,height widget width: must be a valid CSS unit (like `'100\%'`,
@@ -43,26 +15,6 @@
 #'
 bscui <- function(
       svg_txt,
-      ui_elements = NULL,
-      element_styles = NULL,
-      show_menu = TRUE,
-      menu_width = "30px",
-      zoom_min = 0.5,
-      zoom_max = 20,
-      zoom_step = 1.1,
-      clip = FALSE,
-      default_png_scale = 1,
-      selection_color = "orange",
-      selection_opacity = 0.5,
-      hover_color = list(
-         button="yellow", selectable="cyan"
-      ),
-      hover_opacity = 0.5,
-      structure_shapes = c(
-         "rect", "circle", "ellipse", "line", "polyline", "polygon", "path"
-      ),
-      dblclick_timeout = 250,
-      hover_timeout = 100,
       sanitize_attributes = TRUE,
       width = NULL, height = NULL, elementId = NULL
 ) {
@@ -78,32 +30,28 @@ bscui <- function(
    ## forward options using x
    x = list(
       svg_txt = svg_txt,
-      ui_elements = ui_elements,
-      element_styles = list(list(
-         element_styles = element_styles,
-         to_ignore = NULL,
-         targeted_tags = structure_shapes
-      )),
-      element_attributes = list(list(
-         element_attributes = NULL,
-         to_ignore = NULL,
-         targeted_tags = NULL
-      )),
-      show_menu = show_menu,
-      menu_width = menu_width,
-      zoom_min = zoom_min,
-      zoom_max = zoom_max,
-      zoom_step = zoom_step,
-      clip = clip,
-      default_png_scale = default_png_scale,
-      selection_color = selection_color,
-      selection_opacity = selection_opacity,
-      hover_color = hover_color,
-      hover_opacity = hover_opacity,
-      structure_shapes = structure_shapes,
-      dblclick_timeout = dblclick_timeout,
-      hover_timeout = hover_timeout,
-      sanitize_attributes = sanitize_attributes
+      ui_elements = NULL,
+      element_styles = list(),
+      element_attributes = list(),
+      sanitize_attributes = sanitize_attributes,
+      show_menu = TRUE,
+      menu_width = "30px",
+      zoom_min = 0.5,
+      zoom_max = 20,
+      zoom_step = 1.1,
+      clip = FALSE,
+      default_png_scale = 1,
+      selection_color = "orange",
+      selection_opacity = 0.5,
+      hover_color = list(
+         button="yellow", selectable="cyan", none="transparent"
+      ),
+      hover_opacity = 0.5,
+      structure_shapes = c(
+         "rect", "circle", "ellipse", "line", "polyline", "polygon", "path"
+      ),
+      dblclick_timeout = 250,
+      hover_timeout = 100
    )
 
    # create widget

@@ -70,7 +70,8 @@
 <span>  <span class="va">widget</span>,</span>
 <span>  <span class="va">element_styles</span>,</span>
 <span>  to_ignore <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  targeted_tags <span class="op">=</span> <span class="va">widget</span><span class="op">$</span><span class="va">x</span><span class="op">$</span><span class="va">structure_shapes</span></span>
+<span>  targeted_tags <span class="op">=</span> <span class="va">widget</span><span class="op">$</span><span class="va">x</span><span class="op">$</span><span class="va">structure_shapes</span>,</span>
+<span>  append <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -82,7 +83,8 @@
 
 <dt>element_styles</dt>
 <dd><p>NULL or a data frame with an <strong>id</strong> column providing
-the element identifier and one column per style attribute. Column names</p></dd>
+the element identifier and one column per style name. Column names
+should correspond to a style name in camel case (e.g., "strokeOpacity").</p></dd>
 
 
 <dt>to_ignore</dt>
@@ -93,6 +95,10 @@ if those elements are children of elements to update they won't be updated</p></
 <dt>targeted_tags</dt>
 <dd><p>targeted_tags affected tag names
 (by default: structure_shapes of the scui object)</p></dd>
+
+
+<dt>append</dt>
+<dd><p>if TRUE the value will be concatenate with the existing value</p></dd>
 
 </dl></div>
     <div class="section level2">

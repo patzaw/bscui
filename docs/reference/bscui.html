@@ -68,23 +68,6 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bscui</span><span class="op">(</span></span>
 <span>  <span class="va">svg_txt</span>,</span>
-<span>  ui_elements <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  element_styles <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  show_menu <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  menu_width <span class="op">=</span> <span class="st">"30px"</span>,</span>
-<span>  zoom_min <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>  zoom_max <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  zoom_step <span class="op">=</span> <span class="fl">1.1</span>,</span>
-<span>  clip <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  default_png_scale <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  selection_color <span class="op">=</span> <span class="st">"orange"</span>,</span>
-<span>  selection_opacity <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>  hover_color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>button <span class="op">=</span> <span class="st">"yellow"</span>, selectable <span class="op">=</span> <span class="st">"cyan"</span><span class="op">)</span>,</span>
-<span>  hover_opacity <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>  structure_shapes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rect"</span>, <span class="st">"circle"</span>, <span class="st">"ellipse"</span>, <span class="st">"line"</span>, <span class="st">"polyline"</span>, <span class="st">"polygon"</span>,</span>
-<span>    <span class="st">"path"</span><span class="op">)</span>,</span>
-<span>  dblclick_timeout <span class="op">=</span> <span class="fl">250</span>,</span>
-<span>  hover_timeout <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  sanitize_attributes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  height <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -96,79 +79,6 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>svg_txt</dt>
 <dd><p>a character with svg code</p></dd>
-
-
-<dt>ui_elements</dt>
-<dd><p>NULL or a data frame with the following columns:</p><ul><li><p><strong>id</strong>: the element identifier</p></li>
-<li><p><strong>ui_type</strong>: either "selectable" (several elements can be selected),
-"button" (action will be triggered on click), "none" (no ui)</p></li>
-<li><p><strong>title</strong>: a description of the element to display on mouseover event</p></li>
-</ul></dd>
-
-
-<dt>element_styles</dt>
-<dd><p>NULL or a data frame with an <strong>id</strong> column providing
-the element identifier and one column per style attribute. Column names
-should correspond to a style name in camel case (e.g., "strokeOpacity").</p></dd>
-
-
-<dt>show_menu</dt>
-<dd><p>if TRUE (default) control menu will be available</p></dd>
-
-
-<dt>menu_width</dt>
-<dd><p>css width value</p></dd>
-
-
-<dt>zoom_min</dt>
-<dd><p>smallest zoom value</p></dd>
-
-
-<dt>zoom_max</dt>
-<dd><p>largest zoom value</p></dd>
-
-
-<dt>zoom_step</dt>
-<dd><p>zooming step: the larger the faster</p></dd>
-
-
-<dt>clip</dt>
-<dd><p>if true, when the current zoom is 1, the viewBox is
-automatically set to its original state (the drawing cannot be moved)</p></dd>
-
-
-<dt>default_png_scale</dt>
-<dd><p>default value for scaling PNG export</p></dd>
-
-
-<dt>selection_color</dt>
-<dd><p>color used to highlight selection</p></dd>
-
-
-<dt>selection_opacity</dt>
-<dd><p>opacity of selection highlight</p></dd>
-
-
-<dt>hover_color</dt>
-<dd><p>color used to highlight hovered element
-(one for "button", one for "selectable", one for "none")</p></dd>
-
-
-<dt>hover_opacity</dt>
-<dd><p>opacity of hovered highlight</p></dd>
-
-
-<dt>structure_shapes</dt>
-<dd><p>SVG shapes to considered as concrete
-drawing ("text" excluded by default)</p></dd>
-
-
-<dt>dblclick_timeout</dt>
-<dd><p>minimum time between 2 independant clicks</p></dd>
-
-
-<dt>hover_timeout</dt>
-<dd><p>time before update hovered element</p></dd>
 
 
 <dt>sanitize_attributes</dt>

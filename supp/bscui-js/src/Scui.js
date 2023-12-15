@@ -379,14 +379,16 @@ function Scui(element_id){
          scui.set_element_styles(
             es.element_styles,
             es.to_ignore,
-            es.targeted_tags
+            es.targeted_tags,
+            es.append
          );
       });
       element_attributes.forEach(ea => {
          scui.set_element_attributes(
             ea.element_attributes,
             ea.to_ignore,
-            ea.targeted_tags
+            ea.targeted_tags,
+            ea.append
          );
       });
 
@@ -410,11 +412,15 @@ function Scui(element_id){
       }
       wait_for_svg_to_be_rendered(el.id)
          .then(function(svg){
+            var svg_bcr = svg.getBoundingClientRect();
             var g = svg.querySelector("g")
             var bcr = g.getBoundingClientRect();
+            var x = bcr.x - svg_bcr.x;
+            var y = bcr.y - svg_bcr.y;
             var w = bcr.width;
             var h = bcr.height;
-            var vb = 0 + " " + 0 + " " + w + " " + h;
+            // var vb = 0 + " " + 0 + " " + w + " " + h;
+            var vb = x + " " + y + " " + w + " " + h;
             svg.setAttribute("viewBox", vb);
             scui.ori_viewBox = vb;
          });
@@ -752,10 +758,13 @@ function Scui(element_id){
     * if those elements are children of elements to update they won't be updated
     * @param {Array} targeted_tags affected tag names
     * (by default: structure_shapes of the scui object)
+    * @param {boolean} append if TRUE the value will be concatenate with
+    * the existing value
     *
     */
    this.set_element_styles = function (
-      element_styles, to_ignore = [], targeted_tags = this.structure_shapes
+      element_styles, to_ignore = [], targeted_tags = this.structure_shapes,
+      append = false
    ){
       var scui = this;
       var svg = scui.svg;
@@ -770,7 +779,12 @@ function Scui(element_id){
          if(targeted_tags.has(node.tagName)){
             for (let pname in element_styles) {
                if(pname != "id"){
-                  node.style[pname] = element_styles[pname][i];
+                  if(append && node.style){
+                     node.style[pname] = node.style[pname] + " " + 
+                        element_styles[pname][i];
+                  }else{
+                     node.style[pname] = element_styles[pname][i];
+                  }
                }
             }
          }
@@ -798,10 +812,12 @@ function Scui(element_id){
     * column per style to apply
     * @param {Array} targeted_tags affected tag names
     * (by default: structure_shapes of the scui object)
+    * @param {boolean} append if TRUE the value will be concatenate with
+    * the existing value
     *
     */
    this.set_selection_styles = function (
-      element_styles, to_ignore = [], targeted_tags = this.structure_shapes
+      element_styles, targeted_tags = this.structure_shapes, append = false
    ) {
       var scui = this;
       if(scui.selected.size > 0){
@@ -814,7 +830,8 @@ function Scui(element_id){
          scui.set_element_styles(
             element_styles,
             to_ignore = array_setdiff(scui.selectable, scui.selected),
-            targeted_tags = targeted_tags
+            targeted_tags = targeted_tags,
+            append = append
          );
       }
    }
@@ -829,10 +846,13 @@ function Scui(element_id){
     * if those elements are children of elements to update they won't be updated
     * @param {Array} targeted_tags affected tag names
     * (by default: structure_shapes of the scui object)
+    * @param {boolean} append if TRUE the value will be concatenate with
+    * the existing value
     *
     */
    this.set_element_attributes = function (
-      element_attributes, to_ignore = [], targeted_tags = this.structure_shapes
+      element_attributes, to_ignore = [], targeted_tags = this.structure_shapes,
+      append = false
    ) {
       var scui = this;
       var svg = scui.svg;
@@ -847,7 +867,15 @@ function Scui(element_id){
          if (targeted_tags.has(node.tagName)) {
             for (let pname in element_attributes) {
                if (pname != "id") {
-                  node.setAttribute(pname, element_attributes[pname][i]);
+                  if (append && node.getAttribute(pname)){
+                     node.setAttribute(
+                        pname,
+                        node.getAttribute(pname) + " " +
+                           element_attributes[pname][i]
+                     );
+                  }else{
+                     node.setAttribute(pname, element_attributes[pname][i]);
+                  }
                }
             }
          }
@@ -875,10 +903,12 @@ function Scui(element_id){
     * column per attribute to set
     * @param {Array} targeted_tags affected tag names
     * (by default: structure_shapes of the scui object)
+    * @param {boolean} append if TRUE the value will be concatenate with
+    * the existing value
     *
     */
    this.set_selection_styles = function (
-      element_attributes, to_ignore = [], targeted_tags = this.structure_shapes
+      element_attributes, targeted_tags = this.structure_shapes, append = false
    ) {
       var scui = this;
       if (scui.selected.size > 0) {
@@ -891,7 +921,8 @@ function Scui(element_id){
          scui.set_element_attributes(
             element_attributes,
             to_ignore = array_setdiff(scui.selectable, scui.selected),
-            targeted_tags = targeted_tags
+            targeted_tags = targeted_tags,
+            append = append
          );
       }
    }
