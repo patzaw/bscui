@@ -22,10 +22,9 @@ cranRef <- function(x){
     x, x, packageDescription(x)$Title
   )
 }
-logo64 <- dataURI(file=here("supp/logo/bscui-medium.png"))
 ```
 
-# Build SVG Custom User Interface `r img(src=logo64, alt="logo", align="right", width="120px")`
+# Build SVG Custom User Interface <img src="man/figures/bscui-medium.png" width="100px"/>
 
 <!--
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bscui)](https://cran.r-project.org/package=bsui)
