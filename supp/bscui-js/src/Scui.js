@@ -54,8 +54,16 @@ function Scui(element_id){
     * @param {string} svg_txt string with svg code
     * @param {object} ui_elements a data frame with "id", "ui_type" and "title"
     *    columns
-    * @param {object} element_styles a data frame with an "id" column and
-    *    column per style to apply
+    * @param {object} element_styles a list of lists with:
+    * - element_styles: a data frame with an "id" column and column per style
+    * to apply
+    * - to_ignore: an array of identifiers of elements to ignore
+    * - targeted_tags: an array of affected tag names
+    * @param {object} element_attributes a list of lists with:
+    * - element_attributes: a data frame with an "id" column and
+    * column per attibute to set
+    * - to_ignore: an array of identifiers of elements to ignore
+    * - targeted_tags: an array of affected tag names
     * @param {binary} show_menu show the menu
     * @param {string} menu_width css width value
     * @param {number} zoom_min smallest zoom value
@@ -82,6 +90,7 @@ function Scui(element_id){
       svg_txt,
       ui_elements,
       element_styles,
+      element_attributes,
       show_menu = true,
       menu_width = "30px",
       zoom_min = 0.5, zoom_max = 20,
@@ -183,14 +192,14 @@ function Scui(element_id){
       menu_items.appendChild(zoomout_button);
 
       var tooltips_button = create_svg_icon(
-         "hide_tooltips", "Hide tooltips"
+         "hide_tooltips", "Hide tooltips (Esc.)"
       );
       menu_items.appendChild(tooltips_button);
       var show_tooltips_button = create_svg_icon(
-         "show_tooltips", "Show tooltips"
+         "show_tooltips", "Show tooltips (Esc.)"
       );
       var hide_tooltips_button = create_svg_icon(
-         "hide_tooltips", "Hide tooltips"
+         "hide_tooltips", "Hide tooltips (Esc.)"
       );
 
       //
@@ -373,6 +382,13 @@ function Scui(element_id){
             es.targeted_tags
          );
       });
+      element_attributes.forEach(ea => {
+         scui.set_element_attributes(
+            ea.element_attributes,
+            ea.to_ignore,
+            ea.targeted_tags
+         );
+      });
 
       // Adapt viewbox
       function wait_for_svg_to_be_rendered(widget_id) {
@@ -440,6 +456,10 @@ function Scui(element_id){
       tooltip.addEventListener("mouseover", function (event) {
          clearTimeout(mouse_move_timer);
          scui.hovered = tooltip.getAttribute("data-element");
+         document.addEventListener("keyup", tooltips_key)
+      })
+      tooltip.addEventListener("mouseout", function (event) {
+         document.removeEventListener("keyup", tooltips_key)
       })
       svg.addEventListener("elementHovered", function (event) {
          var existing = svg.getElementById("hovered_shape");
@@ -722,7 +742,6 @@ function Scui(element_id){
       }
    };
 
-
    //////////////////////////////////
    /**
     * Set element styles
@@ -794,6 +813,83 @@ function Scui(element_id){
          element_styles.id = [...scui.selected];
          scui.set_element_styles(
             element_styles,
+            to_ignore = array_setdiff(scui.selectable, scui.selected),
+            targeted_tags = targeted_tags
+         );
+      }
+   }
+
+   //////////////////////////////////
+   /**
+    * Set element attributes
+    * 
+    * @param {object} element_attributes a data frame with an "id" column and
+    * column per attibute to set
+    * @param {Array} to_ignore identifiers of elements to ignore:
+    * if those elements are children of elements to update they won't be updated
+    * @param {Array} targeted_tags affected tag names
+    * (by default: structure_shapes of the scui object)
+    *
+    */
+   this.set_element_attributes = function (
+      element_attributes, to_ignore = [], targeted_tags = this.structure_shapes
+   ) {
+      var scui = this;
+      var svg = scui.svg;
+      targeted_tags = new Set(targeted_tags);
+
+      var set_by_node = function (node, i) {
+         if (to_ignore) {
+            if (to_ignore.includes(node.id)) {
+               return;
+            }
+         }
+         if (targeted_tags.has(node.tagName)) {
+            for (let pname in element_attributes) {
+               if (pname != "id") {
+                  node.setAttribute(pname, element_attributes[pname][i]);
+               }
+            }
+         }
+         Array.from(node.children).forEach(child => {
+            set_by_node(child, i)
+         })
+      }
+
+      if (element_attributes) {
+         for (let i = 0; i < element_attributes.id.length; i++) {
+            let id = element_attributes.id[i];
+            let element = svg.getElementById(id);
+            if (element) {
+               set_by_node(element, i)
+            }
+         }
+      }
+   }
+
+   //////////////////////////////////
+   /**
+    * Set attributes of selected elements
+    * 
+    * @param {object} element_attributes a data frame without an "id" column and
+    * column per attribute to set
+    * @param {Array} targeted_tags affected tag names
+    * (by default: structure_shapes of the scui object)
+    *
+    */
+   this.set_selection_styles = function (
+      element_attributes, to_ignore = [], targeted_tags = this.structure_shapes
+   ) {
+      var scui = this;
+      if (scui.selected.size > 0) {
+         for (let name in element_attributes) {
+            while (element_attributes[name].length < scui.selected.size) {
+               element_attributes[name].push(element_attributes[name][0]);
+            }
+         }
+         element_styles.id = [...scui.selected];
+         scui.set_element_attributes(
+            element_attributes,
             to_ignore = array_setdiff(scui.selectable, scui.selected),
             targeted_tags = targeted_tags
          );

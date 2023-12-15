@@ -1,10 +1,9 @@
 ###############################################################################@
-#' Set styles of elements of a bscui widget
+#' Set attributes of elements of a bscui widget
 #'
 #' @param widget a [`bscui`] object
-#' @param element_styles NULL or a data frame with an **id** column providing
-#' the element identifier and one column per style name. Column names
-#' should correspond to a style name in camel case (e.g., "strokeOpacity").
+#' @param element_attributes NULL or a data frame with an **id** column
+#' providing the element identifier and one column per attribute name.
 #' @param to_ignore identifiers of elements to ignore:
 #' if those elements are children of elements to update they won't be updated
 #' @param targeted_tags targeted_tags affected tag names
@@ -14,16 +13,16 @@
 #'
 #' @export
 #'
-set_bscui_styles <- function(
+set_bscui_attributes <- function(
    widget,
-   element_styles,
+   element_attributes,
    to_ignore = NULL,
    targeted_tags = widget$x$structure_shapes
 ){
-   widget$x$element_styles <- c(
-      widget$x$element_styles,
+   widget$x$element_attributes <- c(
+      widget$x$element_attributes,
       list(list(
-         element_styles = element_styles,
+         element_attributes = element_attributes,
          to_ignore = to_ignore,
          targeted_tags = targeted_tags
       ))

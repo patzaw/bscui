@@ -41,7 +41,7 @@ bscui(
 }}
 
 \item{element_styles}{NULL or a data frame with an \strong{id} column providing
-the element identifier and one column per style attribute. Column names
+the element identifier and one column per style name. Column names
 should correspond to a style name in camel case (e.g., "strokeOpacity").}
 
 \item{show_menu}{if TRUE (default) control menu will be available}

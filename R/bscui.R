@@ -8,7 +8,7 @@
 #'    "button" (action will be triggered on click), "none" (no ui)
 #'    - **title**: a description of the element to display on mouseover event
 #' @param element_styles NULL or a data frame with an **id** column providing
-#' the element identifier and one column per style attribute. Column names
+#' the element identifier and one column per style name. Column names
 #' should correspond to a style name in camel case (e.g., "strokeOpacity").
 #' @param selection_color the color with which selected elements will be
 #' highlighted
@@ -83,6 +83,11 @@ bscui <- function(
          element_styles = element_styles,
          to_ignore = NULL,
          targeted_tags = structure_shapes
+      )),
+      element_attributes = list(list(
+         element_attributes = NULL,
+         to_ignore = NULL,
+         targeted_tags = NULL
       )),
       show_menu = show_menu,
       menu_width = menu_width,

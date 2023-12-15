@@ -257,6 +257,27 @@ figure <- figure |>
 figure
 ```
 
+```{r}
+# figure |> 
+#    set_bscui_styles(
+#       info |>
+#          filter(
+#             !id %in%
+#                c("SL0191", "SL0190", "SL0182", "SL0188", "SL0494", "SL0180")
+#          ) |>
+#          mutate(display="none") |> 
+#          select(id, display)
+#    )
+figure |> 
+   set_bscui_styles(
+      info |>
+         filter(id == "SL0191") |>
+         mutate(display="none") |> 
+         select(id, display)
+   )
+
+```
+
 
 
 
