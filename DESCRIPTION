@@ -9,11 +9,12 @@ Authors@R: c(
         email = "patrice.godard@gmail.com"
     )
     )
-Description: Render SVG as interactive figures to diplay contextual information,
-   with selectable and clickable user interface elements.
-   These figures can be integrated in markdown
-   documents or in shiny applications reacting to events triggered on them.
-   Features also include pan, zoom in/out and export in SVG or PNG formats.
+Description: Render SVG as interactive figures to display contextual
+   information, with selectable and clickable user interface elements.
+   These figures can be seamlessly integrated into Rmarkdown and Quarto
+   documents or Shiny applications that react to events triggered within them.
+   Additional features include pan, zoom in/out functionality, and the ability
+   to export the figures in SVG or PNG formats.
 URL:
    https://patzaw.github.io/bscui/,
    https://github.com/patzaw/bscui/

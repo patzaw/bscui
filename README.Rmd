@@ -31,10 +31,7 @@ cranRef <- function(x){
 [![](http://cranlogs.r-pkg.org/badges/bsui)](https://cran.r-project.org/package=bsui)
 -->
 
-Render SVG as interactive figures with selectable and clickable user
-interface elements. These figures can be integrated in markdown documents or
-in shiny applications reacting to events triggered on them.
-Features also include moving, zoom in/out and export in SVG or PNG formats.
+`r packageDescription("bscui")$Description`
 
 ## Installation
 
