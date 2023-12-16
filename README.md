@@ -63,14 +63,16 @@ devtools::install_github("patzaw/bscui")
 
 ## Documentation
 
-[Introduction to
-bscui](https://patzaw.github.io/bscui/articles/bscui.html)
-
-This introduction vignette is also installed with the package:
+- [Introduction to
+  bscui](https://patzaw.github.io/bscui/articles/bscui.html): this
+  introduction vignette is also included in the package:
 
 ``` r
 vignette("bscui")
 ```
+
+- [Preparing SVG: examples, tips and
+  tricks](https://patzaw.github.io/bscui/articles/web_only/SVG-examples.html)
 
 ## Examples
 
