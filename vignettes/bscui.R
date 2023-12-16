@@ -27,17 +27,15 @@ library(DT)
 #  library(xml2)
 #  library(dplyr)
 #  library(readr)
-#  library(htmltools)
 #  library(stringr)
 #  library(glue)
-#  library(DT)
 
 ## ----class.source='fold-hide'-------------------------------------------------
 sessionInfo()
 
 ## -----------------------------------------------------------------------------
 svg <- xml2::read_xml(system.file(
-   "svg-examples", "Animal_cells.svg",
+   "svg-examples", "Animal_cells.svg.gz",
    package="bscui"
 ))
 
@@ -114,5 +112,5 @@ figure <- figure |>
       append=TRUE
    )
 figure |> 
-   set_bscui_options(show_menu=FALSE, zoom_min=1, zoom_max=1, clip=T)
+   set_bscui_options(show_menu=FALSE, zoom_min=1, zoom_max=1, clip=TRUE)
 

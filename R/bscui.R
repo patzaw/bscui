@@ -88,17 +88,14 @@ bscui <- function(
 #' @details
 #'
 #' The UI can be updated with `bscuiProxy`, using different methods:
-#' - [add_elements]: add SVG elements to the UI
-#' - [remove_elements]: remove SVG elements from the UI
+#' - [add_bscui_elements]: add SVG elements to the UI
+#' - [remove_bscui_elements]: remove SVG elements from the UI
 #' - [order_bscui_elements] (where=c("front", "back", "forward", "backward"))
 #'
-#' - [update_bscui_attributes] set attributes of a UI element
-#' (e.g. "d" for changing path of a shape or "cx", "cy" for changing circle
-#' position)
 #'
+#' - [update_bscui_attributes] set attributes of a UI element
 #' - [update_bscui_styles]: set style of UI elements
-#' (e.g. "visibility", "fillOpacity")
-#' - [select_bscui_elements]: chose selected elements (replace current selection)
+#' - [select_bscui_elements]: chose selected elements
 #' - [click_bscui_element]: trigger a single or double click on a UI element
 #' - [get_bscui_svg]: get the displayed svg
 #'

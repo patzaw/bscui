@@ -22,6 +22,9 @@
     <loc>https://patzaw.github.io/bscui/news/index.html</loc>
   </url>
   <url>
+    <loc>https://patzaw.github.io/bscui/reference/add_bscui_elements.html</loc>
+  </url>
+  <url>
     <loc>https://patzaw.github.io/bscui/reference/bscui-shiny.html</loc>
   </url>
   <url>
@@ -37,6 +40,12 @@
     <loc>https://patzaw.github.io/bscui/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://patzaw.github.io/bscui/reference/order_bscui_elements.html</loc>
+  </url>
+  <url>
+    <loc>https://patzaw.github.io/bscui/reference/remove_bscui_elements.html</loc>
+  </url>
+  <url>
     <loc>https://patzaw.github.io/bscui/reference/select_bscui_elements.html</loc>
   </url>
   <url>
@@ -50,6 +59,9 @@
   </url>
   <url>
     <loc>https://patzaw.github.io/bscui/reference/set_bscui_ui_elements.html</loc>
+  </url>
+  <url>
+    <loc>https://patzaw.github.io/bscui/reference/update_bscui_attributes.html</loc>
   </url>
   <url>
     <loc>https://patzaw.github.io/bscui/reference/update_bscui_styles.html</loc>

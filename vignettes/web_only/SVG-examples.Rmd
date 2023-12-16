@@ -73,6 +73,7 @@ library(bscui)
 library(xml2)
 library(dplyr)
 library(readr)
+library(stringr)
 ```
 
 <!-- Collapsible sessionInfo -->
@@ -149,7 +150,11 @@ xml_attr(namespace_element_nodes[1], "xmlns") <- "http://www.w3.org/2000/svg"
 ```
 
 ```{r, echo=FALSE}
-write_xml(svg, file.path(data_dir, file_name))
+write_xml(svg, file.path(data_dir, str_replace(file_name, ".svg$", ".svg.gz")))
+write_tsv(
+   element_titles,
+   file.path(data_dir, str_replace(file_name, ".svg$", ".txt.gz"))
+)
 ```
 
 ```{r}
@@ -187,7 +192,7 @@ xml_attr(namespace_element_nodes[1], "xmlns") <- "http://www.w3.org/2000/svg"
 
 
 ```{r, echo=FALSE}
-write_xml(svg, file.path(data_dir, file_name))
+write_xml(svg, file.path(data_dir, str_replace(file_name, ".svg$", ".svg.gz")))
 ```
 
 ```{r}
@@ -252,7 +257,7 @@ svg <- as.character(svg) |>
 
 
 ```{r, echo=FALSE}
-write_xml(svg, file.path(data_dir, file_name))
+write_xml(svg, file.path(data_dir, str_replace(file_name, ".svg$", ".svg.gz")))
 ```
 
 

@@ -2,27 +2,8 @@ library(shiny)
 library(bscui)
 library(xml2)
 library(dplyr)
+library(readr)
 library(stringr)
-
-get_element_titles <- function(x){
-   id <- xml_attr(x, "id")
-   children <- xml_children(x)
-   children_titles <- tibble(id=character(), label=character())
-   label <- character()
-   if(length(children) > 0) for(i in 1:length(children)){
-      child <- children[[i]]
-      if(xml_name(child) == "title"){
-         label <- xml_attr(child, "id")
-      }else{
-         children_titles <- children_titles |>
-            bind_rows(get_element_titles(child))
-      }
-   }
-   toRet <- tibble(id = id, label = label) |>
-      bind_rows(children_titles) |>
-      filter(!is.na(id))
-   return(toRet)
-}
 
 ui <- function(req){
    addResourcePath(
@@ -91,10 +72,14 @@ ui <- function(req){
 
 server <- function(input, output, session){
    svg <- read_xml(system.file(
-      "svg-examples", "homo_sapiens.male.svg",
+      "svg-examples", "homo_sapiens.female.svg.gz",
       package="bscui"
    ))
-   elements <- get_element_titles(svg) |>
+   element_titles <- read_tsv(system.file(
+      "svg-examples", "homo_sapiens.female.txt.gz",
+      package="bscui"
+   ), col_types = "cc")
+   elements <- element_titles |>
       mutate(
          ui_type = "selectable",
          title = sprintf(
@@ -134,13 +119,15 @@ server <- function(input, output, session){
          xml_remove(to_remove)
       }
       bscui(
-         svg |> as.character(),
-         ui_elements = ui_elements,
-         element_styles = element_styles,
-         menu_width="30px",
-         # hover_color=list(button="pink", selectable="cyan", none="green"),
-         selection_color="red"
-      )
+         svg
+      ) |>
+         set_bscui_ui_elements(ui_elements) |>
+         set_bscui_styles(element_styles) |>
+         set_bscui_options(
+            menu_width="30px",
+            # hover_color=list(button="pink", selectable="cyan", none="green"),
+            selection_color="red"
+         )
    })
    output$selected_org <- renderPrint({
       paste(input$org_interface_selected, collapse=", ")
@@ -190,7 +177,8 @@ server <- function(input, output, session){
          numericInput("fill_opacity", "Fill opacity", value=0.5, min=0, max=1),
          textInput("stroke", "Stroke", "#000000"),
          numericInput("stroke_opacity", "Stroke opacity", value=1, min=0, max=1),
-         actionButton("apply_styles", "Apply changes")
+         actionButton("apply_styles", "Apply changes"),
+         textInput("scale", "Scale", 2)
       )
    })
    observeEvent(input$apply_styles, {
@@ -201,7 +189,13 @@ server <- function(input, output, session){
             fillOpacity=input$fill_opacity,
             stroke = input$stroke,
             strokeOpacity = input$stroke_opacity
-         ),
+         )
+      )
+      update_bscui_attributes(
+         ui_prox,
+         element_attributes = tibble(
+            transform=sprintf("scale(%s)", input$scale)
+         )
       )
    })
 }

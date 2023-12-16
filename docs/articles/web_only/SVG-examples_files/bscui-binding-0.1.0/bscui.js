@@ -109,19 +109,47 @@ HTMLWidgets.widget({
                      if(scui.id == data.id){
                         var targeted_tags = check_array(
                            data.targeted_tags,
-                           default_value = scui.structure_shapes
+                           default_value = [...scui.structure_shapes]
                         );
                         if('id' in data.element_styles){
                            var to_ignore = check_array(data.to_ignore);
                            scui.set_element_styles(
                               element_styles = data.element_styles,
                               to_ignore = to_ignore,
-                              targeted_tags = targeted_tags
+                              targeted_tags = targeted_tags,
+                              append = data.append
                            )
                         }else{
                            scui.set_selection_styles(
                               element_styles = data.element_styles,
-                              targeted_tags = targeted_tags
+                              targeted_tags = targeted_tags,
+                              append = data.append
+                           )
+                        }
+                     }
+                  }
+               )
+               Shiny.addCustomMessageHandler(
+                  "bscuiShinyElementAttributes",
+                  function(data){
+                     if(scui.id == data.id){
+                        var targeted_tags = check_array(
+                           data.targeted_tags,
+                           default_value = [...scui.structure_shapes]
+                        );
+                        if('id' in data.element_attributes){
+                           var to_ignore = check_array(data.to_ignore);
+                           scui.set_element_attributes(
+                              element_attributes = data.element_attributes,
+                              to_ignore = to_ignore,
+                              targeted_tags = targeted_tags,
+                              append = data.append
+                           )
+                        }else{
+                           scui.set_selection_attributes(
+                              element_attributes = data.element_attributes,
+                              targeted_tags = targeted_tags,
+                              append = data.append
                            )
                         }
                      }

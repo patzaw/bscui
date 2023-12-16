@@ -6,11 +6,12 @@
 [![](http://cranlogs.r-pkg.org/badges/bsui)](https://cran.r-project.org/package=bsui)
 -->
 
-Render SVG as interactive figures with selectable and clickable user
-interface elements. These figures can be integrated in markdown
-documents or in shiny applications reacting to events triggered on them.
-Features also include moving, zoom in/out and export in SVG or PNG
-formats.
+Render SVG as interactive figures to display contextual information,
+with selectable and clickable user interface elements. These figures can
+be seamlessly integrated into Rmarkdown and Quarto documents or Shiny
+applications that react to events triggered within them. Additional
+features include pan, zoom in/out functionality, and the ability to
+export the figures in SVG or PNG formats.
 
 ## Installation
 
@@ -60,7 +61,58 @@ examples:
 devtools::install_github("patzaw/bscui")
 ```
 
-## Usage
+## Documentation
 
-- Interactive figures: link to vignette
-- Shiny applications: links (webR?)
+[Introduction to
+bscui](https://patzaw.github.io/bscui/articles/bscui.html)
+
+This introduction vignette is also installed with the package:
+
+``` r
+vignette("bscui")
+```
+
+## Examples
+
+``` r
+library(bscui)
+library(xml2)
+library(readr)
+library(dplyr)
+library(stringr)
+
+#######################################@
+## Use an existing SVG file ----
+svg <- xml2::read_xml(system.file(
+   "svg-examples", "Animal_cells.svg.gz",
+   package="bscui"
+))
+info <- readr::read_tsv(system.file(
+   "svg-examples", "uniprot_cellular_locations.txt.gz",
+   package="bscui"
+), col_types=strrep("c", 6)) |> 
+   mutate(id = str_remove(`Subcellular location ID`, "-"))
+bscui(svg) |> 
+   set_bscui_ui_elements(
+      info |> 
+         mutate(
+            ui_type = "selectable",
+            title = Name
+         ) |>
+         select(id, ui_type, title)
+   ) |> 
+   set_bscui_styles(
+      info |>
+         filter(Name == "Cytosol") |>
+         mutate(fill = "#FF7F7F") |> 
+         select(id, fill)
+   ) |> 
+   set_bscui_options(zoom_min=1, clip=TRUE)
+
+#######################################@
+## Create SVG shapes ----
+
+
+#######################################@
+## Shiny application example ----
+```

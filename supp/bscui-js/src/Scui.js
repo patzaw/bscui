@@ -827,9 +827,10 @@ function Scui(element_id){
             }
          }
          element_styles.id = [...scui.selected];
+         var to_ignore = array_setdiff(scui.selectable, scui.selected);
          scui.set_element_styles(
             element_styles,
-            to_ignore = array_setdiff(scui.selectable, scui.selected),
+            to_ignore = to_ignore,
             targeted_tags = targeted_tags,
             append = append
          );
@@ -907,7 +908,7 @@ function Scui(element_id){
     * the existing value
     *
     */
-   this.set_selection_styles = function (
+   this.set_selection_attributes = function (
       element_attributes, targeted_tags = this.structure_shapes, append = false
    ) {
       var scui = this;
@@ -917,10 +918,11 @@ function Scui(element_id){
                element_attributes[name].push(element_attributes[name][0]);
             }
          }
-         element_styles.id = [...scui.selected];
+         element_attributes.id = [...scui.selected];
+         var to_ignore = array_setdiff(scui.selectable, scui.selected);
          scui.set_element_attributes(
             element_attributes,
-            to_ignore = array_setdiff(scui.selectable, scui.selected),
+            to_ignore = to_ignore,
             targeted_tags = targeted_tags,
             append = append
          );

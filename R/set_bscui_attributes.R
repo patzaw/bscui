@@ -2,7 +2,7 @@
 #' Set attributes of elements of a bscui widget
 #'
 #' @param widget a [`bscui`] object
-#' @param element_attributes NULL or a data frame with an **id** column
+#' @param element_attributes a data frame with an **id** column
 #' providing the element identifier and one column per attribute name.
 #' @param to_ignore identifiers of elements to ignore:
 #' if those elements are children of elements to update they won't be updated

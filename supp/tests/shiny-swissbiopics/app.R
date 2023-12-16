@@ -47,7 +47,7 @@ ui <- function(req){
 
 server <- function(input, output, session){
    svg <- read_xml(system.file(
-      "svg-examples", "Epithelial_cells.svg",
+      "svg-examples", "Animal_cells.svg.gz",
       package="bscui"
    ))
    ## Remove text elements
@@ -58,7 +58,7 @@ server <- function(input, output, session){
    }
 
    elements <- read_tsv(system.file(
-      "svg-examples", "locations_all_2023_12_06.tsv.gz",
+      "svg-examples", "uniprot_cellular_locations.txt.gz",
       package="bscui"
    ), col_types="c")
    ui_elements <- elements |>
@@ -81,12 +81,14 @@ server <- function(input, output, session){
 
    output$cell_interface <- renderBscui({
       bscui(
-         svg |> as.character(),
-         ui_elements = ui_elements,
-         menu_width="30px",
-         # hover_color=list(button="pink", selectable="cyan", none="green"),
-         selection_color="red"
-      )
+         svg
+      ) |>
+         set_bscui_options(
+            menu_width="30px",
+            # hover_color=list(button="pink", selectable="cyan", none="green"),
+            selection_color="red"
+         ) |>
+         set_bscui_ui_elements(ui_elements)
    })
    output$selected_org <- renderPrint({
       paste(input$cell_interface_selected, collapse=", ")

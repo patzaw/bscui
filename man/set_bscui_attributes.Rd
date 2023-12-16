@@ -15,7 +15,7 @@ set_bscui_attributes(
 \arguments{
 \item{widget}{a \code{\link{bscui}} object}
 
-\item{element_attributes}{NULL or a data frame with an \strong{id} column
+\item{element_attributes}{a data frame with an \strong{id} column
 providing the element identifier and one column per attribute name.}
 
 \item{to_ignore}{identifiers of elements to ignore:

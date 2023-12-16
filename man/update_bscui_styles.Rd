@@ -2,13 +2,14 @@
 % Please edit documentation in R/update_bscui_styles.R
 \name{update_bscui_styles}
 \alias{update_bscui_styles}
-\title{Update the style of bscui ui elements in Shiny app}
+\title{Update the style of bscui elements in Shiny app}
 \usage{
 update_bscui_styles(
   proxy,
   element_styles,
   to_ignore = NULL,
-  targeted_tags = NULL
+  targeted_tags = NULL,
+  append = FALSE
 )
 }
 \arguments{
@@ -25,10 +26,12 @@ data frame.}
 
 \item{targeted_tags}{affected tag names. If NULL (default),
 the structure_shapes of the \code{\link{bscui}} object}
+
+\item{append}{if TRUE the value will be concatenate with the existing value}
 }
 \value{
 the provided proxy object
 }
 \description{
-Update the style of bscui ui elements in Shiny app
+Update the style of bscui elements in Shiny app
 }

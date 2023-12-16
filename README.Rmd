@@ -72,7 +72,60 @@ for(p in wdeps$package){
 devtools::install_github("patzaw/bscui")
 ```
 
-## Usage
+## Documentation
 
-- Interactive figures: link to vignette
-- Shiny applications: links (webR?)
+[Introduction to bscui](https://patzaw.github.io/bscui/articles/bscui.html)
+
+This introduction vignette is also installed with the package:
+
+```{r, eval=FALSE}
+vignette("bscui")
+```
+
+
+## Examples
+
+```{r, eval=FALSE}
+library(bscui)
+library(xml2)
+library(readr)
+library(dplyr)
+library(stringr)
+
+#######################################@
+## Use an existing SVG file ----
+svg <- xml2::read_xml(system.file(
+   "svg-examples", "Animal_cells.svg.gz",
+   package="bscui"
+))
+info <- readr::read_tsv(system.file(
+   "svg-examples", "uniprot_cellular_locations.txt.gz",
+   package="bscui"
+), col_types=strrep("c", 6)) |> 
+   mutate(id = str_remove(`Subcellular location ID`, "-"))
+bscui(svg) |> 
+   set_bscui_ui_elements(
+      info |> 
+         mutate(
+            ui_type = "selectable",
+            title = Name
+         ) |>
+         select(id, ui_type, title)
+   ) |> 
+   set_bscui_styles(
+      info |>
+         filter(Name == "Cytosol") |>
+         mutate(fill = "#FF7F7F") |> 
+         select(id, fill)
+   ) |> 
+   set_bscui_options(zoom_min=1, clip=TRUE)
+
+#######################################@
+## Create SVG shapes ----
+
+
+#######################################@
+## Shiny application example ----
+
+```
+
