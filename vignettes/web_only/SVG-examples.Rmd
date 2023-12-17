@@ -149,6 +149,18 @@ for(to_remove in titles){
 xml_attr(namespace_element_nodes[1], "xmlns") <- "http://www.w3.org/2000/svg"
 ```
 
+## Move organs in front
+
+```{r}
+children <- xml_children(svg)
+xml_attr(namespace_element_nodes, "xmlns") <- NULL
+to_move <- children[[which(xml_attr(children, "id") == "LAYER_EFO")]]
+xml_remove(to_move)
+xml_add_child(svg, to_move)
+```
+
+
+
 ```{r, echo=FALSE}
 write_xml(svg, file.path(data_dir, str_replace(file_name, ".svg$", ".svg.gz")))
 write_tsv(

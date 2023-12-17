@@ -32,7 +32,7 @@ ui <- function(req){
             )
          ),
          column(
-            6,
+            3,
             tags$h3("Values"),
             tags$h4("Hovered over (not immediately updated"),
             verbatimTextOutput("hovered_org"),
@@ -62,9 +62,13 @@ ui <- function(req){
                   )
                )
             ),
-            uiOutput("format_sel"),
             tags$h3("Test get SVG"),
             shiny::actionButton("getSvg", "Get SVG")
+         ),
+         column(
+            3,
+            uiOutput("format_sel"),
+            uiOutput("move_sel")
          )
       )
    )
@@ -87,7 +91,7 @@ server <- function(input, output, session){
             sprintf('This is <strong>%s</strong>', label)
          ),
          visibility = "visible",
-         opacity = 0.5,
+         opacity = 1,
          fill = "#000080",
          fillOpacity = 0.5,
          stroke = "#000080",
@@ -173,12 +177,13 @@ server <- function(input, output, session){
       selected <- input$org_interface_selected
       req(selected)
       tagList(
+         tags$h3("Format selection"),
          textInput("fill", "Fill", "#000000"),
          numericInput("fill_opacity", "Fill opacity", value=0.5, min=0, max=1),
          textInput("stroke", "Stroke", "#000000"),
          numericInput("stroke_opacity", "Stroke opacity", value=1, min=0, max=1),
-         actionButton("apply_styles", "Apply changes"),
-         textInput("scale", "Scale", 2)
+         textInput("scale", "Scale", 1),
+         actionButton("apply_styles", "Apply changes")
       )
    })
    observeEvent(input$apply_styles, {
@@ -196,6 +201,23 @@ server <- function(input, output, session){
          element_attributes = tibble(
             transform=sprintf("scale(%s)", input$scale)
          )
+      )
+   })
+
+   output$move_sel <- renderUI({
+      selected <- input$org_interface_selected
+      req(selected)
+      tagList(
+         tags$h3("Move selection"),
+         selectInput(
+            "move_sel", label="where", c("front", "back", "forward", "backward")
+         ),
+         actionButton("apply_move", "Move!")
+      )
+   })
+   observeEvent(input$apply_move, {
+      order_bscui_elements(
+         ui_prox, input$org_interface_selected, where=input$move_sel
       )
    })
 }

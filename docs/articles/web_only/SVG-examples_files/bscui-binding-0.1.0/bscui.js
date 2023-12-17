@@ -155,6 +155,12 @@ HTMLWidgets.widget({
                      }
                   }
                )
+               Shiny.addCustomMessageHandler("bscuiShinyOrder", function(data){
+                  if(scui.id == data.id){
+                     var element_ids = check_array(data.element_ids);
+                     scui.order_elements(element_ids, where = data.where);
+                  }
+               })
             }
 
          },

@@ -929,6 +929,47 @@ function Scui(element_id){
       }
    }
 
+   //////////////////////////////////
+   /**
+    * Change element order in the SVG
+    * 
+    * @param {Array} element_ids the identifiers of the element to move
+    * @param {string} where where to move the elements (default: "front")
+    *
+    */
+   this.order_elements = function(element_ids, where){
+      var scui = this;
+      var svg = scui.svg;
+
+      element_ids.forEach(id => {
+         var element = svg.getElementById(id);
+         var parent = element.parentNode;
+         if(where == "front"){
+            parent.appendChild(element);
+         }
+         if (where == "back") {
+            var first_child = parent.firstChild;
+            parent.insertBefore(element, first_child);
+         }
+         if (where == "forward") {
+            var next_sibling = element.nextElementSibling;
+            if (next_sibling) {
+               next_sibling = next_sibling.nextElementSibling;
+               if(next_sibling){
+                  parent.insertBefore(element, next_sibling);
+               }
+            }
+         }
+         if (where == "backward") {
+            var previous_sibling = element.previousElementSibling;
+            if (previous_sibling) {
+               parent.insertBefore(element, previous_sibling);
+            }
+         }
+      });
+
+   }
+
 
    //////////////////////////////////
    /**
