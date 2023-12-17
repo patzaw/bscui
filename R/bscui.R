@@ -1,7 +1,7 @@
 ###############################################################################@
 #' Build SVG/Shiny custom user interface
 #'
-#' @param svg_txt a character with svg code
+#' @param svg_txt a character with SVG code
 #' @param sanitize_attributes logical indicating if
 #' '<' and '>' characters in element attributes must be replaced by text
 #' @param width,height widget width: must be a valid CSS unit (like `'100\%'`,
@@ -88,7 +88,7 @@ bscui <- function(
 #' @details
 #'
 #' The UI can be updated with `bscuiProxy`, using different methods:
-#' - [add_bscui_elements]: add SVG elements to the UI
+#' - [add_bscui_element]: add an SVG element to the UI
 #' - [remove_bscui_elements]: remove SVG elements from the UI
 #'
 #' - [order_bscui_elements]: change elements order (e.g. move them forward)

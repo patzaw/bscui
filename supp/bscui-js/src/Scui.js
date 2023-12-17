@@ -933,7 +933,7 @@ function Scui(element_id){
    /**
     * Change element order in the SVG
     * 
-    * @param {Array} element_ids the identifiers of the element to move
+    * @param {Array} element_ids the identifiers of the elements to move
     * @param {string} where where to move the elements (default: "front")
     *
     */
@@ -970,6 +970,30 @@ function Scui(element_id){
 
    }
 
+   //////////////////////////////////
+   /**
+    * Add an element to the interface
+    * 
+    * @param {String} element_id the identifier of the element to add
+    * @param {String} svg_txt SVG code
+    * @param {String} ui_type either "selectable", "button" or "none".
+    * If null (default), the element won't be available as UI
+    * @param {String} title a description of the element to display on mouseover
+    * event
+    *
+    */
+   this.add_element = function (element_id, svg_txt, ui_type=null, title=null) {
+   }
+
+   //////////////////////////////////
+   /**
+    * Remove elements from the interface
+    * 
+    * @param {Array} element_ids the identifiers of the elements to remove
+    *
+    */
+   this.remove_elements = function (element_ids) {
+   }
 
    //////////////////////////////////
    /**
