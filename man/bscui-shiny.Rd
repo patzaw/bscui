@@ -40,7 +40,7 @@ Output and render functions for using bscui within Shiny applications.
 \details{
 The UI can be updated with \code{bscuiProxy}, using different methods:
 \itemize{
-\item \link{add_bscui_elements}: add SVG elements to the UI
+\item \link{add_bscui_element}: add an SVG element to the UI
 \item \link{remove_bscui_elements}: remove SVG elements from the UI
 \item \link{order_bscui_elements}: change elements order (e.g. move them forward)
 \item \link{update_bscui_attributes} set attributes of a UI element

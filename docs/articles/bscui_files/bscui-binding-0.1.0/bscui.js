@@ -65,9 +65,14 @@ HTMLWidgets.widget({
                hover_timeout = x.hover_timeout,
                sanitize_attributes = x.sanitize_attributes
             );
+            var selected = check_array(x.selected);
+            scui.update_selection(selected);
 
             // Shiny
             if(window.Shiny){
+
+               // Pre-selection
+               Shiny.setInputValue(el.id + '_selected', [...scui.selected]);
 
                // Talk
                scui.svg.addEventListener("elementSelected", function(event){
@@ -161,6 +166,28 @@ HTMLWidgets.widget({
                      scui.order_elements(element_ids, where = data.where);
                   }
                })
+               Shiny.addCustomMessageHandler(
+                  "bscuiShinyAddElement",
+                  function(data){
+                     if(scui.id == data.id){
+                        scui.add_element(
+                           element_id = data.element_id,
+                           svg_txt = data.svg_txt,
+                           ui_type = data.ui_type,
+                           title = data.title
+                        );
+                     }
+                  }
+               )
+               Shiny.addCustomMessageHandler(
+                  "bscuiShinyRemoveElements",
+                  function(data){
+                     if(scui.id == data.id){
+                        var element_ids = check_array(data.element_ids);
+                        scui.remove_elements(element_ids);
+                     }
+                  }
+               )
             }
 
          },

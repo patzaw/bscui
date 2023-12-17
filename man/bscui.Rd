@@ -13,7 +13,7 @@ bscui(
 )
 }
 \arguments{
-\item{svg_txt}{a character with svg code}
+\item{svg_txt}{a character with SVG code}
 
 \item{sanitize_attributes}{logical indicating if
 '<' and '>' characters in element attributes must be replaced by text}

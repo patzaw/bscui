@@ -63,7 +63,10 @@ ui <- function(req){
                )
             ),
             tags$h3("Test get SVG"),
-            shiny::actionButton("getSvg", "Get SVG")
+            shiny::actionButton("getSvg", "Get SVG"),
+            tags$h3("Modify SVG"),
+            shiny::actionButton("add_rect", "Add rectangle"),
+            shiny::actionButton("rm_rect", "Remove rectangle")
          ),
          column(
             3,
@@ -131,7 +134,8 @@ server <- function(input, output, session){
             menu_width="30px",
             # hover_color=list(button="pink", selectable="cyan", none="green"),
             selection_color="red"
-         )
+         ) |>
+         set_bscui_selection(c("UBERON_0002107", "UBERON_0002048"));
    })
    output$selected_org <- renderPrint({
       paste(input$org_interface_selected, collapse=", ")
@@ -219,6 +223,18 @@ server <- function(input, output, session){
       order_bscui_elements(
          ui_prox, input$org_interface_selected, where=input$move_sel
       )
+   })
+
+   observeEvent(input$add_rect, {
+      add_bscui_element(
+         ui_prox, id="my_rectangle",
+         svg_txt = '<rect x="50" y ="-10" width="20" height="20"></rect>',
+         ui_type = 'selectable',
+         title = 'HELLO!'
+      )
+   })
+   observeEvent(input$rm_rect, {
+      remove_bscui_elements(ui_prox, "my_rectangle")
    })
 }
 

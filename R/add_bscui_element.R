@@ -4,7 +4,7 @@
 #' @param proxy a [`bscui_Proxy`] object
 #' @param id the identifier of the element to add (will replace the id
 #' attribute of the provided svg if any)
-#' @param svg_txt a character with SVG code
+#' @param svg_txt a character with SVG code of one element and its children
 #' @param ui_type either "selectable", "button" or "none". If NULL (default),
 #' the element won't be available as UI
 #' @param title a description of the element to display on mouseover event

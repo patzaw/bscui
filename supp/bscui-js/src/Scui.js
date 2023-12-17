@@ -419,7 +419,6 @@ function Scui(element_id){
             var y = bcr.y - svg_bcr.y;
             var w = bcr.width;
             var h = bcr.height;
-            // var vb = 0 + " " + 0 + " " + w + " " + h;
             var vb = x + " " + y + " " + w + " " + h;
             svg.setAttribute("viewBox", vb);
             scui.ori_viewBox = vb;
@@ -975,14 +974,46 @@ function Scui(element_id){
     * Add an element to the interface
     * 
     * @param {String} element_id the identifier of the element to add
-    * @param {String} svg_txt SVG code
+    * @param {String} svg_txt SVG code of one element and its children
     * @param {String} ui_type either "selectable", "button" or "none".
     * If null (default), the element won't be available as UI
     * @param {String} title a description of the element to display on mouseover
     * event
     *
     */
-   this.add_element = function (element_id, svg_txt, ui_type=null, title=null) {
+   this.add_element = function (element_id, svg_txt, ui_type = null, title = null) {
+      var scui = this;
+      var svg = scui.svg;
+      if (!scui.ui_elements.id.includes(element_id)){
+         scui.ui_elements.id.push(element_id);
+         scui.ui_elements.ui_type.push(ui_type);
+         scui.ui_elements.title.push(title);
+         if (ui_type == "selectable") {
+            scui.selectable.add(element_id);
+         }
+         if (ui_type == "button") {
+            scui.buttons.add(element_id);
+         }
+         var tmp = create_svg_element("g");
+         tmp.innerHTML = svg_txt;
+         var to_add = tmp.firstChild;
+         to_add.id = element_id;
+         scui.main_group.appendChild(to_add);
+
+         var cur_vb = svg.getAttribute("viewBox");
+         svg.removeAttribute("viewBox");
+         var svg_bcr = svg.getBoundingClientRect();
+         var bcr = scui.main_group.getBoundingClientRect();
+         var x = bcr.x - svg_bcr.x;
+         var y = bcr.y - svg_bcr.y;
+         var w = bcr.width;
+         var h = bcr.height;
+         var vb = x + " " + y + " " + w + " " + h;
+         // svg.setAttribute("viewBox", vb);
+         svg.setAttribute("viewBox", cur_vb);
+         scui.ori_viewBox = vb;
+
+      }
    }
 
    //////////////////////////////////
@@ -993,6 +1024,35 @@ function Scui(element_id){
     *
     */
    this.remove_elements = function (element_ids) {
+      var scui = this;
+      var svg = scui.svg;
+      element_ids.forEach(eid => {
+         scui.selectable.delete(eid);
+         scui.selected.delete(eid);
+         scui.buttons.delete(eid);
+         var ind = scui.ui_elements.id.indexOf(eid);
+         if (ind !== -1) {
+            scui.ui_elements.id.splice(ind, 1);
+            scui.ui_elements.ui_type.splice(ind, 1);
+            scui.ui_elements.title.splice(ind, 1);
+         }
+         var to_remove = svg.getElementById(eid);
+         to_remove.parentElement.removeChild(to_remove);
+
+         var cur_vb = svg.getAttribute("viewBox");
+         svg.removeAttribute("viewBox");
+         var svg_bcr = svg.getBoundingClientRect();
+         var bcr = scui.main_group.getBoundingClientRect();
+         var x = bcr.x - svg_bcr.x;
+         var y = bcr.y - svg_bcr.y;
+         var w = bcr.width;
+         var h = bcr.height;
+         var vb = x + " " + y + " " + w + " " + h;
+         // svg.setAttribute("viewBox", vb);
+         svg.setAttribute("viewBox", cur_vb);
+         scui.ori_viewBox = vb;
+
+      })
    }
 
    //////////////////////////////////

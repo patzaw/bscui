@@ -4,10 +4,12 @@
 \alias{remove_bscui_elements}
 \title{Remove SVG elements from the UI}
 \usage{
-remove_bscui_elements(proxy)
+remove_bscui_elements(proxy, element_ids)
 }
 \arguments{
 \item{proxy}{a \code{\link{bscui_Proxy}} object}
+
+\item{element_ids}{the identifiers of the elements to remove}
 }
 \value{
 the provided proxy object

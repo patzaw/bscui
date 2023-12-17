@@ -65,9 +65,14 @@ HTMLWidgets.widget({
                hover_timeout = x.hover_timeout,
                sanitize_attributes = x.sanitize_attributes
             );
+            var selected = check_array(x.selected);
+            scui.update_selection(selected);
 
             // Shiny
             if(window.Shiny){
+
+               // Pre-selection
+               Shiny.setInputValue(el.id + '_selected', [...scui.selected]);
 
                // Talk
                scui.svg.addEventListener("elementSelected", function(event){
