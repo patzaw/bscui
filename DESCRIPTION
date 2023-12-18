@@ -32,6 +32,7 @@ Suggests:
    readr,
    stringr,
    glue,
+   scales,
    shiny,
    DT,
    colourpicker

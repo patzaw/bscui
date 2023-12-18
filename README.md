@@ -48,6 +48,8 @@ examples:
   Consistent Wrappers for Common String Operations
 - [glue](https://CRAN.R-project.org/package=glue): Interpreted String
   Literals
+- [scales](https://CRAN.R-project.org/package=scales): Scale Functions
+  for Visualization
 - [shiny](https://CRAN.R-project.org/package=shiny): Web Application
   Framework for R
 - [DT](https://CRAN.R-project.org/package=DT): A Wrapper of the

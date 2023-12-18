@@ -15,7 +15,7 @@ library(dplyr)
 library(readr)
 library(stringr)
 library(glue)
-library(DT)
+library(scales)
 
 ## ----eval = FALSE-------------------------------------------------------------
 #  ## Dependencies
@@ -113,4 +113,69 @@ figure <- figure |>
    )
 figure |> 
    set_bscui_options(show_menu=FALSE, zoom_min=1, zoom_max=1, clip=TRUE)
+
+## -----------------------------------------------------------------------------
+svg <- xml2::read_xml(system.file(
+   "svg-examples", "WP112.svg.gz",
+   package="bscui"
+))
+info <- read_tsv(system.file(
+   "svg-examples", "WP112.txt.gz",
+   package="bscui"
+), col_types="c")
+deg <- read_tsv(system.file(
+   "svg-examples", "DEG-by-nitrogen-source_MCB-Godard-2007.txt.gz",
+   package="bscui"
+), col_types=paste0(strrep("c", 3), strrep("n", 41)))
+
+## -----------------------------------------------------------------------------
+condition <- "ALANINE"
+toTake <- c("ORF", paste(condition, "M"))
+cond_deg <- deg |> 
+   select(all_of(toTake)) |> 
+   setNames(c("ensembl", "M")) |> 
+   filter(!is.na(M))
+col_scale <- col_numeric(
+   "RdYlBu", domain=range(cond_deg$M), reverse=TRUE
+)
+styles <- cond_deg |> 
+   mutate(
+      fill=col_scale(M)
+   ) |> 
+   inner_join(select(info,id, ensembl), by="ensembl") |> 
+   select(id, fill)
+
+## -----------------------------------------------------------------------------
+elements <- info |> 
+   mutate(
+      ui_type="selectable",
+      bg = case_when(
+         category == "GeneProduct" ~ "#FDFDBD",
+         category == "Metabolite" ~ "#BDFDFD",
+         TRUE ~ "white"
+      )
+   ) |> 
+   left_join(cond_deg, by="ensembl") |> 
+   mutate(
+      de = ifelse(
+         !is.na(M),
+         glue("log2({condition}/UREA) = {round(M,2)}<br/>"),
+         ""
+      )
+   ) |> 
+   mutate(
+      title = glue(
+         '<div style="padding:5px;border:solid;background:{bg}">',
+         '<strong>{name}</strong><br/>',
+         '{de}',
+         '<a href={href}>{category} information</a>',
+         '</div>'
+      )
+   ) |> 
+   select(id, ui_type, title)
+
+## -----------------------------------------------------------------------------
+bscui(svg) |> 
+   set_bscui_ui_elements(elements) |> 
+   set_bscui_styles(styles)
 

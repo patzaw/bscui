@@ -163,3 +163,27 @@ function sanitize_attr(element) {
       }
    }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+/**
+ * Aggregate all transformations applied to an object
+ *
+ * @param {object} element transformed object
+ * 
+ */
+function aggregate_transformations(element) {
+   let transform = "";
+   let currentElement = element;
+
+   // Traverse up the DOM tree to collect transformations
+   while (currentElement !== null) {
+      const elementTransform = getComputedStyle(currentElement).transform;
+      if(elementTransform != 'none'){
+         transform = `${elementTransform} ${transform}`;
+      }
+      currentElement = currentElement.parentElement;
+   }
+   transform = new DOMMatrix(transform);
+   transform = transform.toString();
+   return(transform);
+}

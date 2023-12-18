@@ -237,8 +237,9 @@ readr::write_tsv(info, file=file.path(data_dir, file_name))
 From: https://www.wikipathways.org/
 
 ```{r}
-pid <- "WP4657"
+# pid <- "WP4657"
 # pid <- "WP521"
+pid <- "WP112"
 file_name <- paste0(pid, ".svg")
 svg <- read_xml(file.path(
    "https://www.wikipathways.org",
@@ -256,10 +257,33 @@ namespace_element_nodes <- xml_find_all(
 )
 xml_attr(namespace_element_nodes, "xmlns") <- NULL
 a <- xml_find_all(svg, "//a")
-href <- tibble(
+info <- tibble(
    id = xml_attr(a, "id"),
-   href = xml_attr(a, "href")
-)
+   name = xml_attr(a, "name"),
+   href = xml_attr(a, "href"),
+   svg_class = xml_attr(a, "class")
+) |> 
+   mutate(
+      category = case_when(
+         str_detect(svg_class, "GeneProduct") ~ "GeneProduct",
+         str_detect(svg_class, "Metabolite") ~ "Metabolite",
+         TRUE ~ as.character(NA)
+      ),
+      ensembl = strsplit(svg_class, split = " ") |> 
+         lapply(function(x){
+            grep("^Ensembl_", x, value=TRUE) |> 
+               str_remove("Ensembl_") |> 
+               paste(collapse=", ")
+         }) |> 
+         unlist(),
+      ChEBI = strsplit(svg_class, split = " ") |> 
+         lapply(function(x){
+            grep("^ChEBI_", x, value=TRUE) |> 
+               str_remove("ChEBI_") |> 
+               paste(collapse=", ")
+         }) |> 
+         unlist()
+   )
 xml_attr(a, "target") <- NULL
 xml_attr(namespace_element_nodes[1], "xmlns") <- "http://www.w3.org/2000/svg"
 svg <- as.character(svg) |>
@@ -270,6 +294,14 @@ svg <- as.character(svg) |>
 
 ```{r, echo=FALSE}
 write_xml(svg, file.path(data_dir, str_replace(file_name, ".svg$", ".svg.gz")))
+```
+
+
+```{r, echo=FALSE}
+readr::write_tsv(
+   info,
+   file=file.path(data_dir, str_replace(file_name, ".svg$", ".txt.gz"))
+)
 ```
 
 

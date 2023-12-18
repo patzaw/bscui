@@ -491,8 +491,11 @@ function Scui(element_id){
                }
                var color = hover_color[element_category];
                if (color) {
-                  var to_add = svg.getElementById(scui.hovered).cloneNode(true);
+                  var to_clone = svg.getElementById(scui.hovered);
+                  var transformation = aggregate_transformations(to_clone);
+                  var to_add = to_clone.cloneNode(true);
                   to_add.setAttribute("data-element", scui.hovered);
+                  to_add.setAttribute("transform", transformation);
                   to_add.id = "hovered_shape";
                   to_add.style.visibility = "visible";
                   to_add.style.pointerEvents = 'none';
@@ -636,9 +639,11 @@ function Scui(element_id){
          });
          scui.selected.forEach(id => {
             var current = svg.getElementById(id);
-            if (!disp_identifiers.includes("selection.-_-." + id) && current){
+            if (!disp_identifiers.includes("selection.-_-." + id) && current) {
+               var transformation = aggregate_transformations(current);
                var to_add = current.cloneNode(true);
                to_add.id = "selection.-_-." + to_add.id;
+               to_add.setAttribute("transform", transformation);
                to_add.style.visibility = "visible";
                to_add.style.pointerEvents = 'none';
                if (scui.structure_shapes.has(to_add.tagName)) {

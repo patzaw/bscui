@@ -36,7 +36,7 @@ library(dplyr)
 library(readr)
 library(stringr)
 library(glue)
-library(DT)
+library(scales)
 ```
 
 ```{js, echo=FALSE}
@@ -182,7 +182,7 @@ resetting the view and exporting the figure in SVG or PNG format.
 Several configuration choices are made by default but can be changed,
 such as the zoom range or the width of the menu.
 
-## Defining UI elements
+### Defining UI elements
 
 User Interface (UI) elements are provided as a data frame with the following
 columns:
@@ -225,7 +225,7 @@ figure <- figure |>
 figure
 ```
 
-## Setting element styles
+### Setting element styles
 
 The style of the elements can be changed with the `set_bscui_styles()` function.
 This function can be called several times to change different elements or
@@ -255,7 +255,7 @@ figure <- figure |>
 figure
 ```
 
-## Setting element attributes
+### Setting element attributes
 
 Element attributes can also be changed with
 the `set_bscui_attributes()` function. The example below shows how to focus
@@ -290,6 +290,81 @@ figure |>
 In the example above the `set_bscui_options()` function is used to hide the
 menu and to disable view changes (zoom and pan). Other options can be changed
 with this function.
+
+## Wikipathways: mapping data
+
+```{r}
+svg <- xml2::read_xml(system.file(
+   "svg-examples", "WP112.svg.gz",
+   package="bscui"
+))
+info <- read_tsv(system.file(
+   "svg-examples", "WP112.txt.gz",
+   package="bscui"
+), col_types="c")
+deg <- read_tsv(system.file(
+   "svg-examples", "DEG-by-nitrogen-source_MCB-Godard-2007.txt.gz",
+   package="bscui"
+), col_types=paste0(strrep("c", 3), strrep("n", 41)))
+```
+
+
+```{r}
+condition <- "ALANINE"
+toTake <- c("ORF", paste(condition, "M"))
+cond_deg <- deg |> 
+   select(all_of(toTake)) |> 
+   setNames(c("ensembl", "M")) |> 
+   filter(!is.na(M))
+col_scale <- col_numeric(
+   "RdYlBu", domain=range(cond_deg$M), reverse=TRUE
+)
+styles <- cond_deg |> 
+   mutate(
+      fill=col_scale(M)
+   ) |> 
+   inner_join(select(info,id, ensembl), by="ensembl") |> 
+   select(id, fill)
+```
+
+```{r}
+elements <- info |> 
+   mutate(
+      ui_type="selectable",
+      bg = case_when(
+         category == "GeneProduct" ~ "#FDFDBD",
+         category == "Metabolite" ~ "#BDFDFD",
+         TRUE ~ "white"
+      )
+   ) |> 
+   left_join(cond_deg, by="ensembl") |> 
+   mutate(
+      de = ifelse(
+         !is.na(M),
+         glue("log2({condition}/UREA) = {round(M,2)}<br/>"),
+         ""
+      )
+   ) |> 
+   mutate(
+      title = glue(
+         '<div style="padding:5px;border:solid;background:{bg}">',
+         '<strong>{name}</strong><br/>',
+         '{de}',
+         '<a href={href}>{category} information</a>',
+         '</div>'
+      )
+   ) |> 
+   select(id, ui_type, title)
+```
+
+
+```{r}
+bscui(svg) |> 
+   set_bscui_ui_elements(elements) |> 
+   set_bscui_styles(styles)
+```
+
+
 
 # Shiny applications
 
