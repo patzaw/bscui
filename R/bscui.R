@@ -43,10 +43,12 @@ bscui <- function(
       default_png_scale = 1,
       selection_color = "orange",
       selection_opacity = 0.5,
+      selection_width = 4,
       hover_color = list(
          button="yellow", selectable="cyan", none="transparent"
       ),
       hover_opacity = 0.5,
+      hover_width = 4,
       structure_shapes = c(
          "rect", "circle", "ellipse", "line", "polyline", "polygon", "path"
       ),

@@ -77,11 +77,15 @@
 <span>  <span class="va">default_png_scale</span>,</span>
 <span>  <span class="va">selection_color</span>,</span>
 <span>  <span class="va">selection_opacity</span>,</span>
+<span>  <span class="va">selection_width</span>,</span>
 <span>  <span class="va">hover_color</span>,</span>
 <span>  <span class="va">hover_opacity</span>,</span>
+<span>  <span class="va">hover_width</span>,</span>
 <span>  <span class="va">structure_shapes</span>,</span>
 <span>  <span class="va">dblclick_timeout</span>,</span>
-<span>  <span class="va">hover_timeout</span></span>
+<span>  <span class="va">hover_timeout</span>,</span>
+<span>  <span class="va">width</span>,</span>
+<span>  <span class="va">height</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -128,6 +132,11 @@ is automatically set to its original state (the drawing cannot be moved)</p></dd
 <dd><p>opacity of selection highlight (default: 0.5)</p></dd>
 
 
+<dt>selection_width</dt>
+<dd><p>the additional stroke width to apply on selection
+(default: 4)</p></dd>
+
+
 <dt>hover_color</dt>
 <dd><p>a list of colors used to highlight hovered elements
 (default: <code>list(button="yellow", selectable="cyan", none="transparent")</code>)</p></dd>
@@ -135,6 +144,10 @@ is automatically set to its original state (the drawing cannot be moved)</p></dd
 
 <dt>hover_opacity</dt>
 <dd><p>opacity of hovered highlight (default: 0.5)</p></dd>
+
+
+<dt>hover_width</dt>
+<dd><p>the additional stroke width to apply on hover (default: 4)</p></dd>
 
 
 <dt>structure_shapes</dt>
@@ -152,6 +165,12 @@ drawing
 
 <dt>hover_timeout</dt>
 <dd><p>time in ms before update hovered element (default: 100)</p></dd>
+
+
+<dt>width, height</dt>
+<dd><p>widget width: must be a valid CSS unit (like <code>'100\%'</code>,
+<code>'400px'</code>, <code>'auto'</code>) or a number, which will be coerced to a
+string and have <code>'px'</code> appended.</p></dd>
 
 </dl></div>
     <div class="section level2">

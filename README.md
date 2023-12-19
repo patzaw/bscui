@@ -29,6 +29,8 @@ The following R packages available on CRAN are required:
 
 - [htmlwidgets](https://CRAN.R-project.org/package=htmlwidgets): HTML
   Widgets for R
+- [webshot2](https://CRAN.R-project.org/package=webshot2): Take
+  Screenshots of Web Pages
 
 And those are suggested for building the vignettes and running some
 examples:

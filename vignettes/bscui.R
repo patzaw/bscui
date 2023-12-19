@@ -112,7 +112,10 @@ figure <- figure |>
       append=TRUE
    )
 figure |> 
-   set_bscui_options(show_menu=FALSE, zoom_min=1, zoom_max=1, clip=TRUE)
+   set_bscui_options(
+      show_menu=FALSE, zoom_min=1, zoom_max=1, clip=TRUE,
+      hover_width=1
+   )
 
 ## -----------------------------------------------------------------------------
 svg <- xml2::read_xml(system.file(
@@ -168,7 +171,7 @@ elements <- info |>
          '<div style="padding:5px;border:solid;background:{bg}">',
          '<strong>{name}</strong><br/>',
          '{de}',
-         '<a href={href}>{category} information</a>',
+         '<a href={href} target="_blank">{category} information</a>',
          '</div>'
       )
    ) |> 

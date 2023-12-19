@@ -64,6 +64,11 @@ ui <- function(req){
             ),
             tags$h3("Test get SVG"),
             shiny::actionButton("getSvg", "Get SVG"),
+            tags$h3("Brain type"),
+            shiny::selectInput(
+               "brain_ui_type", "Brain input type",
+               c("button", "selectable", "none")
+            ),
             tags$h3("Modify SVG"),
             shiny::actionButton("add_rect", "Add rectangle"),
             shiny::actionButton("rm_rect", "Remove rectangle")
@@ -222,6 +227,22 @@ server <- function(input, output, session){
    observeEvent(input$apply_move, {
       order_bscui_elements(
          ui_prox, input$org_interface_selected, where=input$move_sel
+      )
+   })
+
+   observe({
+      brain_ui_type = input$brain_ui_type
+      req(brain_ui_type)
+      update_bscui_ui_elements(
+         ui_prox,
+         ui_elements = tibble(
+            id="UBERON_0000955",
+            ui_type=brain_ui_type,
+            title = sprintf(
+               '<div style="background:#FFFF0080; padding:5px;">%s<div>',
+               sprintf('This is <strong>%s</strong>', "brain")
+            )
+         )
       )
    })
 

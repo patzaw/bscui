@@ -284,7 +284,10 @@ figure <- figure |>
       append=TRUE
    )
 figure |> 
-   set_bscui_options(show_menu=FALSE, zoom_min=1, zoom_max=1, clip=TRUE)
+   set_bscui_options(
+      show_menu=FALSE, zoom_min=1, zoom_max=1, clip=TRUE,
+      hover_width=1
+   )
 ```
 
 In the example above the `set_bscui_options()` function is used to hide the
@@ -364,6 +367,14 @@ bscui(svg) |>
    set_bscui_styles(styles)
 ```
 
+## Save and export widget
+
+```{r, eval=FALSE}
+bscui(svg) |>
+   htmlwidgets::saveWidget(file = "test.html")
+bscui(svg) |>
+   export_bscui_to_image(file = "test.png")
+```
 
 
 # Shiny applications

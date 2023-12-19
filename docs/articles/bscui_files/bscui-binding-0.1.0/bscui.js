@@ -58,8 +58,10 @@ HTMLWidgets.widget({
                default_png_scale = x.default_png_scale,
                selection_color = x.selection_color,
                selection_opacity = x.selection_opacity,
+               selection_width = x.selection_width,
                hover_color = x.hover_color,
                hover_opacity = x.hover_opacity,
+               hover_width = x.hover_width,
                structure_shapes = x.structure_shapes,
                dblclick_timeout = x.dblclick_timeout,
                hover_timeout = x.hover_timeout,
@@ -185,6 +187,14 @@ HTMLWidgets.widget({
                      if(scui.id == data.id){
                         var element_ids = check_array(data.element_ids);
                         scui.remove_elements(element_ids);
+                     }
+                  }
+               )
+               Shiny.addCustomMessageHandler(
+                  "bscuiShinyUpdateUI",
+                  function(data){
+                     if(scui.id == data.id){
+                        scui.update_ui_elements(data.ui_elements);
                      }
                   }
                )

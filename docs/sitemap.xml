@@ -34,6 +34,9 @@
     <loc>https://patzaw.github.io/bscui/reference/click_bscui_element.html</loc>
   </url>
   <url>
+    <loc>https://patzaw.github.io/bscui/reference/export_bscui_to_image.html</loc>
+  </url>
+  <url>
     <loc>https://patzaw.github.io/bscui/reference/get_bscui_svg.html</loc>
   </url>
   <url>
@@ -68,5 +71,8 @@
   </url>
   <url>
     <loc>https://patzaw.github.io/bscui/reference/update_bscui_styles.html</loc>
+  </url>
+  <url>
+    <loc>https://patzaw.github.io/bscui/reference/update_bscui_ui_elements.html</loc>
   </url>
 </urlset>

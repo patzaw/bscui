@@ -15,11 +15,15 @@ set_bscui_options(
   default_png_scale,
   selection_color,
   selection_opacity,
+  selection_width,
   hover_color,
   hover_opacity,
+  hover_width,
   structure_shapes,
   dblclick_timeout,
-  hover_timeout
+  hover_timeout,
+  width,
+  height
 )
 }
 \arguments{
@@ -44,10 +48,15 @@ is automatically set to its original state (the drawing cannot be moved)}
 
 \item{selection_opacity}{opacity of selection highlight (default: 0.5)}
 
+\item{selection_width}{the additional stroke width to apply on selection
+(default: 4)}
+
 \item{hover_color}{a list of colors used to highlight hovered elements
 (default: \code{list(button="yellow", selectable="cyan", none="transparent")})}
 
 \item{hover_opacity}{opacity of hovered highlight (default: 0.5)}
+
+\item{hover_width}{the additional stroke width to apply on hover (default: 4)}
 
 \item{structure_shapes}{SVG shapes to considered as concrete
 drawing
@@ -59,6 +68,10 @@ drawing
 (default: 250)}
 
 \item{hover_timeout}{time in ms before update hovered element (default: 100)}
+
+\item{width, height}{widget width: must be a valid CSS unit (like \code{'100\\\%'},
+\code{'400px'}, \code{'auto'}) or a number, which will be coerced to a
+string and have \code{'px'} appended.}
 }
 \value{
 The modified \code{\link{bscui}} object
