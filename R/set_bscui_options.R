@@ -53,7 +53,7 @@ set_bscui_options <- function(
          if(!on %in% names(widget$x)){
             stop(on, " is not a supported option")
          }
-         widget$x[[on]] <- foptions[[i]]
+         widget$x[[on]] <- eval(foptions[[i]])
       }
    }
    return(widget)

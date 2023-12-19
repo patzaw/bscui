@@ -22,7 +22,8 @@ BugReports: https://github.com/patzaw/bscui/issues
 Depends:
    R (>= 4.1)
 Imports:
-   htmlwidgets
+   htmlwidgets,
+   webshot2
 Suggests:
    knitr,
    rmarkdown,
