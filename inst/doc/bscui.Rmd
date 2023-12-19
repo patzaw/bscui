@@ -367,6 +367,14 @@ bscui(svg) |>
    set_bscui_styles(styles)
 ```
 
+## Save and export widget
+
+```{r, eval=FALSE}
+bscui(svg) |>
+   htmlwidgets::saveWidget(file = "test.html")
+bscui(svg) |>
+   export_bscui_to_image(file = "test.png")
+```
 
 
 # Shiny applications

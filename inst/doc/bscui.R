@@ -182,3 +182,9 @@ bscui(svg) |>
    set_bscui_ui_elements(elements) |> 
    set_bscui_styles(styles)
 
+## ----eval=FALSE---------------------------------------------------------------
+#  bscui(svg) |>
+#     htmlwidgets::saveWidget(file = "test.html")
+#  bscui(svg) |>
+#     export_bscui_to_image(file = "test.png")
+

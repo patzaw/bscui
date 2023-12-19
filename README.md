@@ -1,5 +1,5 @@
 
-# Build SVG Custom User Interface <img src="man/figures/bscui-medium.png" width="100px"/>
+# Build SVG Custom User Interface <img src="man/figures/bscui-medium.png" align="right" alt="" width="120" />
 
 <!--
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bscui)](https://cran.r-project.org/package=bsui)
