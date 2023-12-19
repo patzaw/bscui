@@ -4,7 +4,7 @@
 \alias{export_bscui_to_image}
 \title{Save a bscui widget to an image file}
 \usage{
-export_bscui_to_image(widget, file, delay = 0.2)
+export_bscui_to_image(widget, file, delay = 0.2, quiet = TRUE)
 }
 \arguments{
 \item{widget}{a \code{\link{bscui}} object}
@@ -14,6 +14,9 @@ export_bscui_to_image(widget, file, delay = 0.2)
 
 \item{delay}{Time to wait before taking screenshot, in seconds.
 Sometimes a longer delay is needed for all assets to display properly.}
+
+\item{quiet}{If TRUE (default), status updates via console messages are
+suppressed.}
 }
 \description{
 Save a bscui widget to an image file

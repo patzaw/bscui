@@ -6,17 +6,19 @@
 #' (.png, .jpg, .jpeg, or .webp) or .pdf.
 #' @param delay Time to wait before taking screenshot, in seconds.
 #' Sometimes a longer delay is needed for all assets to display properly.
+#' @param quiet If TRUE (default), status updates via console messages are
+#' suppressed.
 #'
 #' @seealso [webshot2::webshot()]
 #'
 #' @export
 #'
-export_bscui_to_image <- function(widget, file, delay=0.2){
+export_bscui_to_image <- function(widget, file, delay=0.2, quiet = TRUE){
    html_file <- tempfile(fileext = ".html")
-   html_file <- normalizePath(html_file, winslash="/")
    on.exit(file.remove(html_file))
    htmlwidgets::saveWidget(widget, html_file)
+   html_file <- normalizePath(html_file, winslash="/")
    invisible(webshot2::webshot(
-      html_file, file=file, selector=".bscui", delay=delay
+      html_file, file=file, selector=".bscui", delay=delay, quiet = quiet
    ))
 }
