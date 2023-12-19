@@ -4,7 +4,14 @@
 \alias{export_bscui_to_image}
 \title{Save a bscui widget to an image file}
 \usage{
-export_bscui_to_image(widget, file, delay = 0.2, quiet = TRUE)
+export_bscui_to_image(
+  widget,
+  file,
+  selector = ".bscui",
+  zoom = 1,
+  quiet = TRUE,
+  ...
+)
 }
 \arguments{
 \item{widget}{a \code{\link{bscui}} object}
@@ -12,10 +19,15 @@ export_bscui_to_image(widget, file, delay = 0.2, quiet = TRUE)
 \item{file}{name of output file. Should end with an image file type
 (.png, .jpg, .jpeg, or .webp) or .pdf.}
 
-\item{delay}{Time to wait before taking screenshot, in seconds.
-Sometimes a longer delay is needed for all assets to display properly.}
+\item{selector}{(\code{\link[webshot2:webshot]{webshot2::webshot()}}) one or more CSS selectors specifying
+a DOM element to set the clipping rectangle to (default: ".bscui").}
 
-\item{quiet}{If TRUE (default), status updates via console messages are
+\item{zoom}{(\code{\link[webshot2:webshot]{webshot2::webshot()}}) If TRUE (default),
+status updates via console messages are suppressed.}
+
+\item{quiet}{(\code{\link[webshot2:webshot]{webshot2::webshot()}}) a number specifying the zoom factor.}
+
+\item{...}{additional parameters for \code{\link[webshot2:webshot]{webshot2::webshot()}}
 suppressed.}
 }
 \description{

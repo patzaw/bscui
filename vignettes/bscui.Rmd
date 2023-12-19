@@ -373,7 +373,8 @@ bscui(svg) |>
 bscui(svg) |>
    htmlwidgets::saveWidget(file = "test.html")
 bscui(svg) |>
-   export_bscui_to_image(file = "test.png")
+   set_bscui_options(show_menu=FALSE) |> 
+   export_bscui_to_image(file = "test.png", zoom=6)
 ```
 
 
