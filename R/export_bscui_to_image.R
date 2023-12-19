@@ -13,6 +13,8 @@
 #'
 export_bscui_to_image <- function(widget, file, delay=0.2){
    html_file <- tempfile(fileext = ".html")
+   html_file <- normalizePath(html_file, winslash="/")
+   on.exit(file.remove(html_file))
    htmlwidgets::saveWidget(widget, html_file)
    invisible(webshot2::webshot(
       html_file, file=file, selector=".bscui", delay=delay
