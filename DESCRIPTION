@@ -6,13 +6,15 @@ Authors@R: c(
     person(
         "Patrice", "Godard",
         role = c("aut", "cre","cph"),
-        email = "patrice.godard@gmail.com"
+        email = "patrice.godard@gmail.com",
+        comment = c(ORCID = "0000-0001-6257-9730")
     )
     )
 Description: Render SVG as interactive figures to display contextual
    information, with selectable and clickable user interface elements.
-   These figures can be seamlessly integrated into Rmarkdown and Quarto
-   documents or Shiny applications that react to events triggered within them.
+   These figures can be seamlessly integrated into R Markdown and Quarto
+   documents, as well as Shiny applications, allowing manipulation of elements
+   and reporting actions performed on them.
    Additional features include pan, zoom in/out functionality, and the ability
    to export the figures in SVG or PNG formats.
 URL:

@@ -23,3 +23,11 @@ the provided proxy object
 \description{
 Update the type and title of bscui ui elements in Shiny app
 }
+\examples{
+\dontrun{
+   shiny::runApp(system.file(
+      "examples", "shiny-anatomogram", package = "bscui"
+   ))
+}
+
+}

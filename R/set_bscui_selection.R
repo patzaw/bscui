@@ -6,6 +6,8 @@
 #'
 #' @return The modified [`bscui`] object
 #'
+#' @example inst/examples/main-example.R
+#'
 #' @export
 #'
 set_bscui_selection <- function(

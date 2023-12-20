@@ -20,3 +20,11 @@ the provided proxy object
 \description{
 Trigger a click event on a clickable element
 }
+\examples{
+\dontrun{
+   shiny::runApp(system.file(
+      "examples", "shiny-anatomogram", package = "bscui"
+   ))
+}
+
+}

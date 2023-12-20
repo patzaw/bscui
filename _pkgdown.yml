@@ -18,5 +18,33 @@ authors:
   Patrice Godard:
     href: https://patzaw.github.io
 
+
+reference:
+- title: "Buiding figures"
+  desc: "Function for preparing bscui figures"
+  contents:
+  - bscui
+  - set_bscui_ui_elements
+  - set_bscui_styles
+  - set_bscui_attributes
+  - set_bscui_options
+  - set_bscui_selection
+  - export_bscui_to_image
+- title: "Shiny figures"
+  desc: "Function for using bscui figures in Shiny"
+  contents:
+  - bscuiOutput
+  - renderBscui
+  - bscuiProxy
+  - update_bscui_ui_elements
+  - update_bscui_styles
+  - update_bscui_attributes
+  - select_bscui_elements
+  - click_bscui_element
+  - order_bscui_elements
+  - add_bscui_element
+  - remove_bscui_elements
+  - get_bscui_svg
+
 deploy:
   install_metadata: true

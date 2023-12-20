@@ -18,3 +18,11 @@ the provided proxy object
 \description{
 Replace current selection with given element identifiers
 }
+\examples{
+\dontrun{
+   shiny::runApp(system.file(
+      "examples", "shiny-anatomogram", package = "bscui"
+   ))
+}
+
+}

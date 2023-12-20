@@ -17,3 +17,63 @@ The modified \code{\link{bscui}} object
 \description{
 Pre-select UI elements in a bscui widget
 }
+\examples{
+##################################@
+### Preparing data ----
+
+library(bscui)
+library(xml2)
+library(readr)
+library(dplyr)
+
+svg <- xml2::read_xml(system.file(
+   "examples", "Animal_cells.svg.gz",
+   package="bscui"
+))
+info <- readr::read_tsv(system.file(
+   "examples", "uniprot_cellular_locations.txt.gz",
+   package="bscui"
+), col_types=strrep("c", 6)) |>
+   mutate(id = sub("-", "", `Subcellular location ID`))
+
+##################################@
+### Building the figure ----
+
+figure <- bscui(svg) |>
+   set_bscui_ui_elements(
+      info |>
+         mutate(
+            ui_type = "selectable",
+            title = Name
+         ) |>
+         select(id, ui_type, title)
+   ) |>
+   set_bscui_styles(
+      info |>
+         filter(Name == "Cytosol") |>
+         mutate(fill = "#FF7F7F") |>
+         select(id, fill)
+   ) |>
+   set_bscui_attributes(
+      info |>
+         filter(Name == "Cytoskeleton") |>
+         mutate(display = "none") |>
+         select(id, display)
+   ) |>
+   set_bscui_selection("SL0188") |>
+   set_bscui_options(zoom_min=1, clip=TRUE)
+figure
+
+##################################@
+### Saving the figure ----
+
+if(FALSE){
+   ## Interactive html file
+   figure |> htmlwidgets::saveWidget(file="figure.html")
+
+   ## PNG image
+   figure |>
+      set_bscui_options(show_menu = FALSE) |>
+      export_bscui_to_image(file="figure.png", zoom=2)
+}
+}

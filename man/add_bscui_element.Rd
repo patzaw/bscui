@@ -25,3 +25,11 @@ the provided proxy object
 \description{
 Add an SVG element to the UI
 }
+\examples{
+\dontrun{
+   shiny::runApp(system.file(
+      "examples", "shiny-anatomogram", package = "bscui"
+   ))
+}
+
+}

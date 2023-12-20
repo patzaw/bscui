@@ -14,6 +14,11 @@
 #'
 #' @seealso [webshot2::webshot()]
 #'
+#' @return Invisibly returns the normalized path to the image.
+#' The character vector will have a class of "webshot".
+#'
+#' @example inst/examples/main-example.R
+#'
 #' @export
 #'
 export_bscui_to_image <- function(

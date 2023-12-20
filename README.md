@@ -8,10 +8,11 @@
 
 Render SVG as interactive figures to display contextual information,
 with selectable and clickable user interface elements. These figures can
-be seamlessly integrated into Rmarkdown and Quarto documents or Shiny
-applications that react to events triggered within them. Additional
-features include pan, zoom in/out functionality, and the ability to
-export the figures in SVG or PNG formats.
+be seamlessly integrated into R Markdown and Quarto documents, as well
+as Shiny applications, allowing manipulation of elements and reporting
+actions performed on them. Additional features include pan, zoom in/out
+functionality, and the ability to export the figures in SVG or PNG
+formats.
 
 ## Installation
 
@@ -80,15 +81,20 @@ vignette("bscui")
 
 ## Examples
 
+### R scripts, R markdown, Quarto
+
+This example relies on a figure of animal cells taken from
+[SwissBioPics](https://www.swissbiopics.org/name/Animal_cell).
+
 ``` r
+##################################@
+### Preparing data ----
+
 library(bscui)
 library(xml2)
 library(readr)
 library(dplyr)
-library(stringr)
 
-#######################################@
-## Use an existing SVG file ----
 svg <- xml2::read_xml(system.file(
    "examples", "Animal_cells.svg.gz",
    package="bscui"
@@ -96,29 +102,57 @@ svg <- xml2::read_xml(system.file(
 info <- readr::read_tsv(system.file(
    "examples", "uniprot_cellular_locations.txt.gz",
    package="bscui"
-), col_types=strrep("c", 6)) |> 
-   mutate(id = str_remove(`Subcellular location ID`, "-"))
-bscui(svg) |> 
+), col_types=strrep("c", 6)) |>
+   mutate(id = sub("-", "", `Subcellular location ID`))
+
+##################################@
+### Building the figure ----
+
+figure <- bscui(svg) |>
    set_bscui_ui_elements(
-      info |> 
+      info |>
          mutate(
             ui_type = "selectable",
             title = Name
          ) |>
          select(id, ui_type, title)
-   ) |> 
+   ) |>
    set_bscui_styles(
       info |>
          filter(Name == "Cytosol") |>
-         mutate(fill = "#FF7F7F") |> 
+         mutate(fill = "#FF7F7F") |>
          select(id, fill)
-   ) |> 
+   ) |>
+   set_bscui_attributes(
+      info |>
+         filter(Name == "Cytoskeleton") |>
+         mutate(display = "none") |>
+         select(id, display)
+   ) |>
+   set_bscui_selection("SL0188") |>
    set_bscui_options(zoom_min=1, clip=TRUE)
+figure
 
-#######################################@
-## Create SVG shapes ----
+##################################@
+### Saving the figure ----
 
+if(FALSE){
+   ## Interactive html file
+   figure |> htmlwidgets::saveWidget(file="figure.html")
 
-#######################################@
-## Shiny application example ----
+   ## PNG image
+   figure |>
+      set_bscui_options(show_menu = FALSE) |>
+      export_bscui_to_image(file="figure.png", zoom=2)
+}
+```
+
+### Shiny application
+
+The following shiny application relies on an anatomogram taken from the
+[EBI gene expression
+group](https://github.com/ebi-gene-expression-group/anatomogram).
+
+``` r
+shiny::runApp(system.file("examples", "shiny-anatomogram", package = "bscui"))
 ```

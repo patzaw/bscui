@@ -17,3 +17,11 @@ the provided proxy object
 \description{
 Remove SVG elements from the UI
 }
+\examples{
+\dontrun{
+   shiny::runApp(system.file(
+      "examples", "shiny-anatomogram", package = "bscui"
+   ))
+}
+
+}

@@ -15,3 +15,11 @@ the provided proxy object
 \description{
 Get the displayed SVG
 }
+\examples{
+\dontrun{
+   shiny::runApp(system.file(
+      "examples", "shiny-anatomogram", package = "bscui"
+   ))
+}
+
+}

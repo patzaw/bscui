@@ -40,13 +40,22 @@ Output and render functions for using bscui within Shiny applications.
 \details{
 The UI can be updated with \code{bscuiProxy}, using different methods:
 \itemize{
-\item \link{add_bscui_element}: add an SVG element to the UI
-\item \link{remove_bscui_elements}: remove SVG elements from the UI
-\item \link{order_bscui_elements}: change elements order (e.g. move them forward)
-\item \link{update_bscui_attributes} set attributes of a UI element
+\item \link{update_bscui_ui_elements}: change type and title of elements
 \item \link{update_bscui_styles}: set style of UI elements
+\item \link{update_bscui_attributes} set attributes of a UI element
 \item \link{select_bscui_elements}: chose selected elements
 \item \link{click_bscui_element}: trigger a single or double click on a UI element
+\item \link{order_bscui_elements}: change elements order (e.g. move them forward)
+\item \link{add_bscui_element}: add an SVG element to the UI
+\item \link{remove_bscui_elements}: remove SVG elements from the UI
 \item \link{get_bscui_svg}: get the displayed SVG in R session
 }
+}
+\examples{
+\dontrun{
+   shiny::runApp(system.file(
+      "examples", "shiny-anatomogram", package = "bscui"
+   ))
+}
+
 }

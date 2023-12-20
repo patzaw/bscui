@@ -11,6 +11,8 @@
 #'
 #' @return An `htmlwidget` object
 #'
+#' @example inst/examples/main-example.R
+#'
 #' @export
 #'
 bscui <- function(
@@ -90,15 +92,22 @@ bscui <- function(
 #' @details
 #'
 #' The UI can be updated with `bscuiProxy`, using different methods:
-#' - [add_bscui_element]: add an SVG element to the UI
-#' - [remove_bscui_elements]: remove SVG elements from the UI
-#'
-#' - [order_bscui_elements]: change elements order (e.g. move them forward)
-#' - [update_bscui_attributes] set attributes of a UI element
+#' - [update_bscui_ui_elements]: change type and title of elements
 #' - [update_bscui_styles]: set style of UI elements
+#' - [update_bscui_attributes] set attributes of a UI element
 #' - [select_bscui_elements]: chose selected elements
 #' - [click_bscui_element]: trigger a single or double click on a UI element
+#' - [order_bscui_elements]: change elements order (e.g. move them forward)
+#' - [add_bscui_element]: add an SVG element to the UI
+#' - [remove_bscui_elements]: remove SVG elements from the UI
 #' - [get_bscui_svg]: get the displayed SVG in R session
+#'
+#' @examples
+#' \dontrun{
+#'    shiny::runApp(system.file(
+#'       "examples", "shiny-anatomogram", package = "bscui"
+#'    ))
+#' }
 #'
 #' @export
 #'

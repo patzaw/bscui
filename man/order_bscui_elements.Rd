@@ -23,3 +23,11 @@ the provided proxy object
 \description{
 Change element order in the SVG
 }
+\examples{
+\dontrun{
+   shiny::runApp(system.file(
+      "examples", "shiny-anatomogram", package = "bscui"
+   ))
+}
+
+}

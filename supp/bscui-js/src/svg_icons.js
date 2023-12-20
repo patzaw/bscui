@@ -7,9 +7,10 @@
  * @param {string} icon the name of the icon to create
  * @param {string} title the title of the icon
  * @param {string} fill the background color
+ * @param {string} display attribute
  *
  */
-function create_svg_icon(icon, title, fill = "#FFFFFF00"){
+function create_svg_icon(icon, title, fill = "#FFFFFF00", display = "block"){
 
    // Icon definitions
    var icons = [
@@ -196,6 +197,7 @@ function create_svg_icon(icon, title, fill = "#FFFFFF00"){
    </g>
    `;
    toRet.setAttribute("viewBox", icons[i].viewBox);
+   toRet.setAttribute("display", display);
    toRet.style.cursor= "pointer";
 
    return(toRet);

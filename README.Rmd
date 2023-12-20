@@ -85,47 +85,23 @@ vignette("bscui")
 
 ## Examples
 
-```{r, eval=FALSE}
-library(bscui)
-library(xml2)
-library(readr)
-library(dplyr)
-library(stringr)
+### R scripts, R markdown, Quarto
 
-#######################################@
-## Use an existing SVG file ----
-svg <- xml2::read_xml(system.file(
-   "examples", "Animal_cells.svg.gz",
-   package="bscui"
-))
-info <- readr::read_tsv(system.file(
-   "examples", "uniprot_cellular_locations.txt.gz",
-   package="bscui"
-), col_types=strrep("c", 6)) |> 
-   mutate(id = str_remove(`Subcellular location ID`, "-"))
-bscui(svg) |> 
-   set_bscui_ui_elements(
-      info |> 
-         mutate(
-            ui_type = "selectable",
-            title = Name
-         ) |>
-         select(id, ui_type, title)
-   ) |> 
-   set_bscui_styles(
-      info |>
-         filter(Name == "Cytosol") |>
-         mutate(fill = "#FF7F7F") |> 
-         select(id, fill)
-   ) |> 
-   set_bscui_options(zoom_min=1, clip=TRUE)
+This example relies on a figure of animal cells taken
+from [SwissBioPics](https://www.swissbiopics.org/name/Animal_cell).
 
-#######################################@
-## Create SVG shapes ----
-
-
-#######################################@
-## Shiny application example ----
-
+```{r, echo=FALSE, results='asis'}
+ec <- readLines(system.file("examples", "main-example.R", package = "bscui"))
+cat('```r', sep="\n")
+cat(ec, sep="\n")
+cat('```', sep="\n")
 ```
 
+### Shiny application
+
+The following shiny application relies on an anatomogram taken from the
+[EBI gene expression group](https://github.com/ebi-gene-expression-group/anatomogram).
+
+```{r, eval=FALSE}
+shiny::runApp(system.file("examples", "shiny-anatomogram", package = "bscui"))
+```

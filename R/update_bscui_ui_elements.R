@@ -10,6 +10,13 @@
 #'
 #' @return the provided proxy object
 #'
+#' @examples
+#' \dontrun{
+#'    shiny::runApp(system.file(
+#'       "examples", "shiny-anatomogram", package = "bscui"
+#'    ))
+#' }
+#'
 #' @export
 #'
 update_bscui_ui_elements <- function(
