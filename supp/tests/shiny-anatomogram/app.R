@@ -84,11 +84,11 @@ ui <- function(req){
 
 server <- function(input, output, session){
    svg <- read_xml(system.file(
-      "svg-examples", "homo_sapiens.female.svg.gz",
+      "examples", "homo_sapiens.female.svg.gz",
       package="bscui"
    ))
    element_titles <- read_tsv(system.file(
-      "svg-examples", "homo_sapiens.female.txt.gz",
+      "examples", "homo_sapiens.female.txt.gz",
       package="bscui"
    ), col_types = "cc")
    elements <- element_titles |>

@@ -32,7 +32,7 @@ library(xml2)
 library(dplyr)
 library(readr)
 ##
-data_dir <- here("inst/svg-examples")
+data_dir <- here("inst/examples")
 ```
 
 ```{js, echo=FALSE}

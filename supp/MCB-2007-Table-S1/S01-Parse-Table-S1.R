@@ -24,5 +24,5 @@ gt <- gt |>
 
 write_tsv(
    gt,
-   file=here("inst/svg-examples/DEG-by-nitrogen-source_MCB-Godard-2007.txt.gz")
+   file=here("inst/examples/DEG-by-nitrogen-source_MCB-Godard-2007.txt.gz")
 )

@@ -90,11 +90,11 @@ library(stringr)
 #######################################@
 ## Use an existing SVG file ----
 svg <- xml2::read_xml(system.file(
-   "svg-examples", "Animal_cells.svg.gz",
+   "examples", "Animal_cells.svg.gz",
    package="bscui"
 ))
 info <- readr::read_tsv(system.file(
-   "svg-examples", "uniprot_cellular_locations.txt.gz",
+   "examples", "uniprot_cellular_locations.txt.gz",
    package="bscui"
 ), col_types=strrep("c", 6)) |> 
    mutate(id = str_remove(`Subcellular location ID`, "-"))

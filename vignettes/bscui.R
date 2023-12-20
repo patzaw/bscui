@@ -35,7 +35,7 @@ sessionInfo()
 
 ## -----------------------------------------------------------------------------
 svg <- xml2::read_xml(system.file(
-   "svg-examples", "Animal_cells.svg.gz",
+   "examples", "Animal_cells.svg.gz",
    package="bscui"
 ))
 
@@ -45,7 +45,7 @@ figure
 
 ## -----------------------------------------------------------------------------
 info <- readr::read_tsv(system.file(
-   "svg-examples", "uniprot_cellular_locations.txt.gz",
+   "examples", "uniprot_cellular_locations.txt.gz",
    package="bscui"
 ), col_types=strrep("c", 6)) |> 
    mutate(id = str_remove(`Subcellular location ID`, "-"))
@@ -119,15 +119,15 @@ figure |>
 
 ## -----------------------------------------------------------------------------
 svg <- xml2::read_xml(system.file(
-   "svg-examples", "WP112.svg.gz",
+   "examples", "WP112.svg.gz",
    package="bscui"
 ))
 info <- read_tsv(system.file(
-   "svg-examples", "WP112.txt.gz",
+   "examples", "WP112.txt.gz",
    package="bscui"
 ), col_types="c")
 deg <- read_tsv(system.file(
-   "svg-examples", "DEG-by-nitrogen-source_MCB-Godard-2007.txt.gz",
+   "examples", "DEG-by-nitrogen-source_MCB-Godard-2007.txt.gz",
    package="bscui"
 ), col_types=paste0(strrep("c", 3), strrep("n", 41)))
 
@@ -186,5 +186,6 @@ bscui(svg) |>
 #  bscui(svg) |>
 #     htmlwidgets::saveWidget(file = "test.html")
 #  bscui(svg) |>
-#     export_bscui_to_image(file = "test.png")
+#     set_bscui_options(show_menu=FALSE) |>
+#     export_bscui_to_image(file = "test.png", zoom=6)
 

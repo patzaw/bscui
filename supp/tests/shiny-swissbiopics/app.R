@@ -47,7 +47,7 @@ ui <- function(req){
 
 server <- function(input, output, session){
    svg <- read_xml(system.file(
-      "svg-examples", "Animal_cells.svg.gz",
+      "examples", "Animal_cells.svg.gz",
       package="bscui"
    ))
    ## Remove text elements
@@ -58,7 +58,7 @@ server <- function(input, output, session){
    }
 
    elements <- read_tsv(system.file(
-      "svg-examples", "uniprot_cellular_locations.txt.gz",
+      "examples", "uniprot_cellular_locations.txt.gz",
       package="bscui"
    ), col_types="c")
    ui_elements <- elements |>
