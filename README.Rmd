@@ -74,7 +74,7 @@ devtools::install_github("patzaw/bscui")
 
 ## Documentation
 
-- [Introduction to bscui](https://patzaw.github.io/bscui/articles/bscui.html):
+- [Introduction to bscui](https://patzaw.github.io/bscui/articles/bscui.html);
 this introduction vignette is also included in the package:
 
 ```{r, eval=FALSE}
@@ -85,7 +85,7 @@ vignette("bscui")
 
 ## Examples
 
-### R scripts, R markdown, Quarto
+### Building figures
 
 This example relies on a figure of animal cells taken
 from [SwissBioPics](https://www.swissbiopics.org/name/Animal_cell).
@@ -97,7 +97,7 @@ cat(ec, sep="\n")
 cat('```', sep="\n")
 ```
 
-### Shiny application
+### Figures in Shiny
 
 The following shiny application relies on an anatomogram taken from the
 [EBI gene expression group](https://github.com/ebi-gene-expression-group/anatomogram).

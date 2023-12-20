@@ -30,7 +30,6 @@ opts_chunk$set(
    cache.lazy=FALSE
 )
 library(bscui)
-library(dplyr)
 library(xml2)
 library(dplyr)
 library(readr)
@@ -69,22 +68,23 @@ function toggleCollapse(id) {
 }
 ```
 
-The aim of the 'bscui' R package is to use any SVG image as an interactive figure
-on which contextual information can be displayed.
-These figures can be integrated
-in [R Markdown](https://rmarkdown.rstudio.com/)/[Quarto](https://quarto.org/)
-documents or in [Shiny](https://shiny.posit.co/) applications.
+The aim of the 'bscui' R package is to render any SVG image as an interactive
+figure and convert identified elements into an actionable interface.
+This figure can be seamlessly integrated into 
+[R Markdown](https://rmarkdown.rstudio.com/) and [Quarto](https://quarto.org/)
+documents applications.as well as [Shiny](https://shiny.posit.co/) applications,
+allowing manipulation of elements and reporting actions performed on them.
 
 Here are the main features of 'bscui' figures:
 
    - Interactive view: pan, zoom in/out
    - Update the style (e.g., color, stroke, opacity...) of SVG elements
    - Update the attribute (e.g., path) of SVG elements
-   - Add or remove SVG elements
    - Export the figure in SVG or PNG format
    - Display contextual information when hovering over SVG elements
    - Select one or multiple SVG elements (mainly used with Shiny)
    - Click on elements (mainly used with Shiny)
+   - Add or remove SVG elements (in Shiny)
 
 The main motivation behind the development of this package was to be able
 to leverage SVG images kindly shared in public knowledge resources
@@ -96,7 +96,8 @@ or [wikipathways](https://www.wikipathways.org/)
 to display and browse information in the relevant contexts.
 
 The package comes with several pre-processed
-examples used to demonstrate the available features, as shown in this document.
+examples used to demonstrate the main available features
+described in this document.
 
 # Installation and requirements
 
@@ -110,7 +111,7 @@ install.packages("htmlwidgets")
 devtools::install_github("patzaw/bscui")
 ```
 
-Hopefully 'bscui' will be available soon on [CRAN](https://cran.r-project.org/).
+Hopefully 'bscui' will be available on [CRAN](https://cran.r-project.org/) soon.
 
 ## Vignette requirements
 
@@ -118,11 +119,13 @@ The following packages are not dependencies of 'bscui' strictly speaking but
 are required to run code examples discussed in this document.
 
 ```{r, eval = FALSE}
+library(bscui)
 library(xml2)
 library(dplyr)
 library(readr)
-library(stringr)
+library(stringr
 library(glue)
+library(scales)
 ```
 
 
@@ -147,8 +150,10 @@ are used to read and manipulate tables with figure contextual information
 - [stringr](https://cran.r-project.org/package=stringr) and
 [glue](https://cran.r-project.org/package=glue) are used to facilitate
 the creation of html tags
+- [scales](https://cran.r-project.org/package=scales) is used to generate
+color scales
 
-# Simple use in R session or static documents
+# Building figures
 
 The main function of the package is `bscui()`. It takes as main argument
 a character string with SVG code.
@@ -156,7 +161,7 @@ The use of [xml2](https://cran.r-project.org/package=xml2) to read SVG files is
 not mandatory but it can be useful to validate the SVG and manipulate it before
 displaying it.
 
-## Animal cells example
+## Simple example: Animal cells
 
 This example relies on a figure of animal cells taken
 from [SwissBioPics](https://www.swissbiopics.org/name/Animal_cell).
@@ -220,6 +225,11 @@ ui_elements <- info |>
       )
    ) |>
    select(id, ui_type, title)
+ui_elements
+```
+
+
+```{r}
 figure <- figure |> 
    set_bscui_ui_elements(ui_elements)
 figure
@@ -228,6 +238,9 @@ figure
 ### Setting element styles
 
 The style of the elements can be changed with the `set_bscui_styles()` function.
+The styles are are provided in a data frame with an id column, providing the
+element identifier, and one column per style.  Column names should correspond
+to a style name in camel case (e.g., "strokeOpacity").
 This function can be called several times to change different elements or
 different options.
 
@@ -294,7 +307,43 @@ In the example above the `set_bscui_options()` function is used to hide the
 menu and to disable view changes (zoom and pan). Other options can be changed
 with this function.
 
-## Wikipathways: mapping data
+### Save and export widget
+
+The `htmlwidgets::saveWidget()` function can be used to save the figure in
+an interactive html file.
+
+```{r, eval=FALSE}
+bscui(svg) |>
+   htmlwidgets::saveWidget(file = "figure.html")
+```
+
+And the `export_bscui_to_image()` is used to export the figure as an image.
+
+```{r, eval=FALSE}
+bscui(svg) |>
+   set_bscui_options(show_menu=FALSE) |> 
+   export_bscui_to_image(file = "figure.png", zoom=6)
+```
+
+This function relies on the '[webshot2](https://rstudio.github.io/webshot2/)'
+package and requires the Chrome browser or other browsers based on Chromium,
+such as Chromium itself, Edge, Vivaldi, Brave, Opera
+or [Thorium](https://github.com/Alex313031/thorium/).
+The following code chunk shows how to rely on Microsoft Edge.
+
+```{r, eval=FALSE}
+Sys.setenv(
+	"CHROMOTE_CHROME" = "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
+)
+```
+
+## Mapping data: Wikipathways
+
+The following example demonstrates how to use 'bscui' to map numeric data
+with colors on the figure. In this example, gene expression data are used
+to color elements of the [Principal pathways of
+carbon metabolism](https://www.wikipathways.org/pathways/WP112.html) taken
+from [WikiPathways](https://www.wikipathways.org/).
 
 ```{r}
 svg <- xml2::read_xml(system.file(
@@ -305,12 +354,26 @@ info <- read_tsv(system.file(
    "examples", "WP112.txt.gz",
    package="bscui"
 ), col_types="c")
+```
+
+Gene expression data were
+taken from a publication describing the effect of the provided nitrogen sources
+on baker yeast gene expression
+([Godard *et al.* 2007](https://doi.org/10.1128/MCB.01084-06)). The
+supplementary Table S1 provides the list genes displaying significant variation
+of expression in at least one tested nitrogen condition compared to urea.
+
+```{r}
 deg <- read_tsv(system.file(
    "examples", "DEG-by-nitrogen-source_MCB-Godard-2007.txt.gz",
    package="bscui"
 ), col_types=paste0(strrep("c", 3), strrep("n", 41)))
 ```
 
+Below, we focus on the ALANINE condition and extract the M value
+comparing the expression of genes when this amino-acid is used as the nitrogen
+source instead of urea in yeast culture:
+$M = log_2\left(Expression\,on\,alanine \over Expression\,on\,urea\right)$
 
 ```{r}
 condition <- "ALANINE"
@@ -319,6 +382,12 @@ cond_deg <- deg |>
    select(all_of(toTake)) |> 
    setNames(c("ensembl", "M")) |> 
    filter(!is.na(M))
+```
+
+We define a color scale on M values and define the style of the SVG elements
+accordingly.
+
+```{r}
 col_scale <- col_numeric(
    "RdYlBu", domain=range(cond_deg$M), reverse=TRUE
 )
@@ -329,6 +398,9 @@ styles <- cond_deg |>
    inner_join(select(info,id, ensembl), by="ensembl") |> 
    select(id, fill)
 ```
+
+Finally, we create tooltips on SVG elements showing the type of biological
+object and the M value when available.
 
 ```{r}
 elements <- info |> 
@@ -360,6 +432,7 @@ elements <- info |>
    select(id, ui_type, title)
 ```
 
+And we use this information to create the figure.
 
 ```{r}
 bscui(svg) |> 
@@ -367,18 +440,13 @@ bscui(svg) |>
    set_bscui_styles(styles)
 ```
 
-## Save and export widget
-
-```{r, eval=FALSE}
-bscui(svg) |>
-   htmlwidgets::saveWidget(file = "test.html")
-bscui(svg) |>
-   set_bscui_options(show_menu=FALSE) |> 
-   export_bscui_to_image(file = "test.png", zoom=6)
-```
-
 
 # Shiny applications
+
+```{r, eval=FALSE}
+shiny::runApp(system.file("examples", "shiny-anatomogram", package = "bscui"))
+```
+
 
 ## Reacting
 

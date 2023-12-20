@@ -30,7 +30,7 @@ reference:
   - set_bscui_options
   - set_bscui_selection
   - export_bscui_to_image
-- title: "Shiny figures"
+- title: "Figures in Shiny"
   desc: "Function for using bscui figures in Shiny"
   contents:
   - bscuiOutput
