@@ -507,9 +507,6 @@ function Scui(element_id){
                   if (scui.structure_shapes.has(to_add.tagName)) {
                      to_add.style.fill = "none";
                      to_add.style.stroke = color;
-                     // if(!to_add.style.strokeWidth){
-                     //    to_add.style.strokeWidth = 1;
-                     // }
                      to_add.style.strokeWidth = to_add.style.strokeWidth +
                         hover_width;
                      to_add.style.strokeOpacity = 1;
@@ -522,9 +519,6 @@ function Scui(element_id){
                         to_mod.style.fill = "none";
                         to_mod.style.stroke = color;
                         to_mod.style.visibility = "visible";
-                        // if (!to_mod.style.strokeWidth) {
-                        //    to_mod.style.strokeWidth = 1;
-                        // }
                         to_mod.style.strokeWidth = to_mod.style.strokeWidth +
                            hover_width;
                         to_mod.style.strokeOpacity = 1;
@@ -658,13 +652,11 @@ function Scui(element_id){
                to_add.id = "selection.-_-." + to_add.id;
                to_add.setAttribute("transform", transformation);
                to_add.style.visibility = "visible";
+               to_add.style.display = "block";
                to_add.style.pointerEvents = 'none';
                if (scui.structure_shapes.has(to_add.tagName)) {
                   to_add.style.fill = "none";
                   to_add.style.stroke = selection_color;
-                  // if (!to_add.style.strokeWidth) {
-                  //    to_add.style.strokeWidth = 1;
-                  // }
                   to_add.style.strokeWidth = to_add.style.strokeWidth + 
                      selection_width;
                   to_add.style.strokeOpacity = 1;
@@ -677,9 +669,7 @@ function Scui(element_id){
                      to_mod.style.fill = "none";
                      to_mod.style.stroke = selection_color;
                      to_mod.style.visibility = "visible";
-                     // if (!to_mod.style.strokeWidth) {
-                     //    to_mod.style.strokeWidth = 1;
-                     // }
+                     to_mod.style.display = "block";
                      to_mod.style.strokeWidth = to_mod.style.strokeWidth +
                         selection_width;
                      to_mod.style.strokeOpacity = 1;
@@ -1095,22 +1085,34 @@ function Scui(element_id){
       ui_elements.id.forEach(eid => {
          var new_ind = ui_elements.id.indexOf(eid);
          // clean
-         if (ui_elements.ui_type[new_ind] != "selectable") {
-            scui.selected.delete(eid);
-            svg.dispatchEvent(scui.select_event);
+         if(ui_elements.ui_type){
+            if (ui_elements.ui_type[new_ind] != "selectable") {
+               scui.selected.delete(eid);
+               svg.dispatchEvent(scui.select_event);
+            }
          }
          scui.selectable.delete(eid);
          scui.buttons.delete(eid);
          var ind = scui.ui_elements.id.indexOf(eid);
+         var cur_type = "none";
+         var cur_title = "";
          if (ind !== -1) {
             scui.ui_elements.id.splice(ind, 1);
-            scui.ui_elements.ui_type.splice(ind, 1);
-            scui.ui_elements.title.splice(ind, 1);
+            cur_type = scui.ui_elements.ui_type.splice(ind, 1)[0];
+            cur_title = scui.ui_elements.title.splice(ind, 1)[0];
          }
          // add
          scui.ui_elements.id.push(eid);
-         scui.ui_elements.ui_type.push(ui_elements.ui_type[new_ind]);
-         scui.ui_elements.title.push(ui_elements.title[new_ind]);
+         if (ui_elements.ui_type){
+            scui.ui_elements.ui_type.push(ui_elements.ui_type[new_ind]);
+         }else{
+            scui.ui_elements.ui_type.push(cur_type);
+         }
+         if (ui_elements.title){
+            scui.ui_elements.title.push(ui_elements.title[new_ind]);
+         }else{
+            scui.ui_elements.title.push(cur_title);
+         }
          if (ui_elements.ui_type[new_ind] == "selectable") {
             scui.selectable.add(eid);
          }

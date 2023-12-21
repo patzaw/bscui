@@ -55,10 +55,10 @@ examples:
   for Visualization
 - [shiny](https://CRAN.R-project.org/package=shiny): Web Application
   Framework for R
-- [DT](https://CRAN.R-project.org/package=DT): A Wrapper of the
-  JavaScript Library ‘DataTables’
-- [colourpicker](https://CRAN.R-project.org/package=colourpicker): A
-  Colour Picker Tool for Shiny and for Selecting Colours in Plots
+- [reactable](https://CRAN.R-project.org/package=reactable): Interactive
+  Data Tables for R
+- [reactable.extras](https://CRAN.R-project.org/package=reactable.extras):
+  Extra Features for ‘reactable’ Package
 
 ### From github
 
@@ -69,7 +69,7 @@ devtools::install_github("patzaw/bscui")
 ## Documentation
 
 - [Introduction to
-  bscui](https://patzaw.github.io/bscui/articles/bscui.html): this
+  bscui](https://patzaw.github.io/bscui/articles/bscui.html); this
   introduction vignette is also included in the package:
 
 ``` r
@@ -81,7 +81,7 @@ vignette("bscui")
 
 ## Examples
 
-### R scripts, R markdown, Quarto
+### Building figures
 
 This example relies on a figure of animal cells taken from
 [SwissBioPics](https://www.swissbiopics.org/name/Animal_cell).
@@ -147,10 +147,10 @@ if(FALSE){
 }
 ```
 
-### Shiny application
+### Figures in Shiny
 
-The following shiny application relies on an anatomogram taken from the
-[EBI gene expression
+The following shiny application relies on human female anatomical
+diagram taken from the [EBI gene expression
 group](https://github.com/ebi-gene-expression-group/anatomogram).
 
 ``` r

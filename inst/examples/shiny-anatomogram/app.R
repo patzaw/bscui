@@ -4,7 +4,69 @@ library(xml2)
 library(dplyr)
 library(readr)
 library(stringr)
+library(glue)
+library(reactable)
+library(reactable.extras)
 
+###############################################################################@
+## Load data ----
+svg_txt <- read_xml(system.file(
+   "examples", "homo_sapiens.female.svg.gz",
+   package="bscui"
+)) |>
+   as.character()
+organs <- read_tsv(system.file(
+   "examples", "homo_sapiens.female.txt.gz",
+   package="bscui"
+), col_types = "cc") |>
+   arrange(label)
+ols_url <- function(id){
+   paste0(
+      "https://www.ebi.ac.uk/ols4/ontologies/uberon/classes?obo_id=",
+      url_escape(str_replace(id, "_", ":"))
+   )
+}
+ui_elements <- organs |>
+   mutate(
+      ui_type = "selectable",
+      title = glue(
+         '<div style="background:#FDFDBD; padding:5px;">',
+         '<strong>{label}</strong> ',
+         '(<a href="{ols_url(id)}" target="_blank">{id}</a>)',
+         '<div>'
+      )
+   ) |>
+   select(id, ui_type, title)
+app_colors <- list(
+   blue = "#000080",
+   green = "#008000",
+   orange = "#FAA000"
+)
+default_color <- "blue"
+element_styles <- organs |>
+   mutate(
+      visibility = "visible",
+      opacity = 1,
+      fill = app_colors[[default_color]],
+      fillOpacity = 0.5,
+      stroke = app_colors[[default_color]],
+      strokeWidth = 0.5,
+      strokeOpacity = 1
+   ) |>
+   select(-label)
+organs_to_show <- c(
+      "brain", "heart", "lung",
+      "liver", "small_intestine", "stomach", "pancreas"
+   )
+element_attributes <- organs |>
+   mutate(
+      display = ifelse(label %in% organs_to_show, "block", "none"),
+   ) |>
+   select(id, display)
+presel <- c("UBERON_0002107", "UBERON_0002048")
+
+###############################################################################@
+## UI ----
 ui <- function(req){
    addResourcePath(
       "www",
@@ -18,244 +80,279 @@ ui <- function(req){
             href='www/bscui-ico.png'
          )
       ),
+      reactable_extras_dependency(),
       fluidRow(
          column(
             6,
             tags$div(
-               bscuiOutput("org_interface", height="94vh"),
+               bscuiOutput("anatomogram", height="94vh"),
                style = "
                   margin-top: 10px;
                   margin-bottom: 10px;
+                  margin-left: 0px;
+                  margin-right: 0px;
                   padding: 5px;
                   border: solid black;
                "
             )
          ),
          column(
-            3,
-            tags$h3("Values"),
-            tags$h4("Hovered over (not immediately updated"),
-            verbatimTextOutput("hovered_org"),
-            tags$h4("Selected (selectable elements)"),
-            verbatimTextOutput("selected_org"),
-            tags$h4("Operated (button elements)"),
-            verbatimTextOutput("operated_org"),
-            tags$h3("Test selection"),
-            shiny::actionButton(
-               "unique_predefined_sel", "Use predefined selection (1)"
-            ),
-            shiny::actionButton(
-               "predefined_sel", "Use predefined selection (2)"
-            ),
-            shiny::actionButton("clear_sel", "Clear selection"),
-            tags$h3("Test click"),
+            6,
             fluidRow(
                column(
                   12,
-                  tags$div(
-                     shiny::actionButton("click_test", "Click on brain"),
-                     style="display:inline-block;"
+                  reactableOutput("organs")
+               ),
+               style = "
+                  margin-top: 10px;
+                  margin-bottom: 10px;
+                  margin-left: 0px;
+                  margin-right: 5px;
+                  padding: 5px;
+                  border: solid black;
+               "
+            ),
+            fluidRow(
+               column(
+                  6,
+                  tags$h3("Status"),
+                  tags$h4("Hovered over"),
+                  verbatimTextOutput("hovered_org"),
+                  tags$h4("Selected (selectable elements)"),
+                  verbatimTextOutput("selected_org"),
+                  tags$h4("Operated (button elements)"),
+                  verbatimTextOutput("operated_org")
+               ),
+               column(
+                  6,
+                  tags$h3("Return SVG in R session"),
+                  fluidRow(
+                     column(8, textInput(
+                        "svg_object_name", label=NULL,
+                        value="", placeholder="Object name"
+                     )),
+                     column(4, uiOutput("getSvg"))
                   ),
-                  tags$div(
-                     shiny::checkboxInput("click_test_dbl", "Double click"),
-                     style="display:inline-block;"
-                  )
-               )
-            ),
-            tags$h3("Test get SVG"),
-            shiny::actionButton("getSvg", "Get SVG"),
-            tags$h3("Brain type"),
-            shiny::selectInput(
-               "brain_ui_type", "Brain input type",
-               c("button", "selectable", "none")
-            ),
-            tags$h3("Modify SVG"),
-            shiny::actionButton("add_rect", "Add rectangle"),
-            shiny::actionButton("rm_rect", "Remove rectangle")
-         ),
-         column(
-            3,
-            uiOutput("format_sel"),
-            uiOutput("move_sel")
+                  uiOutput("move_sel")
+               ),
+               style = "
+                  margin-top: 10px;
+                  margin-bottom: 10px;
+                  margin-left: 0px;
+                  margin-right: 5px;
+                  padding: 5px;
+                  border: solid black;
+               "
+            )
          )
       )
    )
 }
 
+###############################################################################@
+## Server ----
 server <- function(input, output, session){
-   svg <- read_xml(system.file(
-      "examples", "homo_sapiens.female.svg.gz",
-      package="bscui"
-   ))
-   element_titles <- read_tsv(system.file(
-      "examples", "homo_sapiens.female.txt.gz",
-      package="bscui"
-   ), col_types = "cc")
-   elements <- element_titles |>
-      mutate(
-         ui_type = "selectable",
-         title = sprintf(
-            '<div style="background:#FFFF0080; padding:5px;">%s<div>',
-            sprintf('This is <strong>%s</strong>', label)
-         ),
-         visibility = "visible",
-         opacity = 1,
-         fill = "#000080",
-         fillOpacity = 0.5,
-         stroke = "#000080",
-         strokeWidth = 0.5,
-         strokeOpacity = 1
-      )
-   elements_to_show <- c(
-      "brain", "heart", "lung",
-      "liver", "small_intestine", "stomach", "pancreas"
-   )
-   ui_elements <- elements |>
-      mutate(
-         ui_type = ifelse(label %in% elements_to_show, "selectable", "none"),
-         ui_type = ifelse(label == "stomach", "none", ui_type),
-         ui_type = ifelse(label == "brain", "button", ui_type)
-      ) |>
-      select(id, ui_type, title)
-   element_styles <- elements |>
-      mutate(
-         visibility = ifelse(label %in% elements_to_show, "visible", "hidden"),
-         title = ifelse(label == "brain", NA, title)
-      ) |>
-      select(-ui_type, -title, -label)
-   output$org_interface <- renderBscui({
-      ## Remove title elements
-      xml_ns_strip(svg)
-      titles <- xml_find_all(svg, "//title")
-      for(to_remove in titles){
-         xml_remove(to_remove)
-      }
-      bscui(
-         svg
-      ) |>
+
+   organ_table <- reactiveVal({
+      organs |>
+         mutate(
+            displayed = ifelse(label %in% organs_to_show, TRUE, FALSE),
+            ui_type = "selectable",
+            color = default_color,
+            selection = ifelse(label %in% presel, "unselect", "select")
+         )
+   })
+
+   ## Anatomogram ----
+   output$anatomogram <- renderBscui({
+      bscui(svg_txt) |>
          set_bscui_ui_elements(ui_elements) |>
          set_bscui_styles(element_styles) |>
+         set_bscui_attributes(element_attributes) |>
          set_bscui_options(
             menu_width="30px",
             # hover_color=list(button="pink", selectable="cyan", none="green"),
             selection_color="red"
          ) |>
-         set_bscui_selection(c("UBERON_0002107", "UBERON_0002048"));
+         set_bscui_selection(presel);
    })
+   anatomogram_proxy <- bscuiProxy("anatomogram")
+
+   ## Organ table ----
+   output$organs <- renderReactable({
+      isolate(organ_table())|>
+         reactable(
+            filterable=TRUE,
+            columns=list(
+               id = colDef(name = "ID"),
+               label = colDef(name = "Name"),
+               displayed = colDef(
+                  name = "Displayed",
+                  cell = checkbox_extra("display_org")
+               ),
+               ui_type = colDef(
+                  name = "UI",
+                  cell = dropdown_extra(
+                     "ui_type",
+                     choices = c("selectable", "button", "none")
+                  )
+               ),
+               color = colDef(
+                  name = "Color",
+                  cell = dropdown_extra(
+                     "org_color",
+                     choices = names(app_colors)
+                  )
+               ),
+               selection = colDef(
+                  name = "Selection",
+                  cell = button_extra("sel_org")
+               )
+            )
+         )
+   })
+
+   ## Update anatomogram ----
+   observe({
+      cur_state <- isolate(getReactableState("organs"))
+      updateReactable("organs", data=organ_table(), page=cur_state$page)
+   })
+   observe({
+      disp_org <- input$display_org
+      req(disp_org)
+      req(disp_org$column == "displayed")
+      cur_table <- isolate(organ_table())
+      id <- cur_table$id[disp_org$row]
+      update_bscui_attributes(
+         anatomogram_proxy,
+         tibble(
+            id = id,
+            display = ifelse(disp_org$value, "block", "none")
+         )
+      )
+      cur_table <- cur_table |>
+         mutate(displayed = ifelse(id==!!id, disp_org$value, displayed))
+      organ_table({cur_table})
+
+   })
+   observe({
+      ui_type <- input$ui_type
+      req(ui_type)
+      req(ui_type$column == "ui_type")
+      cur_table <- isolate(organ_table())
+      id <- cur_table$id[ui_type$row]
+      update_bscui_ui_elements(
+         anatomogram_proxy,
+         tibble(
+            id = id,
+            ui_type = !!ui_type$value
+         )
+      )
+      cur_table <- cur_table |>
+         mutate(ui_type = ifelse(id==!!id, !!ui_type$value, ui_type))
+      organ_table({cur_table})
+
+   })
+   observe({
+      org_color <- input$org_color
+      req(org_color)
+      req(org_color$column == "color")
+      cur_table <- isolate(organ_table())
+      id <- cur_table$id[org_color$row]
+      update_bscui_styles(
+         anatomogram_proxy,
+         tibble(
+            id = id,
+            fill = app_colors[[org_color$value]],
+            stroke = app_colors[[org_color$value]]
+         )
+      )
+      cur_table <- cur_table |>
+         mutate(color = ifelse(id==!!id, !!org_color$value, color))
+      organ_table({cur_table})
+
+   })
+   observe({
+      sel_org <- input$sel_org
+      req(sel_org)
+      req(sel_org$column == "selection")
+      cur_table <- isolate(organ_table())
+      id <- cur_table$id[sel_org$row]
+      cur_sel <- isolate(input$anatomogram_selected)
+      if(id %in% cur_sel){
+         new_sel <- setdiff(cur_sel, id)
+         new_lab <- "select"
+      }else{
+         new_sel <- union(cur_sel, id)
+         new_lab <- "unselect"
+      }
+      select_bscui_elements(anatomogram_proxy, new_sel)
+      # cur_table <- cur_table |>
+      #    mutate(selection = ifelse(id==!!id, new_lab, selection))
+      # organ_table({cur_table})
+
+   })
+   observe({
+      cur_table <- isolate(organ_table())
+      req(cur_table)
+      cur_sel <- input$anatomogram_selected
+      cur_table <- cur_table |>
+         mutate(selection = ifelse(id %in% cur_sel, "unselect", "select"))
+      organ_table({cur_table})
+
+   })
+
+   ## bscui event outputs ----
    output$selected_org <- renderPrint({
-      paste(input$org_interface_selected, collapse=", ")
+      paste(input$anatomogram_selected, collapse=", ")
    })
    output$hovered_org <- renderPrint({
-      input$org_interface_hovered
+      input$anatomogram_hovered
    })
    output$operated_org <- renderPrint({
       sprintf(
          "%s click on %s (%s)",
-         input$org_interface_operated$click,
-         input$org_interface_operated$id,
-         input$org_interface_operated$n
+         input$anatomogram_operated$click,
+         input$anatomogram_operated$id,
+         input$anatomogram_operated$n
       )
    })
-   ui_prox <- bscuiProxy("org_interface")
-   observeEvent(input$unique_predefined_sel, {
-      select_bscui_elements(ui_prox, "UBERON_0000948")
-   })
-   observeEvent(input$predefined_sel, {
-      select_bscui_elements(ui_prox, c("UBERON_0000948", "UBERON_0002107"))
-   })
-   observeEvent(input$clear_sel, {
-      select_bscui_elements(ui_prox, c())
-   })
 
-   observeEvent(input$click_test, {
-      dbl_click <- as.logical(input$click_test_dbl)
-      click_bscui_element(ui_prox, "UBERON_0000955", dbl_click)
+   ## Get SVG ----
+   output$getSvg <- renderUI({
+      req(input$svg_object_name)
+      actionButton("getSvg", "Get SVG")
    })
-
    observeEvent(input$getSvg, {
-      get_bscui_svg(ui_prox)
+      get_bscui_svg(anatomogram_proxy)
    })
    observe({
-      svg <- input$org_interface_svg
+      req(input$svg_object_name)
+      svg <- input$anatomogram_svg
       req(svg)
       svg <- read_xml(svg)
-      assign("saved_svg", svg, envir=.GlobalEnv)
+      assign(input$svg_object_name, svg, envir=.GlobalEnv)
    })
 
-   output$format_sel <- renderUI({
-      selected <- input$org_interface_selected
-      req(selected)
-      tagList(
-         tags$h3("Format selection"),
-         textInput("fill", "Fill", "#000000"),
-         numericInput("fill_opacity", "Fill opacity", value=0.5, min=0, max=1),
-         textInput("stroke", "Stroke", "#000000"),
-         numericInput("stroke_opacity", "Stroke opacity", value=1, min=0, max=1),
-         textInput("scale", "Scale", 1),
-         actionButton("apply_styles", "Apply changes")
-      )
-   })
-   observeEvent(input$apply_styles, {
-      update_bscui_styles(
-         ui_prox,
-         element_styles = tibble(
-            fill=input$fill,
-            fillOpacity=input$fill_opacity,
-            stroke = input$stroke,
-            strokeOpacity = input$stroke_opacity
-         )
-      )
-      update_bscui_attributes(
-         ui_prox,
-         element_attributes = tibble(
-            transform=sprintf("scale(%s)", input$scale)
-         )
-      )
-   })
-
+   ## Interact with anatomogram ----
    output$move_sel <- renderUI({
-      selected <- input$org_interface_selected
+      selected <- input$anatomogram_selected
       req(selected)
       tagList(
          tags$h3("Move selection"),
-         selectInput(
-            "move_sel", label="where", c("front", "back", "forward", "backward")
-         ),
-         actionButton("apply_move", "Move!")
+         fluidRow(
+            column(6, selectInput(
+               "move_sel", label=NULL,
+               c("front", "back", "forward", "backward")
+            )),
+            column(6,actionButton("apply_move", "Move!"))
+         )
       )
    })
    observeEvent(input$apply_move, {
       order_bscui_elements(
-         ui_prox, input$org_interface_selected, where=input$move_sel
+         anatomogram_proxy, input$anatomogram_selected, where=input$move_sel
       )
-   })
-
-   observe({
-      brain_ui_type = input$brain_ui_type
-      req(brain_ui_type)
-      update_bscui_ui_elements(
-         ui_prox,
-         ui_elements = tibble(
-            id="UBERON_0000955",
-            ui_type=brain_ui_type,
-            title = sprintf(
-               '<div style="background:#FFFF0080; padding:5px;">%s<div>',
-               sprintf('This is <strong>%s</strong>', "brain")
-            )
-         )
-      )
-   })
-
-   observeEvent(input$add_rect, {
-      add_bscui_element(
-         ui_prox, id="my_rectangle",
-         svg_txt = '<rect x="50" y ="-10" width="20" height="20"></rect>',
-         ui_type = 'selectable',
-         title = 'HELLO!'
-      )
-   })
-   observeEvent(input$rm_rect, {
-      remove_bscui_elements(ui_prox, "my_rectangle")
    })
 }
 

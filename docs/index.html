@@ -144,9 +144,9 @@ install.packages("bscui")
 <li>
 <a href="https://CRAN.R-project.org/package=shiny" class="external-link">shiny</a>: Web Application Framework for R</li>
 <li>
-<a href="https://CRAN.R-project.org/package=DT" class="external-link">DT</a>: A Wrapper of the JavaScript Library ‘DataTables’</li>
+<a href="https://CRAN.R-project.org/package=reactable" class="external-link">reactable</a>: Interactive Data Tables for R</li>
 <li>
-<a href="https://CRAN.R-project.org/package=colourpicker" class="external-link">colourpicker</a>: A Colour Picker Tool for Shiny and for Selecting Colours in Plots</li>
+<a href="https://CRAN.R-project.org/package=reactable.extras" class="external-link">reactable.extras</a>: Extra Features for ‘reactable’ Package</li>
 </ul>
 </div>
 <div class="section level3">
@@ -161,7 +161,7 @@ install.packages("bscui")
 </h2>
 <ul>
 <li>
-<a href="https://patzaw.github.io/bscui/articles/bscui.html">Introduction to bscui</a>: this introduction vignette is also included in the package:</li>
+<a href="https://patzaw.github.io/bscui/articles/bscui.html">Introduction to bscui</a>; this introduction vignette is also included in the package:</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"bscui"</span><span class="op">)</span></span></code></pre></div>
@@ -173,7 +173,7 @@ install.packages("bscui")
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
 <div class="section level3">
-<h3 id="r-scripts-r-markdown-quarto">R scripts, R markdown, Quarto<a class="anchor" aria-label="anchor" href="#r-scripts-r-markdown-quarto"></a>
+<h3 id="building-figures">Building figures<a class="anchor" aria-label="anchor" href="#building-figures"></a>
 </h3>
 <p>This example relies on a figure of animal cells taken from <a href="https://www.swissbiopics.org/name/Animal_cell" class="external-link">SwissBioPics</a>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -237,9 +237,9 @@ install.packages("bscui")
 <span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="shiny-application">Shiny application<a class="anchor" aria-label="anchor" href="#shiny-application"></a>
+<h3 id="figures-in-shiny">Figures in Shiny<a class="anchor" aria-label="anchor" href="#figures-in-shiny"></a>
 </h3>
-<p>The following shiny application relies on an anatomogram taken from the <a href="https://github.com/ebi-gene-expression-group/anatomogram" class="external-link">EBI gene expression group</a>.</p>
+<p>The following shiny application relies on human female anatomical diagram taken from the <a href="https://github.com/ebi-gene-expression-group/anatomogram" class="external-link">EBI gene expression group</a>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, <span class="st">"shiny-anatomogram"</span>, package <span class="op">=</span> <span class="st">"bscui"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>

@@ -9,7 +9,6 @@ opts_chunk$set(
    cache.lazy=FALSE
 )
 library(bscui)
-library(dplyr)
 library(xml2)
 library(dplyr)
 library(readr)
@@ -24,11 +23,13 @@ library(scales)
 #  devtools::install_github("patzaw/bscui")
 
 ## ----eval = FALSE-------------------------------------------------------------
+#  library(bscui)
 #  library(xml2)
 #  library(dplyr)
 #  library(readr)
-#  library(stringr)
+#  library(stringr
 #  library(glue)
+#  library(scales)
 
 ## ----class.source='fold-hide'-------------------------------------------------
 sessionInfo()
@@ -64,6 +65,9 @@ ui_elements <- info |>
       )
    ) |>
    select(id, ui_type, title)
+ui_elements
+
+## -----------------------------------------------------------------------------
 figure <- figure |> 
    set_bscui_ui_elements(ui_elements)
 figure
@@ -117,6 +121,20 @@ figure |>
       hover_width=1
    )
 
+## ----eval=FALSE---------------------------------------------------------------
+#  bscui(svg) |>
+#     htmlwidgets::saveWidget(file = "figure.html")
+
+## ----eval=FALSE---------------------------------------------------------------
+#  bscui(svg) |>
+#     set_bscui_options(show_menu=FALSE) |>
+#     export_bscui_to_image(file = "figure.png", zoom=6)
+
+## ----eval=FALSE---------------------------------------------------------------
+#  Sys.setenv(
+#  	"CHROMOTE_CHROME" = "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
+#  )
+
 ## -----------------------------------------------------------------------------
 svg <- xml2::read_xml(system.file(
    "examples", "WP112.svg.gz",
@@ -126,6 +144,8 @@ info <- read_tsv(system.file(
    "examples", "WP112.txt.gz",
    package="bscui"
 ), col_types="c")
+
+## -----------------------------------------------------------------------------
 deg <- read_tsv(system.file(
    "examples", "DEG-by-nitrogen-source_MCB-Godard-2007.txt.gz",
    package="bscui"
@@ -138,6 +158,8 @@ cond_deg <- deg |>
    select(all_of(toTake)) |> 
    setNames(c("ensembl", "M")) |> 
    filter(!is.na(M))
+
+## -----------------------------------------------------------------------------
 col_scale <- col_numeric(
    "RdYlBu", domain=range(cond_deg$M), reverse=TRUE
 )
@@ -183,9 +205,5 @@ bscui(svg) |>
    set_bscui_styles(styles)
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  bscui(svg) |>
-#     htmlwidgets::saveWidget(file = "test.html")
-#  bscui(svg) |>
-#     set_bscui_options(show_menu=FALSE) |>
-#     export_bscui_to_image(file = "test.png", zoom=6)
+#  shiny::runApp(system.file("examples", "shiny-anatomogram", package = "bscui"))
 

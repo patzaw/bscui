@@ -37,8 +37,8 @@ Suggests:
    glue,
    scales,
    shiny,
-   DT,
-   colourpicker
+   reactable,
+   reactable.extras
 License: GPL-3
 Encoding: UTF-8
 VignetteBuilder: knitr

@@ -356,12 +356,11 @@ info <- read_tsv(system.file(
 ), col_types="c")
 ```
 
-Gene expression data were
-taken from a publication describing the effect of the provided nitrogen sources
-on baker yeast gene expression
-([Godard *et al.* 2007](https://doi.org/10.1128/MCB.01084-06)). The
-supplementary Table S1 provides the list genes displaying significant variation
-of expression in at least one tested nitrogen condition compared to urea.
+Gene expression data were taken from a publication describing the effects of the
+provided nitrogen sources on baker's yeast gene
+expression ([Godard *et al.* 2007](https://doi.org/10.1128/MCB.01084-06)).
+The supplementary Table S1 provides a list of genes displaying significant
+variations in expression under at least one tested nitrogen condition compared to urea.
 
 ```{r}
 deg <- read_tsv(system.file(
@@ -440,13 +439,26 @@ bscui(svg) |>
    set_bscui_styles(styles)
 ```
 
-
 # Shiny applications
+
+The following example is used to describe the capabilities of 'bscui' within
+Shiny. It relies on the human female anatomical diagram taken from
+the [EBI gene expression
+group](https://github.com/ebi-gene-expression-group/anatomogram).
 
 ```{r, eval=FALSE}
 shiny::runApp(system.file("examples", "shiny-anatomogram", package = "bscui"))
 ```
 
+![Anatomogram Shiny app.](shiny-anatomogram.png)
+
+The application is divided in three main parts:
+
+- On the left: the anatomical diagram 
+- On the top right: a table to choose the organs and configure the interactions
+- On the bottom right: text outputs showing the input values that are updated
+when interacting with the diagram and interfaces to interact with the anatomical
+diagram
 
 ## Reacting
 

@@ -99,8 +99,9 @@ cat('```', sep="\n")
 
 ### Figures in Shiny
 
-The following shiny application relies on an anatomogram taken from the
-[EBI gene expression group](https://github.com/ebi-gene-expression-group/anatomogram).
+The following shiny application relies on human female anatomical diagram taken
+from the [EBI gene expression
+group](https://github.com/ebi-gene-expression-group/anatomogram).
 
 ```{r, eval=FALSE}
 shiny::runApp(system.file("examples", "shiny-anatomogram", package = "bscui"))
