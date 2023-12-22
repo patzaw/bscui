@@ -47,7 +47,7 @@ figure
 ##################################@
 ### Saving the figure ----
 
-if(FALSE){
+\dontrun{
    ## Interactive html file
    figure |> htmlwidgets::saveWidget(file="figure.html")
 
