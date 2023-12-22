@@ -27,7 +27,7 @@ library(scales)
 #  library(xml2)
 #  library(dplyr)
 #  library(readr)
-#  library(stringr
+#  library(stringr)
 #  library(glue)
 #  library(scales)
 
