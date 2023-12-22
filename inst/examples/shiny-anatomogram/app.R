@@ -10,11 +10,10 @@ library(reactable.extras)
 
 ###############################################################################@
 ## Load data ----
-svg_txt <- read_xml(system.file(
+svg <- read_xml(system.file(
    "examples", "homo_sapiens.female.svg.gz",
    package="bscui"
-)) |>
-   as.character()
+))
 organs <- read_tsv(system.file(
    "examples", "homo_sapiens.female.txt.gz",
    package="bscui"
@@ -133,7 +132,8 @@ ui <- function(req){
                      )),
                      column(4, uiOutput("getSvg"))
                   ),
-                  uiOutput("move_sel")
+                  uiOutput("move_sel"),
+                  uiOutput("clone_organs")
                ),
                style = "
                   margin-top: 10px;
@@ -165,7 +165,7 @@ server <- function(input, output, session){
 
    ## Anatomogram ----
    output$anatomogram <- renderBscui({
-      bscui(svg_txt) |>
+      bscui(svg) |>
          set_bscui_ui_elements(ui_elements) |>
          set_bscui_styles(element_styles) |>
          set_bscui_attributes(element_attributes) |>
@@ -353,6 +353,78 @@ server <- function(input, output, session){
       order_bscui_elements(
          anatomogram_proxy, input$anatomogram_selected, where=input$move_sel
       )
+   })
+
+   ## Clone organs (add and remove elements) ----
+   cloning_status <- reactiveValues(
+      to_remove = character()
+   )
+   output$clone_organs <- renderUI({
+      to_clone <- input$anatomogram_selected
+      to_remove <- cloning_status$to_remove
+      req(length(to_clone) > 0 || length(to_remove) > 0)
+      ui <- tagList()
+      if(length(to_clone) > 0){
+         ui <- c(ui, tagList(
+            column(3, actionButton("clone_org", "Clone"))
+         ))
+      }else{
+         # ui <- c(ui, tagList(column(2)))
+      }
+      if(length(to_remove) > 0){
+         ui <- c(ui, tagList(
+            column(3, actionButton("rm_clone", "Remove")),
+            column(6, selectInput("to_remove", NULL, to_remove))
+         ))
+      }else{
+         ui <- c(ui, tagList(column(3), column(3)))
+      }
+      ui <- do.call(fluidRow, ui)
+      toRet <- tagList(
+         tags$h3("Clone organs"),
+         ui
+      )
+      return(toRet)
+   })
+   observeEvent(input$clone_org, {
+      to_clone <- isolate(input$anatomogram_selected)
+      to_remove <- isolate(cloning_status$to_remove)
+      clone_ids <- paste0(to_clone, "_clone")
+      to_keep <- which(!clone_ids %in% to_remove)
+      req(length(to_keep) > 0)
+      to_clone <- to_clone[to_keep]
+      clone_ids <- clone_ids[to_keep]
+      clone_names <- organs |> filter(id %in% !!to_clone) |> pull(label)
+      to_remove <- c(to_remove, setNames(clone_ids, clone_names))
+      cloning_status$to_remove <- to_remove
+      for(i in 1:length(to_clone)){
+         id <- to_clone[i]
+         cl_id <- paste0(id, "_clone")
+         to_add <- xml_find_all(svg, sprintf("//*[@id='%s']", id))[[1]] |>
+            as.character()
+         to_add <- paste('<g>', to_add, '</g>') |>
+            read_xml() |>
+            xml_child()
+         xml_set_attr(to_add, "id", NULL)
+         xml_set_attr(
+            to_add, "style", "fill:purple; stroke:purple; fill-opacity:0.5;"
+         )
+         to_add <- as.character(to_add)
+         to_add <- glue(
+            '<g id="{cl_id}" transform="translate(-80, 0)">',
+            to_add,
+            '</g>'
+         )
+         add_bscui_element(anatomogram_proxy, id = cl_id, to_add)
+      }
+   })
+   observeEvent(input$rm_clone, {
+      to_remove <- isolate(input$to_remove)
+      req(to_remove)
+      cloning_status$to_remove <- isolate(
+         cloning_status$to_remove[which(cloning_status$to_remove != to_remove)]
+      )
+      remove_bscui_elements(anatomogram_proxy, to_remove)
    })
 }
 
