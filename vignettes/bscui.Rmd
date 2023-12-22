@@ -129,6 +129,7 @@ library(scales)
 
 
 <!-- Collapsible sessionInfo -->
+<br/>
 <button class="collapse-button" onclick="toggleCollapse('sessionInfo')">
 Display session info
 </button>
@@ -141,6 +142,7 @@ Built on `r Sys.Date()`
 sessionInfo()
 ```
 :::
+<br/>
 
 - [xml2](https://cran.r-project.org/package=xml2) is used to read SVG files
 - [readr](https://cran.r-project.org/package=readr) and

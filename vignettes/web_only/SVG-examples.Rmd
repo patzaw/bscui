@@ -78,6 +78,7 @@ library(stringr)
 ```
 
 <!-- Collapsible sessionInfo -->
+<br/>
 <button class="collapse-button" onclick="toggleCollapse('sessionInfo')">
 Display session info
 </button>
@@ -90,6 +91,7 @@ Built on `r Sys.Date()`
 sessionInfo()
 ```
 :::
+<br/>
 
 # Reading EBI anatomograms
 
