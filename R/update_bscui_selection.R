@@ -16,10 +16,10 @@
 #'
 #' @export
 #'
-select_bscui_elements <- function(proxy, element_ids){
+update_bscui_selection <- function(proxy, element_ids){
    if(!any(class(proxy) %in% "bscui_Proxy")){
       stop(
-         "You can use select_bscui_elements only within shiny and ",
+         "You can use update_bscui_selection only within shiny and ",
          "using bscui_Proxy"
       )
    }

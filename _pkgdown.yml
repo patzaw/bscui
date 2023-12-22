@@ -39,7 +39,7 @@ reference:
   - update_bscui_ui_elements
   - update_bscui_styles
   - update_bscui_attributes
-  - select_bscui_elements
+  - update_bscui_selection
   - click_bscui_element
   - order_bscui_elements
   - add_bscui_element

@@ -3,7 +3,6 @@ title: "Introduction to bscui"
 package: "bscui (version `r packageVersion('bscui')`)"
 output:
    rmarkdown::html_document:
-      code_folding: show
       number_sections: yes
       self_contained: true
       theme: cerulean
@@ -452,15 +451,108 @@ shiny::runApp(system.file("examples", "shiny-anatomogram", package = "bscui"))
 
 ![Anatomogram Shiny app.](shiny-anatomogram.png)
 
-The application is divided in three main parts:
+The application is divided in four main parts:
 
-- On the left: the anatomical diagram 
-- On the top right: a table to choose the organs and configure the interactions
-- On the bottom right: text outputs showing the input values that are updated
-when interacting with the diagram and interfaces to interact with the anatomical
-diagram
+- **(P1)** On the left: the anatomical diagram 
+- On the bottom right:
+   - **(P2)** text outputs showing the input values that are updated
+   when interacting with the diagram
+   - **(P3)** interfaces to modify the anatomical diagram and export it in R session
+- **(P4)** On the top right: a table to choose the organs and configure
+the interactions
 
-## Reacting
+## Building and inserting the figure (P1)
 
-## Updating
+Building the figure and inserting it in Shiny user interface is straightforward
+and relies on the `bscuiOutput()` and `renderBscui()` functions:
 
+```{r, eval=FALSE}
+ui <- fluidPage(
+   bscuiOutput("anatomogram")
+)
+server <- function(input, output, session){
+   output$anatomogram <- renderBscui({
+      bscui(svg)|>
+         set_bscui_ui_elements(ui_elements)
+   })
+}
+```
+
+UI elements need to be defined with `set_bscui_ui_elements()` to make the
+figure interactive and to allow shiny interactions.
+
+## Interactions (P2)
+
+The following information are exposed to Shiny from the bscui widget:
+
+- `input$bscuiID_selected` reports selected elements
+- `input$bscuiID_operated` report operated button elements
+- `input$bscuiID_hovered` reports hovered elements
+
+`bscuiID` is used to refer to the figure output id, "anatomogram" in
+the example above.
+
+## Modifying the figure (P3)
+
+Creating a "bscui_Proxy" object allows figure modification without redrawing it.
+It's done by calling the `bscuiProxy()` within the sever function:
+
+```{r, eval=FALSE}
+server <- function(input, output, session){
+   output$anatomogram <- renderBscui({
+      bscui(svg)|>
+         set_bscui_ui_elements(ui_elements)
+   })
+   anatomogram_proxy <- bscuiProxy("anatomogram")
+}
+```
+
+The following functions can then be used to modify the figure:
+
+- `order_bscui_elements()` changes the display order of chosen elements
+- `add_bscui_element()` adds an element to the figure
+- `remove_bscui_elements()` removes chosen elements from the figure
+
+Finally, the `get_bscui_svg()` function makes the updated figure SVG available
+via `input$bscuiID_svg` (`input$anatomogram_svg` in the example).
+
+## Updating figure elements (P4)
+
+The example above relies on the '[reactable](https://glin.github.io/reactable/)'
+and '[reactable.extras](https://appsilon.github.io/reactable.extras/)' packages
+to display available elements (organs) and change their properties.
+The following functions are applied to
+a "bscui_Proxy" (`anatomogram_proxy` in the example above).
+
+- `update_bscui_ui_elements()` changes the type and the title of elements. It
+is used in the example above to select the type ("selectable", "button"
+or "none") of each element from the "UI" column.
+
+- `update_bscui_attributes()` sets attributes of SVG elements. It is used
+in the example above to display or hide the different organs from
+the "Displayed" column.
+
+- `update_bscui_styles()` sets styles of SVG elements. It is used in the
+example above to modify the color of the organs from the "Color" column.
+
+- `update_bscui_selection()` updates the list of selected elements. In the
+example, it is used to select organs from the "Selection" column of
+the table (organs can therefore be selected either from the table or directly
+from the diagram).
+
+- `click_bscui_element()` triggers a click on a "button" element. It is not
+used in the example.
+
+# Additional notes
+
+The functions of the 'bscui' package do their best to handle and modify SVG
+elements as accurately as possible. However, depending on the structure of
+the SVG it can be more or less successful. Simple and unnested structures should
+be preferred when building SVG specifically for this use.
+
+However, the aim of the 'bscui' package is also to leverage SVG from existing
+sources as shown in all the examples described here.
+The vignette [Preparing SVG: examples, tips
+and tricks](https://patzaw.github.io/bscui/articles/web_only/SVG-examples.html)
+describes how the SVG used in 'bscui' package examples were prepared. This
+experience can be used when preparing SVG from new sources.

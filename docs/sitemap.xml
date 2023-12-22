@@ -49,9 +49,6 @@
     <loc>https://patzaw.github.io/bscui/reference/remove_bscui_elements.html</loc>
   </url>
   <url>
-    <loc>https://patzaw.github.io/bscui/reference/select_bscui_elements.html</loc>
-  </url>
-  <url>
     <loc>https://patzaw.github.io/bscui/reference/set_bscui_attributes.html</loc>
   </url>
   <url>
@@ -68,6 +65,9 @@
   </url>
   <url>
     <loc>https://patzaw.github.io/bscui/reference/update_bscui_attributes.html</loc>
+  </url>
+  <url>
+    <loc>https://patzaw.github.io/bscui/reference/update_bscui_selection.html</loc>
   </url>
   <url>
     <loc>https://patzaw.github.io/bscui/reference/update_bscui_styles.html</loc>

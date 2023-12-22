@@ -95,7 +95,7 @@ bscui <- function(
 #' - [update_bscui_ui_elements]: change type and title of elements
 #' - [update_bscui_styles]: set style of UI elements
 #' - [update_bscui_attributes] set attributes of a UI element
-#' - [select_bscui_elements]: chose selected elements
+#' - [update_bscui_selection]: chose selected elements
 #' - [click_bscui_element]: trigger a single or double click on a UI element
 #' - [order_bscui_elements]: change elements order (e.g. move them forward)
 #' - [add_bscui_element]: add an SVG element to the UI

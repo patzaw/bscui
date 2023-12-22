@@ -207,3 +207,23 @@ bscui(svg) |>
 ## ----eval=FALSE---------------------------------------------------------------
 #  shiny::runApp(system.file("examples", "shiny-anatomogram", package = "bscui"))
 
+## ----eval=FALSE---------------------------------------------------------------
+#  ui <- fluidPage(
+#     bscuiOutput("anatomogram")
+#  )
+#  server <- function(input, output, session){
+#     output$anatomogram <- renderBscui({
+#        bscui(svg)|>
+#           set_bscui_ui_elements(ui_elements)
+#     })
+#  }
+
+## ----eval=FALSE---------------------------------------------------------------
+#  server <- function(input, output, session){
+#     output$anatomogram <- renderBscui({
+#        bscui(svg)|>
+#           set_bscui_ui_elements(ui_elements)
+#     })
+#     anatomogram_proxy <- bscuiProxy("anatomogram")
+#  }
+

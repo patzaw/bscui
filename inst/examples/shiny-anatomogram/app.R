@@ -286,11 +286,7 @@ server <- function(input, output, session){
          new_sel <- union(cur_sel, id)
          new_lab <- "unselect"
       }
-      select_bscui_elements(anatomogram_proxy, new_sel)
-      # cur_table <- cur_table |>
-      #    mutate(selection = ifelse(id==!!id, new_lab, selection))
-      # organ_table({cur_table})
-
+      update_bscui_selection(anatomogram_proxy, new_sel)
    })
    observe({
       cur_table <- isolate(organ_table())
@@ -302,7 +298,7 @@ server <- function(input, output, session){
 
    })
 
-   ## bscui event outputs ----
+   ## bscui inputs ----
    output$selected_org <- renderPrint({
       paste(input$anatomogram_selected, collapse=", ")
    })

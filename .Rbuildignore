@@ -13,3 +13,5 @@
 ^_pkgdown\.yml$
 ^pkgdown$
 vignettes/web_only
+vignettes/shiny-anatomogram.odg
+vignettes/shiny-anatomogram-sc.png
