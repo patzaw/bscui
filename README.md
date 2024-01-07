@@ -136,7 +136,7 @@ figure
 ##################################@
 ### Saving the figure ----
 
-\dontrun{
+## Not run:
    ## Interactive html file
    figure |> htmlwidgets::saveWidget(file="figure.html")
 
@@ -144,7 +144,7 @@ figure
    figure |>
       set_bscui_options(show_menu = FALSE) |>
       export_bscui_to_image(file="figure.png", zoom=2)
-}
+## End (Not run)
 ```
 
 ### Figures in Shiny

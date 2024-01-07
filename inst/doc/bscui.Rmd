@@ -71,8 +71,9 @@ The aim of the 'bscui' R package is to render any SVG image as an interactive
 figure and convert identified elements into an actionable interface.
 This figure can be seamlessly integrated into 
 [R Markdown](https://rmarkdown.rstudio.com/) and [Quarto](https://quarto.org/)
-documents applications.as well as [Shiny](https://shiny.posit.co/) applications,
-allowing manipulation of elements and reporting actions performed on them.
+documents, as well as [Shiny](https://shiny.posit.co/)
+applications, allowing manipulation of elements and reporting actions
+performed on them.
 
 Here are the main features of 'bscui' figures:
 
