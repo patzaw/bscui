@@ -8,19 +8,15 @@
 #'
 #' @return the provided proxy object
 #'
-#' @examples
-#' \dontrun{
-#'    shiny::runApp(system.file(
-#'       "examples", "shiny-anatomogram", package = "bscui"
-#'    ))
-#' }
+#' @example inst/examples/shiny-example.R
 #'
 #' @export
 #'
 click_bscui_element <- function(proxy, element_id, dbl_click=FALSE){
    if(!any(class(proxy) %in% "bscui_Proxy")){
       stop(
-         "You can use click_bscui_element only within shiny & using bscui_Proxy"
+         "You can use click_bscui_element only within 'shiny' and ",
+         "using bscui_Proxy"
       )
    }
    data <- list(id = proxy$id, element_id = element_id, dbl_click = dbl_click)

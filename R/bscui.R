@@ -1,5 +1,5 @@
 ###############################################################################@
-#' Build SVG/Shiny custom user interface
+#' Build SVG Custom User Interface
 #'
 #' @param svg_txt a character with SVG code
 #' @param sanitize_attributes logical indicating if
@@ -70,44 +70,28 @@ bscui <- function(
 }
 
 ###############################################################################@
-#' Shiny bindings for bscui
+#' 'shiny' bindings for bscui
 #'
-#' Output and render functions for using bscui within Shiny applications.
+#' Output and render functions for using bscui within 'shiny' applications.
 #'
 #' @param outputId output variable to read from
 #' @param width,height Must be a valid CSS unit (like `'100\%'`,
 #'   `'400px'`, `'auto'`) or a number, which will be coerced to a
 #'   string and have `'px'` appended.
-#' @param expr An expression that generates a bscui
-#' @param env The environment in which to evaluate `expr`.
-#' @param quoted Is `expr` a quoted expression (with `quote()`)? This
-#'   is useful if you want to save an expression in a variable.
-#' @param shinyId single-element character vector indicating the shiny output ID
-#'   of the UI to modify
-#' @param session the Shiny session object to which the UI belongs; usually the
-#'   default value will suffice
 #'
 #' @name bscui-shiny
 #'
+#' @return An output or render function that enables the use of the widget
+#' within 'shiny' applications.
+#'
 #' @details
 #'
-#' The UI can be updated with `bscuiProxy`, using different methods:
-#' - [update_bscui_ui_elements]: change type and title of elements
-#' - [update_bscui_styles]: set style of UI elements
-#' - [update_bscui_attributes] set attributes of a UI element
-#' - [update_bscui_selection]: chose selected elements
-#' - [click_bscui_element]: trigger a single or double click on a UI element
-#' - [order_bscui_elements]: change elements order (e.g. move them forward)
-#' - [add_bscui_element]: add an SVG element to the UI
-#' - [remove_bscui_elements]: remove SVG elements from the UI
-#' - [get_bscui_svg]: get the displayed SVG in R session
+#' The [bscuiProxy()] function can be used to allow user interface dynamic
+#' updates.
 #'
-#' @examples
-#' \dontrun{
-#'    shiny::runApp(system.file(
-#'       "examples", "shiny-anatomogram", package = "bscui"
-#'    ))
-#' }
+#' @seealso [bscuiProxy()]
+#'
+#' @example inst/examples/shiny-example.R
 #'
 #' @export
 #'
@@ -120,6 +104,11 @@ bscuiOutput <- function(outputId, width = '100%', height = '400px'){
 ###############################################################################@
 #' @rdname bscui-shiny
 #'
+#' @param expr An expression that generates a bscui
+#' @param env The environment in which to evaluate `expr`.
+#' @param quoted Is `expr` a quoted expression (with `quote()`)? This
+#'   is useful if you want to save an expression in a variable.
+#'
 #' @export
 #'
 renderBscui <- function(expr, env = parent.frame(), quoted = FALSE) {
@@ -130,14 +119,42 @@ renderBscui <- function(expr, env = parent.frame(), quoted = FALSE) {
 }
 
 ###############################################################################@
-#' @rdname bscui-shiny
+#' Manipulate an existing bscui instance in a 'shiny' app
+#'
+#' @details
+#'
+#' This function creates a proxy object that can be used to manipulate an
+#' existing bscui instance in a 'shiny' app using different methods:
+#' - [update_bscui_ui_elements]: change type and title of elements
+#' - [update_bscui_styles]: set style of UI elements
+#' - [update_bscui_attributes] set attributes of a UI element
+#' - [update_bscui_selection]: chose selected elements
+#' - [click_bscui_element]: trigger a single or double click on a UI element
+#' - [order_bscui_elements]: change elements order (e.g. move them forward)
+#' - [add_bscui_element]: add an SVG element to the UI
+#' - [remove_bscui_elements]: remove SVG elements from the UI
+#' - [get_bscui_svg]: get the displayed SVG in R session
+#'
+#'
+#' @param shinyId single-element character vector indicating the 'shiny' output
+#' ID of the UI to modify
+#' @param session the 'shiny' session object to which the UI belongs; usually
+#' the default value will suffice
+#'
+#' @return A `bscui_Proxy` object with an "id" and a "session" slot.
+#'
+#' @seealso [bscui-shiny]
+#'
+#' @example inst/examples/shiny-example.R
+#'
 #' @aliases bscui_Proxy
 #'
 #' @export
+#'
 bscuiProxy <- function(shinyId,  session = shiny::getDefaultReactiveDomain()){
    if(is.null(session)){
       stop(
-         "bscuiProxy must be called from the server function of a Shiny app"
+         "bscuiProxy must be called from the server function of a 'shiny' app"
       )
    }
    object <- list(id = shinyId, session = session)

@@ -11,19 +11,14 @@
 #'
 #' @return the provided proxy object
 #'
-#' @examples
-#' \dontrun{
-#'    shiny::runApp(system.file(
-#'       "examples", "shiny-anatomogram", package = "bscui"
-#'    ))
-#' }
+#' @example inst/examples/shiny-example.R
 #'
 #' @export
 #'
 add_bscui_element <- function(proxy, id, svg_txt, ui_type=NULL, title=NULL){
    if(!any(class(proxy) %in% "bscui_Proxy")){
       stop(
-         "You can use add_bscui_element only within shiny and ",
+         "You can use add_bscui_element only within 'shiny' and ",
          "using bscui_Proxy"
       )
    }

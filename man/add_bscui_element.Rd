@@ -26,10 +26,13 @@ the provided proxy object
 Add an SVG element to the UI
 }
 \examples{
-\dontrun{
+if(interactive()){
+   from_shiny <- new.env()
    shiny::runApp(system.file(
       "examples", "shiny-anatomogram", package = "bscui"
    ))
+   for(n in names(from_shiny)){
+      bscui(from_shiny[[n]]) |> print()
+   }
 }
-
 }

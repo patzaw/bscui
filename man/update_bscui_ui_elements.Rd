@@ -2,7 +2,7 @@
 % Please edit documentation in R/update_bscui_ui_elements.R
 \name{update_bscui_ui_elements}
 \alias{update_bscui_ui_elements}
-\title{Update the type and title of bscui ui elements in Shiny app}
+\title{Update the type and title of bscui ui elements in 'shiny' app}
 \usage{
 update_bscui_ui_elements(proxy, ui_elements)
 }
@@ -21,13 +21,16 @@ update_bscui_ui_elements(proxy, ui_elements)
 the provided proxy object
 }
 \description{
-Update the type and title of bscui ui elements in Shiny app
+Update the type and title of bscui ui elements in 'shiny' app
 }
 \examples{
-\dontrun{
+if(interactive()){
+   from_shiny <- new.env()
    shiny::runApp(system.file(
       "examples", "shiny-anatomogram", package = "bscui"
    ))
+   for(n in names(from_shiny)){
+      bscui(from_shiny[[n]]) |> print()
+   }
 }
-
 }

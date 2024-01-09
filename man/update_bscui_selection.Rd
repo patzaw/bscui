@@ -19,10 +19,13 @@ the provided proxy object
 Replace current selection with given element identifiers
 }
 \examples{
-\dontrun{
+if(interactive()){
+   from_shiny <- new.env()
    shiny::runApp(system.file(
       "examples", "shiny-anatomogram", package = "bscui"
    ))
+   for(n in names(from_shiny)){
+      bscui(from_shiny[[n]]) |> print()
+   }
 }
-
 }

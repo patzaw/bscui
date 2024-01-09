@@ -2,7 +2,7 @@
 % Please edit documentation in R/bscui.R
 \name{bscui}
 \alias{bscui}
-\title{Build SVG/Shiny custom user interface}
+\title{Build SVG Custom User Interface}
 \usage{
 bscui(
   svg_txt,
@@ -28,7 +28,7 @@ string and have \code{'px'} appended.}
 An \code{htmlwidget} object
 }
 \description{
-Build SVG/Shiny custom user interface
+Build SVG Custom User Interface
 }
 \examples{
 ##################################@

@@ -69,9 +69,10 @@ function toggleCollapse(id) {
 
 The aim of the 'bscui' R package is to render any SVG image as an interactive
 figure and convert identified elements into an actionable interface.
-This figure can be seamlessly integrated into 
-[R Markdown](https://rmarkdown.rstudio.com/) and [Quarto](https://quarto.org/)
-documents, as well as [Shiny](https://shiny.posit.co/)
+This figure can be seamlessly integrated
+into  '[rmarkdown](https://rmarkdown.rstudio.com/)'
+and '[Quarto](https://quarto.org/)'
+documents, as well as '[shiny](https://shiny.posit.co/)'
 applications, allowing manipulation of elements and reporting actions
 performed on them.
 
@@ -82,9 +83,9 @@ Here are the main features of 'bscui' figures:
    - Update the attribute (e.g., path) of SVG elements
    - Export the figure in SVG or PNG format
    - Display contextual information when hovering over SVG elements
-   - Select one or multiple SVG elements (mainly used with Shiny)
-   - Click on elements (mainly used with Shiny)
-   - Add or remove SVG elements (in Shiny)
+   - Select one or multiple SVG elements (mainly used with 'shiny')
+   - Click on elements (mainly used with 'shiny')
+   - Add or remove SVG elements (in 'shiny')
 
 The main motivation behind the development of this package was to be able
 to leverage SVG images kindly shared in public knowledge resources
@@ -441,10 +442,10 @@ bscui(svg) |>
    set_bscui_styles(styles)
 ```
 
-# Shiny applications
+# 'shiny' applications
 
 The following example is used to describe the capabilities of 'bscui' within
-Shiny. It relies on the human female anatomical diagram taken from
+'shiny'. It relies on the human female anatomical diagram taken from
 the [EBI gene expression
 group](https://github.com/ebi-gene-expression-group/anatomogram).
 
@@ -452,7 +453,7 @@ group](https://github.com/ebi-gene-expression-group/anatomogram).
 shiny::runApp(system.file("examples", "shiny-anatomogram", package = "bscui"))
 ```
 
-![Anatomogram Shiny app.](shiny-anatomogram.png)
+![Anatomogram 'shiny' app.](shiny-anatomogram.png)
 
 The application is divided in four main parts:
 
@@ -466,8 +467,8 @@ the interactions
 
 ## Building and inserting the figure (P1)
 
-Building the figure and inserting it in Shiny user interface is straightforward
-and relies on the `bscuiOutput()` and `renderBscui()` functions:
+Building the figure and inserting it in 'shiny' user interface is
+straightforward and relies on the `bscuiOutput()` and `renderBscui()` functions:
 
 ```{r, eval=FALSE}
 ui <- fluidPage(
@@ -482,11 +483,11 @@ server <- function(input, output, session){
 ```
 
 UI elements need to be defined with `set_bscui_ui_elements()` to make the
-figure interactive and to allow shiny interactions.
+figure interactive and to allow 'shiny' interactions.
 
 ## Interactions (P2)
 
-The following information are exposed to Shiny from the bscui widget:
+The following information are exposed to 'shiny' from the 'bscui' widget:
 
 - `input$bscuiID_selected` reports selected elements
 - `input$bscuiID_operated` report operated button elements

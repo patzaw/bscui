@@ -8,11 +8,11 @@
 
 Render SVG as interactive figures to display contextual information,
 with selectable and clickable user interface elements. These figures can
-be seamlessly integrated into R Markdown and Quarto documents, as well
-as Shiny applications, allowing manipulation of elements and reporting
-actions performed on them. Additional features include pan, zoom in/out
-functionality, and the ability to export the figures in SVG or PNG
-formats.
+be seamlessly integrated into ‘rmarkdown’ and ‘Quarto’ documents, as
+well as ‘shiny’ applications, allowing manipulation of elements and
+reporting actions performed on them. Additional features include pan,
+zoom in/out functionality, and the ability to export the figures in SVG
+or PNG formats.
 
 ## Installation
 
@@ -147,9 +147,9 @@ figure
 ## End (Not run)
 ```
 
-### Figures in Shiny
+### Figures in ‘shiny’
 
-The following shiny application relies on human female anatomical
+The following ‘shiny’ application relies on human female anatomical
 diagram taken from the [EBI gene expression
 group](https://github.com/ebi-gene-expression-group/anatomogram).
 

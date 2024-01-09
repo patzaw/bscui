@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="Render SVG as interactive figures to display contextual
    information, with selectable and clickable user interface elements.
-   These figures can be seamlessly integrated into R Markdown and Quarto
-   documents, as well as Shiny applications, allowing manipulation of elements
+   These figures can be seamlessly integrated into rmarkdown and Quarto
+   documents, as well as shiny applications, allowing manipulation of elements
    and reporting actions performed on them.
    Additional features include pan, zoom in/out functionality, and the ability
    to export the figures in SVG or PNG formats.">
@@ -26,8 +26,8 @@
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Build SVG Custom User Interface">
 <meta property="og:description" content="Render SVG as interactive figures to display contextual
    information, with selectable and clickable user interface elements.
-   These figures can be seamlessly integrated into R Markdown and Quarto
-   documents, as well as Shiny applications, allowing manipulation of elements
+   These figures can be seamlessly integrated into rmarkdown and Quarto
+   documents, as well as shiny applications, allowing manipulation of elements
    and reporting actions performed on them.
    Additional features include pan, zoom in/out functionality, and the ability
    to export the figures in SVG or PNG formats.">
@@ -50,7 +50,7 @@
     
     <a class="navbar-brand me-2" href="index.html">bscui</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,7 +100,7 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bscui)](https://cran.r-project.org/package=bsui)
 [![](http://cranlogs.r-pkg.org/badges/bsui)](https://cran.r-project.org/package=bsui)
 -->
-<p>Render SVG as interactive figures to display contextual information, with selectable and clickable user interface elements. These figures can be seamlessly integrated into R Markdown and Quarto documents, as well as Shiny applications, allowing manipulation of elements and reporting actions performed on them. Additional features include pan, zoom in/out functionality, and the ability to export the figures in SVG or PNG formats.</p>
+<p>Render SVG as interactive figures to display contextual information, with selectable and clickable user interface elements. These figures can be seamlessly integrated into ‘rmarkdown’ and ‘Quarto’ documents, as well as ‘shiny’ applications, allowing manipulation of elements and reporting actions performed on them. Additional features include pan, zoom in/out functionality, and the ability to export the figures in SVG or PNG formats.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -237,9 +237,9 @@ install.packages("bscui")
 <span><span class="co">## End (Not run)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="figures-in-shiny">Figures in Shiny<a class="anchor" aria-label="anchor" href="#figures-in-shiny"></a>
+<h3 id="figures-in-shiny">Figures in ‘shiny’<a class="anchor" aria-label="anchor" href="#figures-in-shiny"></a>
 </h3>
-<p>The following shiny application relies on human female anatomical diagram taken from the <a href="https://github.com/ebi-gene-expression-group/anatomogram" class="external-link">EBI gene expression group</a>.</p>
+<p>The following ‘shiny’ application relies on human female anatomical diagram taken from the <a href="https://github.com/ebi-gene-expression-group/anatomogram" class="external-link">EBI gene expression group</a>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, <span class="st">"shiny-anatomogram"</span>, package <span class="op">=</span> <span class="st">"bscui"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>

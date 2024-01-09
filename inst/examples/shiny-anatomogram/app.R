@@ -64,6 +64,11 @@ element_attributes <- organs |>
    select(id, display)
 presel <- c("UBERON_0002107", "UBERON_0002048")
 
+### Environment for storing data from shiny ----
+if(!exists("from_shiny")){
+   from_shiny <- new.env()
+}
+
 ###############################################################################@
 ## UI ----
 ui <- function(req){
@@ -124,11 +129,14 @@ ui <- function(req){
                ),
                column(
                   6,
-                  tags$h3("Return SVG in R session"),
+                  tags$h3(
+                     "Return SVG in R session"
+                  ),
                   fluidRow(
-                     column(8, textInput(
+                     column(8,textInput(
                         "svg_object_name", label=NULL,
-                        value="", placeholder="Object name"
+                        value="",
+                        placeholder="Object name (in 'from_shiny' env.)"
                      )),
                      column(4, uiOutput("getSvg"))
                   ),
@@ -323,11 +331,12 @@ server <- function(input, output, session){
       get_bscui_svg(anatomogram_proxy)
    })
    observe({
-      req(input$svg_object_name)
       svg <- input$anatomogram_svg
       req(svg)
+      on <- isolate(input$svg_object_name)
+      req(on)
       svg <- read_xml(svg)
-      assign(input$svg_object_name, svg, envir=.GlobalEnv)
+      assign(on, svg, envir=from_shiny)
    })
 
    ## Interact with anatomogram ----

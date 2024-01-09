@@ -1,5 +1,5 @@
 ###############################################################################@
-#' Update the type and title of bscui ui elements in Shiny app
+#' Update the type and title of bscui ui elements in 'shiny' app
 #'
 #' @param proxy a [`bscui_Proxy`] object
 #' @param ui_elements NULL or a data frame with the following columns:
@@ -10,12 +10,7 @@
 #'
 #' @return the provided proxy object
 #'
-#' @examples
-#' \dontrun{
-#'    shiny::runApp(system.file(
-#'       "examples", "shiny-anatomogram", package = "bscui"
-#'    ))
-#' }
+#' @example inst/examples/shiny-example.R
 #'
 #' @export
 #'
@@ -24,7 +19,7 @@ update_bscui_ui_elements <- function(
 ){
    if(!any(class(proxy) %in% "bscui_Proxy")){
       stop(
-         "You can use update_bscui_ui_elements only within shiny and ",
+         "You can use update_bscui_ui_elements only within 'shiny' and ",
          "using bscui_Proxy"
       )
    }

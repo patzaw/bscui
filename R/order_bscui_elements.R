@@ -7,12 +7,7 @@
 #'
 #' @return the provided proxy object
 #'
-#' @examples
-#' \dontrun{
-#'    shiny::runApp(system.file(
-#'       "examples", "shiny-anatomogram", package = "bscui"
-#'    ))
-#' }
+#' @example inst/examples/shiny-example.R
 #'
 #' @export
 #'
@@ -23,7 +18,7 @@ order_bscui_elements <- function(
 ){
    if(!any(class(proxy) %in% "bscui_Proxy")){
       stop(
-         "You can use order_bscui_elements only within shiny and ",
+         "You can use order_bscui_elements only within 'shiny' and ",
          "using bscui_Proxy"
       )
    }

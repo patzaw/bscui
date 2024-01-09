@@ -2,7 +2,7 @@
 % Please edit documentation in R/update_bscui_styles.R
 \name{update_bscui_styles}
 \alias{update_bscui_styles}
-\title{Update the style of bscui elements in Shiny app}
+\title{Update the style of bscui elements in 'shiny' app}
 \usage{
 update_bscui_styles(
   proxy,
@@ -33,13 +33,16 @@ the structure_shapes of the \code{\link{bscui}} object}
 the provided proxy object
 }
 \description{
-Update the style of bscui elements in Shiny app
+Update the style of bscui elements in 'shiny' app
 }
 \examples{
-\dontrun{
+if(interactive()){
+   from_shiny <- new.env()
    shiny::runApp(system.file(
       "examples", "shiny-anatomogram", package = "bscui"
    ))
+   for(n in names(from_shiny)){
+      bscui(from_shiny[[n]]) |> print()
+   }
 }
-
 }

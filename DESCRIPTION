@@ -1,7 +1,7 @@
 Package: bscui
 Type: Package
 Title: Build SVG Custom User Interface
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person(
         "Patrice", "Godard",
@@ -12,8 +12,8 @@ Authors@R: c(
     )
 Description: Render SVG as interactive figures to display contextual
    information, with selectable and clickable user interface elements.
-   These figures can be seamlessly integrated into R Markdown and Quarto
-   documents, as well as Shiny applications, allowing manipulation of elements
+   These figures can be seamlessly integrated into 'rmarkdown' and 'Quarto'
+   documents, as well as 'shiny' applications, allowing manipulation of elements
    and reporting actions performed on them.
    Additional features include pan, zoom in/out functionality, and the ability
    to export the figures in SVG or PNG formats.

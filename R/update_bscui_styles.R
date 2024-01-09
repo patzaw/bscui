@@ -1,5 +1,5 @@
 ###############################################################################@
-#' Update the style of bscui elements in Shiny app
+#' Update the style of bscui elements in 'shiny' app
 #'
 #' @param proxy a [`bscui_Proxy`] object
 #' @param element_styles a data frame with an "id" column and
@@ -15,12 +15,7 @@
 #'
 #' @return the provided proxy object
 #'
-#' @examples
-#' \dontrun{
-#'    shiny::runApp(system.file(
-#'       "examples", "shiny-anatomogram", package = "bscui"
-#'    ))
-#' }
+#' @example inst/examples/shiny-example.R
 #'
 #' @export
 #'
@@ -29,7 +24,7 @@ update_bscui_styles <- function(
 ){
    if(!any(class(proxy) %in% "bscui_Proxy")){
       stop(
-         "You can use update_bscui_styles only within shiny and ",
+         "You can use update_bscui_styles only within 'shiny' and ",
          "using bscui_Proxy"
       )
    }
