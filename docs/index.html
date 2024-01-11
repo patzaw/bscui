@@ -50,7 +50,7 @@
     
     <a class="navbar-brand me-2" href="index.html">bscui</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -226,15 +226,22 @@ install.packages("bscui")
 <span><span class="co">##################################@</span></span>
 <span><span class="co">### Saving the figure ----</span></span>
 <span></span>
-<span><span class="co">## Not run:</span></span>
+<span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>   <span class="co">## Temporary directory to save example file</span></span>
+<span>   <span class="va">tdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
 <span>   <span class="co">## Interactive html file</span></span>
-<span>   <span class="va">figure</span> <span class="op">|&gt;</span> <span class="fu">htmlwidgets</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/htmlwidgets/man/saveWidget.html" class="external-link">saveWidget</a></span><span class="op">(</span>file<span class="op">=</span><span class="st">"figure.html"</span><span class="op">)</span></span>
+<span>   <span class="va">f_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">tdir</span>, <span class="st">"figure.html"</span><span class="op">)</span></span>
+<span>   <span class="va">figure</span> <span class="op">|&gt;</span> <span class="fu">htmlwidgets</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/htmlwidgets/man/saveWidget.html" class="external-link">saveWidget</a></span><span class="op">(</span>file<span class="op">=</span><span class="va">f_path</span><span class="op">)</span></span>
+<span>   <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">f_path</span><span class="op">)</span></span>
 <span></span>
 <span>   <span class="co">## PNG image</span></span>
+<span>   <span class="va">f_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">tdir</span>, <span class="st">"figure.png"</span><span class="op">)</span></span>
 <span>   <span class="va">figure</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="reference/set_bscui_options.html">set_bscui_options</a></span><span class="op">(</span>show_menu <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>      <span class="fu"><a href="reference/export_bscui_to_image.html">export_bscui_to_image</a></span><span class="op">(</span>file<span class="op">=</span><span class="st">"figure.png"</span>, zoom<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">## End (Not run)</span></span></code></pre></div>
+<span>      <span class="fu"><a href="reference/export_bscui_to_image.html">export_bscui_to_image</a></span><span class="op">(</span>file<span class="op">=</span><span class="va">f_path</span>, zoom<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
+<span>   <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">f_path</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="figures-in-shiny">Figures in ‘shiny’<a class="anchor" aria-label="anchor" href="#figures-in-shiny"></a>

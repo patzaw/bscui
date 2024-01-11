@@ -92,8 +92,6 @@ from [SwissBioPics](https://www.swissbiopics.org/name/Animal_cell).
 
 ```{r, echo=FALSE, results='asis'}
 ec <- readLines(system.file("examples", "main-example.R", package = "bscui"))
-ec <- sub("^[\\]dontrun[{]$", "## Not run:", ec)
-ec <- sub("^[}]$", "## End (Not run)", ec)
 cat('```r', sep="\n")
 cat(ec, sep="\n")
 cat('```', sep="\n")

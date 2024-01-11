@@ -1,4 +1,4 @@
-# bscui 0.1.1
+# bscui 0.1.2
 
 * CRAN corrections: documentation and policies.
 

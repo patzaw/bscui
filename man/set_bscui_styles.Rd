@@ -83,13 +83,20 @@ figure
 ##################################@
 ### Saving the figure ----
 
-\dontrun{
+if(interactive()){
+   ## Temporary directory to save example file
+   tdir <- tempdir()
+
    ## Interactive html file
-   figure |> htmlwidgets::saveWidget(file="figure.html")
+   f_path <- file.path(tdir, "figure.html")
+   figure |> htmlwidgets::saveWidget(file=f_path)
+   cat(f_path)
 
    ## PNG image
+   f_path <- file.path(tdir, "figure.png")
    figure |>
       set_bscui_options(show_menu = FALSE) |>
-      export_bscui_to_image(file="figure.png", zoom=2)
+      export_bscui_to_image(file=f_path, zoom=2)
+   cat(f_path)
 }
 }
