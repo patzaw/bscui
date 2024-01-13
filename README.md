@@ -1,10 +1,8 @@
 
 # Build SVG Custom User Interface <img src="man/figures/bscui-medium.png" align="right" alt="" width="120" />
 
-<!--
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bscui)](https://cran.r-project.org/package=bsui)
 [![](http://cranlogs.r-pkg.org/badges/bsui)](https://cran.r-project.org/package=bsui)
--->
 
 Render SVG as interactive figures to display contextual information,
 with selectable and clickable user interface elements. These figures can
@@ -16,13 +14,11 @@ or PNG formats.
 
 ## Installation
 
-<!--
-&#10;## From CRAN
-&#10;
-```r
+### From CRAN
+
+``` r
 install.packages("bscui")
 ```
-&#10;-->
 
 ### Dependencies
 

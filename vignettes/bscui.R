@@ -16,6 +16,9 @@ library(stringr)
 library(glue)
 library(scales)
 
+## ----eval=FALSE---------------------------------------------------------------
+#  install.packages('bscui')
+
 ## ----eval = FALSE-------------------------------------------------------------
 #  ## Dependencies
 #  install.packages("htmlwidgets")

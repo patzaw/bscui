@@ -102,7 +102,16 @@ described in this document.
 
 # Installation and requirements
 
-The 'bscui' R package is currently available
+The 'bscui' R package is available
+on [CRAN](https://cran.r-project.org/package=bscui).
+
+```{r, eval=FALSE}
+install.packages('bscui')
+```
+
+## Development version from github
+
+The development version is available
 in [github](https://github.com/patzaw/bscui/).
 
 ```{r, eval = FALSE}
@@ -111,8 +120,6 @@ install.packages("htmlwidgets")
 ## Install from github
 devtools::install_github("patzaw/bscui")
 ```
-
-Hopefully 'bscui' will be available on [CRAN](https://cran.r-project.org/) soon.
 
 ## Vignette requirements
 

@@ -26,24 +26,20 @@ cranRef <- function(x){
 
 # Build SVG Custom User Interface <img src="man/figures/bscui-medium.png" align="right" alt="" width="120" />
 
-<!--
+
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bscui)](https://cran.r-project.org/package=bsui)
 [![](http://cranlogs.r-pkg.org/badges/bsui)](https://cran.r-project.org/package=bsui)
--->
+
 
 `r packageDescription("bscui")$Description`
 
 ## Installation
 
-<!--
-
-## From CRAN
+### From CRAN
 
 ```{r, eval=FALSE}
 install.packages("bscui")
 ```
-
--->
 
 ### Dependencies
 

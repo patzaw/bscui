@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   bscui: bscui.html
   SVG-examples: web_only/SVG-examples.html
-last_built: 2024-01-11T05:53Z
+last_built: 2024-01-13T06:36Z
 urls:
   reference: https://patzaw.github.io/bscui/reference
   article: https://patzaw.github.io/bscui/articles

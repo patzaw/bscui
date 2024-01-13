@@ -96,21 +96,17 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="build-svg-custom-user-interface-">Build SVG Custom User Interface <img src="reference/figures/bscui-medium.png" align="right" alt="" width="120"><a class="anchor" aria-label="anchor" href="#build-svg-custom-user-interface-"></a>
 </h1></div>
-<!--
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bscui)](https://cran.r-project.org/package=bsui)
-[![](http://cranlogs.r-pkg.org/badges/bsui)](https://cran.r-project.org/package=bsui)
--->
+<p><a href="https://cran.r-project.org/package=bsui" class="external-link"><img src="http://www.r-pkg.org/badges/version/bscui" alt="CRAN_Status_Badge"></a> <a href="https://cran.r-project.org/package=bsui" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/bsui"></a></p>
 <p>Render SVG as interactive figures to display contextual information, with selectable and clickable user interface elements. These figures can be seamlessly integrated into ‘rmarkdown’ and ‘Quarto’ documents, as well as ‘shiny’ applications, allowing manipulation of elements and reporting actions performed on them. Additional features include pan, zoom in/out functionality, and the ability to export the figures in SVG or PNG formats.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<!--
-&#10;## From CRAN
-&#10;
-```r
-install.packages("bscui")
-```
-&#10;-->
+<div class="section level3">
+<h3 id="from-cran">From CRAN<a class="anchor" aria-label="anchor" href="#from-cran"></a>
+</h3>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"bscui"</span><span class="op">)</span></span></code></pre></div>
+</div>
 <div class="section level3">
 <h3 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a>
 </h3>
@@ -152,7 +148,7 @@ install.packages("bscui")
 <div class="section level3">
 <h3 id="from-github">From github<a class="anchor" aria-label="anchor" href="#from-github"></a>
 </h3>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"patzaw/bscui"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -163,7 +159,7 @@ install.packages("bscui")
 <li>
 <a href="https://patzaw.github.io/bscui/articles/bscui.html">Introduction to bscui</a>; this introduction vignette is also included in the package:</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"bscui"</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li><a href="https://patzaw.github.io/bscui/articles/web_only/SVG-examples.html">Preparing SVG: examples, tips and tricks</a></li>
@@ -176,7 +172,7 @@ install.packages("bscui")
 <h3 id="building-figures">Building figures<a class="anchor" aria-label="anchor" href="#building-figures"></a>
 </h3>
 <p>This example relies on a figure of animal cells taken from <a href="https://www.swissbiopics.org/name/Animal_cell" class="external-link">SwissBioPics</a>.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">##################################@</span></span>
 <span><span class="co">### Preparing data ----</span></span>
 <span></span>
@@ -247,7 +243,7 @@ install.packages("bscui")
 <h3 id="figures-in-shiny">Figures in ‘shiny’<a class="anchor" aria-label="anchor" href="#figures-in-shiny"></a>
 </h3>
 <p>The following ‘shiny’ application relies on human female anatomical diagram taken from the <a href="https://github.com/ebi-gene-expression-group/anatomogram" class="external-link">EBI gene expression group</a>.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, <span class="st">"shiny-anatomogram"</span>, package <span class="op">=</span> <span class="st">"bscui"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -255,6 +251,7 @@ install.packages("bscui")
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=bscui" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/patzaw/bscui/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/patzaw/bscui/issues" class="external-link">Report a bug</a></li>
 </ul>
