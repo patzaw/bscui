@@ -1,3 +1,7 @@
+# bscui 0.1.3
+
+- Correction of rendering bug when updating bscui data
+
 # bscui 0.1.2
 
 - CRAN corrections: documentation and policies.
