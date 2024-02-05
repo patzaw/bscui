@@ -205,7 +205,7 @@ columns:
    - **id**: the element identifier
    - **ui_type**: either "selectable" (several elements can be selected),
    "button" (action will be triggered by clicking), "none" (no action on click)
-   - **title**: a description of the element to display the mouse hovers
+   - **title**: a description of the element to display when the mouse hovers
    over the element
    
 Information about the different part of a cell were taken
@@ -497,7 +497,7 @@ figure interactive and to allow 'shiny' interactions.
 The following information are exposed to 'shiny' from the 'bscui' widget:
 
 - `input$bscuiID_selected` reports selected elements
-- `input$bscuiID_operated` report operated button elements
+- `input$bscuiID_operated` reports operated button elements
 - `input$bscuiID_hovered` reports hovered elements
 
 `bscuiID` is used to refer to the figure output id, "anatomogram" in

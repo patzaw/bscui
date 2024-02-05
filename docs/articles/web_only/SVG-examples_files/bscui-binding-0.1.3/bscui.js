@@ -37,6 +37,12 @@ HTMLWidgets.widget({
          // Render
          renderValue: function(x) {
 
+            // Clean
+            var cont = document.getElementById(el.id);
+            while (cont.hasChildNodes()) {
+                cont.removeChild(cont.lastChild);
+            }
+
             // Init bscui
             if(!x.structure_shapes){
                x.structure_shapes = [];
