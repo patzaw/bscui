@@ -145,7 +145,7 @@ head(element_titles)
 
 ## Remove title elements from SVG
 
-In order to avoid double title display, '<title>' elements were removed from the
+In order to avoid double title display, '\<title\>' elements were removed from the
 original SVG.
 
 ```{r}
