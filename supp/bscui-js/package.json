@@ -2,7 +2,7 @@
   "name": "bscui",
   "version": "0.0.1",
   "description": "Build SVG Custom User Interface",
-  "main": "src/Sui.js",
+  "main": "src/Scui.js",
   "author": "Patrice Godard",
   "license": "GPL-3.0-or-later"
 }
