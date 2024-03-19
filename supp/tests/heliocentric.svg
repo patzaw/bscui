@@ -1,0 +1,39 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox="0 0 100 100">
+  <path id="sun1" d="M25,50 A25,25 0,0,0 75,50 z" fill="#FD0" stroke="#FD0" stroke-width="1" transform="rotate(-30)" transform-origin="50 50"/>
+  <g stroke="#000" fill="none" stroke-width="0.2">
+    <path d="M20,60 A13,30 60,1,1 80,40 A13,30 60,1,1 20,60z" />
+    <path d="M15,60 A14,30 60,1,1 85,40 A14,30 60,1,1 15,60z" />
+    <path d="M10,60 A15,30 60,1,1 90,40 A15,30 60,1,1 10,60z" />
+    <path d="M5,60 A16,30 60,1,1 95,40 A16,30 60,1,1 5,60z" />
+  </g>
+  <circle cx="20" cy="60" r="2" fill="#F00">
+    <animateMotion
+      dur="5s"
+      repeatCount="indefinite"
+      path="m0,0 A13,30 60,1,1 60,-20 A13,30 60,1,1 0,0z"
+    />
+    <!-- path="M20,60 A13,30 60,1,1 80,40 A13,30 60,1,1 20,60z" -->
+  </circle>
+  <circle r="3" fill="#00F">
+    <animateMotion
+      dur="10s"
+      repeatCount="indefinite"
+      path="M15,60 A14,30 60,1,1 85,40 A14,30 60,1,1 15,60z"
+    />
+  </circle>
+  <circle r="3" fill="#0F0">
+    <animateMotion
+      dur="15s"
+      repeatCount="indefinite"
+      path="M10,60 A15,30 60,1,1 90,40 A15,30 60,1,1 10,60z"
+    />
+  </circle>
+  <circle r="4" fill="#C0C" stroke="none">
+    <animateMotion
+      dur="20s"
+      repeatCount="indefinite"
+      path="M5,60 A16,30 60,1,1 95,40 A16,30 60,1,1 5,60z"
+    />
+  </circle>
+  <path id="sun2" d="M25,50 A25,25 0,1,1 75,50 z" fill="#FD0" stroke="#FD0" stroke-width="1" transform="rotate(-30)" transform-origin="50 50"/>
+</svg>

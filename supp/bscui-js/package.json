@@ -1,6 +1,6 @@
 {
   "name": "bscui",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Build SVG Custom User Interface",
   "main": "src/Scui.js",
   "author": "Patrice Godard",

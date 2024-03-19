@@ -1347,6 +1347,7 @@ function Scui(element_id){
       var svg = scui.svg;
       var toRet = svg.cloneNode(true);
       toRet.setAttribute("viewBox", scui.ori_viewBox);
+      toRet.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       toRet.removeChild(toRet.children[1]);
       var mg = toRet.children[0];
       while (mg.firstChild) {

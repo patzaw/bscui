@@ -1,7 +1,7 @@
 Package: bscui
 Type: Package
 Title: Build SVG Custom User Interface
-Version: 0.1.3
+Version: 0.1.4
 Authors@R: c(
     person(
         "Patrice", "Godard",
