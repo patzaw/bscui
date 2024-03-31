@@ -33,6 +33,8 @@ library(scales)
 #  library(stringr)
 #  library(glue)
 #  library(scales)
+#  library(reactable)
+#  library(reactable.extras)
 
 ## ----class.source='fold-hide'-------------------------------------------------
 sessionInfo()

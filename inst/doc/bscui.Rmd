@@ -134,6 +134,8 @@ library(readr)
 library(stringr)
 library(glue)
 library(scales)
+library(reactable)
+library(reactable.extras)
 ```
 
 
@@ -162,6 +164,9 @@ are used to read and manipulate tables with figure contextual information
 the creation of html tags
 - [scales](https://cran.r-project.org/package=scales) is used to generate
 color scales
+- [reactable](https://cran.r-project.org/package=reactable) and
+[reactable.extras](https://cran.r-project.org/package=reactable.extras)
+are used to manipulate information in a table displayed in the Shiny example
 
 # Building figures
 
