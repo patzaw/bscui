@@ -25,17 +25,6 @@ ols_url <- function(id){
       url_escape(str_replace(id, "_", ":"))
    )
 }
-ui_elements <- organs |>
-   mutate(
-      ui_type = "selectable",
-      title = glue(
-         '<div style="background:#FDFDBD; padding:5px;">',
-         '<strong>{label}</strong> ',
-         '(<a href="{ols_url(id)}" target="_blank">{id}</a>)',
-         '<div>'
-      )
-   ) |>
-   select(id, ui_type, title)
 app_colors <- list(
    blue = "#000080",
    green = "#008000",
@@ -63,6 +52,18 @@ element_attributes <- organs |>
    ) |>
    select(id, display)
 presel <- c("UBERON_0002107", "UBERON_0002048")
+
+ui_elements <- organs |>
+   mutate(
+      ui_type = ifelse(label %in% organs_to_show, "selectable", "none"),
+      title = glue(
+         '<div style="background:#FDFDBD; padding:5px;">',
+         '<strong>{label}</strong> ',
+         '(<a href="{ols_url(id)}" target="_blank">{id}</a>)',
+         '<div>'
+      )
+   ) |>
+   select(id, ui_type, title)
 
 ### Environment for storing data from shiny ----
 if(!exists("from_shiny")){
@@ -165,7 +166,7 @@ server <- function(input, output, session){
       organs |>
          mutate(
             displayed = ifelse(label %in% organs_to_show, TRUE, FALSE),
-            ui_type = "selectable",
+            ui_type = ifelse(label %in% organs_to_show, "selectable", "none"),
             color = default_color,
             selection = ifelse(label %in% presel, "unselect", "select")
          )
@@ -433,4 +434,4 @@ server <- function(input, output, session){
    })
 }
 
-runApp(shinyApp(ui, server))
+shinyApp(ui, server)
