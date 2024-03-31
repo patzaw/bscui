@@ -177,7 +177,8 @@ function aggregate_transformations(element) {
 
    // Traverse up the DOM tree to collect transformations
    while (currentElement !== null) {
-      const elementTransform = getComputedStyle(currentElement).transform;
+      var elementTransform = currentElement.getAttribute("transform");
+      elementTransform = parse_transform_matrix(elementTransform);
       if(elementTransform != 'none'){
          transform = `${elementTransform} ${transform}`;
       }
@@ -187,3 +188,77 @@ function aggregate_transformations(element) {
    transform = transform.toString();
    return(transform);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+/**
+ * Aggregate all transformations applied to an object
+ *
+ * @param {transformAttribute} compute transformation matrix
+ * from transform attribute
+ * 
+ */
+function parse_transform_matrix(transformAttribute) {
+   // Check if the transform attribute is present
+   if (!transformAttribute || transformAttribute=='none') {
+      return('none');
+   }
+
+   function multiply_matrices(matrix1, matrix2) {
+      return [
+         matrix1[0] * matrix2[0] + matrix1[2] * matrix2[1],
+         matrix1[1] * matrix2[0] + matrix1[3] * matrix2[1],
+         matrix1[0] * matrix2[2] + matrix1[2] * matrix2[3],
+         matrix1[1] * matrix2[2] + matrix1[3] * matrix2[3],
+         matrix1[0] * matrix2[4] + matrix1[2] * matrix2[5] + matrix1[4],
+         matrix1[1] * matrix2[4] + matrix1[3] * matrix2[5] + matrix1[5]
+      ];
+   }
+
+   // Initialize the matrix with identity matrix values
+   var matrix = [1, 0, 0, 1, 0, 0];
+
+   // Regex to match different types of transformations
+   var transformRegex = /(\w+)\(([^)]+)\)/g;
+
+   // Match each transformation
+   var match;
+   while ((match = transformRegex.exec(transformAttribute)) !== null) {
+      var type = match[1];
+      var params = match[2].split(',');
+
+      // Apply the transformation based on the type
+      switch (type) {
+         case 'matrix':
+            // Extract matrix parameters
+            var values = params.map(parseFloat);
+            // Update the matrix with the matrix transformation
+            matrix = multiply_matrices(matrix, values);
+            break;
+         case 'translate':
+            // Extract translation values
+            var tx = parseFloat(params[0]);
+            var ty = parseFloat(params[1] || 0);
+            // Update the matrix with the translation
+            matrix = multiply_matrices(matrix, [1, 0, 0, 1, tx, ty]);
+            break;
+         case 'scale':
+            // Extract scale values
+            var sx = parseFloat(params[0]);
+            var sy = parseFloat(params[1] || sx);
+            // Update the matrix with the scaling
+            matrix = multiply_matrices(matrix, [sx, 0, 0, sy, 0, 0]);
+            break;
+         case 'rotate':
+            // Extract rotation values
+            var angle = parseFloat(params[0]) * Math.PI / 180;
+            var cos = Math.cos(angle);
+            var sin = Math.sin(angle);
+            // Update the matrix with the rotation
+            matrix = multiply_matrices(matrix, [cos, sin, -sin, cos, 0, 0]);
+            break;
+         // Handle additional transformation types as needed
+      }
+   }
+   return('matrix(' + matrix.toString() + ')');
+}
+

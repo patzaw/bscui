@@ -1,6 +1,7 @@
 # bscui 0.1.5
 
-- touch screen management
+- Touchscreen support
+- Better support of Firefox and Safari
  
 # bscui 0.1.4
 
