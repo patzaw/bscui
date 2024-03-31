@@ -29,6 +29,7 @@ function Scui(element_id){
    this.selected = new Set();
    this.hovered = null;
    this.show_tooltips = true;
+   this.multiple_sel = false;
    this.clientX = null;
    this.clientY = null;
    this.button = { n: 0, id: null, click: null };
@@ -46,6 +47,8 @@ function Scui(element_id){
    this.zoom_current = null;
    this.stop_zoom = false;
    this.moved = false;
+   this.touch_init_dist;
+   this.touch_ori_point;
 
    //////////////////////////////////
    /**
@@ -184,6 +187,16 @@ function Scui(element_id){
       var invert_sel_button = create_svg_icon("invert_sel", "Invert selection");
       menu_items.appendChild(invert_sel_button);
 
+      var single_sel_button = create_svg_icon(
+         "single_sel", "Single sel. mode (Ctrl.)"
+      );
+      menu_items.appendChild(single_sel_button);
+      single_sel_button.style.display = "none";
+      var multiple_sel_button = create_svg_icon(
+         "multiple_sel", "Multiple sel. mode (Ctrl)"
+      );
+      menu_items.appendChild(multiple_sel_button);
+
       //
       menu_items.appendChild(msep_elt.cloneNode(true));
 
@@ -196,16 +209,15 @@ function Scui(element_id){
       var zoomout_button = create_svg_icon("zoom_out", "Zoom out");
       menu_items.appendChild(zoomout_button);
 
-      var tooltips_button = create_svg_icon(
-         "hide_tooltips", "Hide tooltips (Esc.)"
-      );
-      menu_items.appendChild(tooltips_button);
       var show_tooltips_button = create_svg_icon(
          "show_tooltips", "Show tooltips (Esc.)"
       );
+      menu_items.appendChild(show_tooltips_button);
+      show_tooltips_button.style.display = "none";
       var hide_tooltips_button = create_svg_icon(
          "hide_tooltips", "Hide tooltips (Esc.)"
       );
+      menu_items.appendChild(hide_tooltips_button);
 
       //
       menu_items.appendChild(msep_elt.cloneNode(true));
@@ -260,6 +272,30 @@ function Scui(element_id){
          let new_sel = array_setdiff(scui.selectable, scui.selected);
          scui.update_selection(new_sel);
       });
+
+      multiple_sel_button.addEventListener("click", function (event) {
+         scui.multiple_sel = true;
+         multiple_sel_button.style.display = "none";
+         single_sel_button.style.display = "block";
+      });
+      single_sel_button.addEventListener("click", function (event) {
+         scui.multiple_sel = false;
+         single_sel_button.style.display = "none";
+         multiple_sel_button.style.display = "block";
+      });
+      var selmode_keyd = function (event) {
+         if (event.key == "Control") {
+            let clickEvent = new Event("click");
+            multiple_sel_button.dispatchEvent(clickEvent);
+         }
+      };
+      var selmode_keyu = function (event) {
+         if (event.key == "Control") {
+            let clickEvent = new Event("click");
+            single_sel_button.dispatchEvent(clickEvent);
+         }
+      };
+
       reset_button.addEventListener("click", function(event){
          scui.reset_view();
       });
@@ -269,41 +305,39 @@ function Scui(element_id){
       zoomout_button.addEventListener("click", function(event){
          scui.zoom_out();
       });
-      tooltips_button.addEventListener("click", function (event) {
-         scui.show_tooltips = !scui.show_tooltips;
-         if(scui.show_tooltips){
-            tooltips_button.getElementsByTagName("path")[0].setAttribute(
-               "d",
-               hide_tooltips_button.getElementsByTagName("path")[0].
-                  getAttribute("d")
-            );
-            tooltips_button.getElementsByTagName("title")[0].textContent =
-               hide_tooltips_button.getElementsByTagName("title")[0].
-                  textContent;
-            svg.dispatchEvent(scui.hover_event);
-         } else {
-            tooltips_button.getElementsByTagName("path")[0].setAttribute(
-               "d",
-               show_tooltips_button.getElementsByTagName("path")[0].
-                  getAttribute("d")
-            );
-            tooltips_button.getElementsByTagName("title")[0].textContent =
-               show_tooltips_button.getElementsByTagName("title")[0].
-                  textContent;
-            tooltip.style.visibility = "hidden";
-         }
+
+      hide_tooltips_button.addEventListener("click", function (event) {
+         scui.show_tooltips = false;
+         hide_tooltips_button.style.display = "none";
+         show_tooltips_button.style.display = "block";
+         tooltip.style.visibility = "hidden";
+      });
+      show_tooltips_button.addEventListener("click", function (event) {
+         scui.show_tooltips = true;
+         show_tooltips_button.style.display = "none";
+         hide_tooltips_button.style.display = "block";
+         svg.dispatchEvent(scui.hover_event);
       });
       var tooltips_key = function (event) {
          if (event.key == "Escape") {
             let clickEvent = new Event("click");
-            tooltips_button.dispatchEvent(clickEvent);
+            if(scui.show_tooltips){
+               hide_tooltips_button.dispatchEvent(clickEvent);
+            }else{
+               show_tooltips_button.dispatchEvent(clickEvent);
+            }
          }
       };
+
       svg.addEventListener("mouseover", function(event){
          document.addEventListener("keyup", tooltips_key)
+         document.addEventListener("keydown", selmode_keyd)
+         document.addEventListener("keyup", selmode_keyu)
       })
       svg.addEventListener("mouseout", function (event) {
          document.removeEventListener("keyup", tooltips_key)
+         document.removeEventListener("keydown", selmode_keyd)
+         document.removeEventListener("keyup", selmode_keyu)
       })
       savepng_button.addEventListener("click", function(event){
          scui.save_png();
@@ -435,13 +469,60 @@ function Scui(element_id){
          scui.wheel_zoom(event);
       });
 
+      svg.addEventListener("touchstart", function (event) {
+         if (event.touches.length === 2) {
+            var touch1 = event.touches[0];
+            var touch2 = event.touches[1];
+            scui.touch_init_dist = Math.hypot(
+               touch2.clientX - touch1.clientX,
+               touch2.clientY - touch1.clientY
+            );
+            scui.touch_ori_point = {
+               x: (touch2.clientX + touch1.clientX) / 2,
+               y: (touch2.clientY + touch1.clientY) / 2
+            };
+         }
+      });
+      svg.addEventListener('touchmove', function (event) {
+         if (event.touches.length === 2) {
+            event.preventDefault();
+            var touch1 = event.touches[0];
+            var touch2 = event.touches[1];
+            var distance = Math.hypot(
+               touch2.clientX - touch1.clientX,
+               touch2.clientY - touch1.clientY
+            );
+            var lcp = {
+               x: (touch2.clientX + touch1.clientX)/2,
+               y: (touch2.clientY + touch1.clientY) / 2
+            };
+            // scui.touch_zoom(distance, lcp);
+            scui.touch_zoom(distance, scui.touch_ori_point);
+            scui.touch_init_dist = distance;
+         }
+      });
+
       svg.addEventListener("mousedown", function(event){
          scui.mouse_move(event);
+      });
+
+      svg.addEventListener("touchstart", function (event) {
+         if (
+            event.touches.length != 1 ||
+            (scui.clip && scui.zoom_current == 1)
+            ) {
+               return;
+         }
+         scui.touch_move(event);
       });
 
       // Interaction Events
       var mouse_move_timer;
       svg.addEventListener("mousemove", function (event) {
+         // var mvt = Math.abs(event.movementX) + Math.abs(event.movementY);
+         // if( mvt <= 2){
+         //    return;
+         // }
          var target = event.target;
          var target_ids = get_ancestors_ids(target);
          var hovered = array_intersect(
@@ -456,6 +537,21 @@ function Scui(element_id){
             svg.dispatchEvent(scui.hover_event);
          }, hover_timeout)
       });
+      svg.addEventListener("pointerover", function (event) {
+         if (event.pointerType !== 'mouse') {
+            var target = event.target;
+            var target_ids = get_ancestors_ids(target);
+            var hovered = array_intersect(
+               target_ids,
+               scui.ui_elements.id
+            )[0];
+            scui.hovered = hovered;
+            scui.clientX = event.clientX - 20;
+            scui.clientY = event.clientY - 15;
+            svg.dispatchEvent(scui.hover_event);
+         }
+      })
+
 
       var container = svg.parentElement;
       var ttid = el.id + "..ui_tooltip";
@@ -601,7 +697,7 @@ function Scui(element_id){
                   to_update.push(...get_all_descendant_ids(sel_element));
                   to_update = array_intersect(to_update, scui.selectable);
                }
-               if (!event.ctrlKey) {
+               if (!scui.multiple_sel) {
                   if (empty_sel) {
                      scui.selected.clear() ;
                   } else {
@@ -1224,7 +1320,7 @@ function Scui(element_id){
       var vbw = Number(viewBox[2]);
       var vbh = Number(viewBox[3]);
       var neww, newh;
-      var svw = svg.getBoundingClientRect().width;
+      // var svw = svg.getBoundingClientRect().width;
       var zf = scui.zoom_step;
       if(event.deltaY > 0){
          zf = 1/zf
@@ -1255,6 +1351,58 @@ function Scui(element_id){
       );
       event.stopPropagation();
       event.preventDefault();
+   };
+
+   //////////////////////////////////
+   /**
+    * Zoom in and out drawing using touch pinch
+    *
+    * @param {distance} distance between touches
+    * @param {lcp} center point
+    * 
+    */
+   this.touch_zoom = function(distance, lcp){
+      var scui = this;
+      if (scui.stop_zoom) {
+         scui.stop_zoom = false;
+         return;
+      }
+      var svg = scui.svg;
+      var orip = point_to_area_ref(lcp, svg);
+      
+      var viewBox = svg.getAttribute("viewBox").split(" ");
+      var vbx = Number(viewBox[0]);
+      var vby = Number(viewBox[1]);
+      var vbw = Number(viewBox[2]);
+      var vbh = Number(viewBox[3]);
+      var neww, newh;
+
+      var zf = distance / scui.touch_init_dist;
+      // zf = Math.pow(zf, 1/100);
+      var new_zoom = scui.zoom_current * zf;
+      if (new_zoom > scui.zoom_max || new_zoom < scui.zoom_min) {
+         return;
+      }
+      if (scui.clip && Math.abs(Math.log10(new_zoom)) < 0.001) {
+         scui.zoom_current = 1;
+         scui.stop_zoom = true;
+         svg.setAttribute("viewBox", scui.ori_viewBox);
+         return;
+      }
+      scui.zoom_current = new_zoom;
+      neww = vbw / zf;
+      newh = vbh / zf;
+      svg.setAttribute(
+         "viewBox",
+         vbx + " " + vby + " " + neww + " " + newh
+      );
+      var newp = point_to_area_ref(lcp, svg);
+      var newx = vbx - (newp.x - orip.x);
+      var newy = vby - (newp.y - orip.y);
+      svg.setAttribute(
+         "viewBox",
+         newx + " " + newy + " " + neww + " " + newh
+      );
    };
 
    //////////////////////////////////
@@ -1326,14 +1474,108 @@ function Scui(element_id){
       var scheduled = false;
       var lcp = {x:event.clientX, y:event.clientY};
       svg.addEventListener("mousemove", move_viewBox);
-      svg.addEventListener("mouseup", function(event){
+      function mup(event) {
          svg.removeEventListener("mousemove", move_viewBox);
+         svg.removeEventListener("mouseup", mup);
          svg.style.cursor = "auto";
          event.stopPropagation();
          event.preventDefault();
-      });
+      }
+      svg.addEventListener("mouseup", mup);
       event.stopPropagation();
       event.preventDefault();
+   };
+
+   //////////////////////////////////
+   /**
+    * Move drawing using touch
+    *
+    * @param {object} event touchstart event
+    *
+    */
+   this.touch_move = function (event) {
+
+      var scui = this;
+      scui.moved = false;
+
+      if (
+         event.touches.length != 1 ||
+         (scui.clip && scui.zoom_current == 1)
+      ) {
+         return;
+      }
+
+      var touch = event.touches[0];
+      var svg = scui.svg;
+
+      function tmove_viewBox(event) {
+         event.stopPropagation();
+         event.preventDefault();
+         if (
+            event.touches.length != 1 ||
+            (scui.clip && scui.zoom_current == 1)
+         ) {
+            return;
+         }
+         var curEvent = event;
+         var curTouch = curEvent.touches[0];
+         if (!scheduled) {
+            scheduled = true;
+            setTimeout(function () {
+               svg.style.cursor = "grabbing";
+               var viewBox = svg.getAttribute("viewBox").split(" ");
+               var x = Number(viewBox[0]);
+               var y = Number(viewBox[1]);
+               var w = Number(viewBox[2]);
+               var h = Number(viewBox[3]);
+               var cp = { x: curTouch.clientX, y: curTouch.clientY };
+               var abs_dx = lcp.x - cp.x;
+               var abs_dy = lcp.y - cp.y;
+               // Use width and height ratio of the display box
+               var rel_dx = dw * abs_dx / rw;
+               var rel_dy = dh * abs_dy / rh;
+               //
+               var nx = x + rel_dx;
+               var ny = y + rel_dy;
+               svg.setAttribute("viewBox", nx + " " + ny + " " + w + " " + h);
+               scui.moved = true;
+               lcp = cp;
+               scheduled = false;
+            }, 40);
+         }
+      }
+      // Compute width and height ratio of the display box compared to viewBox
+      // for adpating the x and y displacement
+      var viewBox = svg.getAttribute("viewBox").split(" ");
+      var w = Number(viewBox[2]);
+      var h = Number(viewBox[3]);
+      var bcr = svg.getBoundingClientRect();
+      var rw = bcr.width;
+      var rh = bcr.height;
+      var rr = rw / rh;
+      var rwh = Math.max(rw, rh);
+      var vbr = w / h;
+      if (vbr >= rr) {
+         var dw = w;
+         var dh = w / rr;
+      } else {
+         var dh = h;
+         var dw = h * rr;
+      }
+      //
+      var scheduled = false;
+      var lcp = { x: touch.clientX, y: touch.clientY };
+      svg.addEventListener("touchmove", tmove_viewBox);
+      function tend(event) {
+         svg.removeEventListener("touchmove", tmove_viewBox);
+         svg.removeEventListener("touchend", tend);
+         svg.style.cursor = "auto";
+         event.stopPropagation();
+         // event.preventDefault();
+      }
+      svg.addEventListener("touchend", tend);
+      event.stopPropagation();
+      // event.preventDefault();
    };
 
 

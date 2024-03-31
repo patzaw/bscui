@@ -1,3 +1,7 @@
+# bscui 0.1.5
+
+- touch screen management
+ 
 # bscui 0.1.4
 
 - Correction of svg export in Scui js library

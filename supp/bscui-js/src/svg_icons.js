@@ -177,6 +177,28 @@ function create_svg_icon(icon, title, fill = "#FFFFFF00", display = "block"){
          </path>
          `,
          viewBox: "0 0 512 512"
+      },
+      {
+         name: "single_sel",
+         svg: `
+         <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5
+         12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5
+         45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z">
+         </path>
+         `,
+         viewBox: "0 0 448 512"
+      },
+      {
+         name: "multiple_sel",
+         svg: `
+         <path d="M224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V144H48c-17.7
+         0-32 14.3-32 32s14.3 32 32 32H160V320c0 17.7 14.3 32 32 32s32-14.3
+         32-32V208H336c17.7 0 32-14.3 32-32s-14.3-32-32-32H224V32zM0 480c0
+         17.7 14.3 32 32 32H352c17.7 0 32-14.3 32-32s-14.3-32-32-32H32c-17.7
+         0-32 14.3-32 32z">
+         </path>
+         `,
+         viewBox: "0 0 384 512"
       }
    ]
 
@@ -191,14 +213,35 @@ function create_svg_icon(icon, title, fill = "#FFFFFF00", display = "block"){
    // Create svg
    var toRet = create_svg_element('svg');
    toRet.innerHTML = `
-   <g><title>${title}</title>
+   <g>
    <rect width="100%" height="100%" style="fill:${fill};"></rect>
    ${icons[i].svg}
    </g>
-   `;
+   `; // <title>${title}</title>
    toRet.setAttribute("viewBox", icons[i].viewBox);
    toRet.setAttribute("display", display);
    toRet.style.cursor= "pointer";
+   var tid = Math.floor(Math.random() * 1000000000).toString;
+   toRet.addEventListener("pointerover", function (event) {
+      if(document.getElementById(tid)){
+         return;
+      }
+      var tooltip = create_html_element('div');
+      tooltip.id = tid;
+      tooltip.textContent = title;
+      tooltip.style.left = (event.pageX + 10) + 'px';
+      tooltip.style.top = (event.pageY + 10) + 'px';
+      tooltip.style.position = 'absolute';
+      tooltip.style.background = '#fff';
+      tooltip.style.border = '1px solid #ccc';
+      tooltip.style.padding = '5px';
+      // Append the tooltip to the body
+      document.body.appendChild(tooltip);
+   })
+   toRet.addEventListener("pointerleave", function (event) {
+      var tooltip = document.getElementById(tid);
+      tooltip.parentElement.removeChild(tooltip);
+   })
 
    return(toRet);
 };
