@@ -17,24 +17,24 @@ library(glue)
 library(scales)
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  install.packages('bscui')
+# install.packages('bscui')
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  ## Dependencies
-#  install.packages("htmlwidgets")
-#  ## Install from github
-#  devtools::install_github("patzaw/bscui")
+# ## Dependencies
+# install.packages("htmlwidgets")
+# ## Install from github
+# devtools::install_github("patzaw/bscui")
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  library(bscui)
-#  library(xml2)
-#  library(dplyr)
-#  library(readr)
-#  library(stringr)
-#  library(glue)
-#  library(scales)
-#  library(reactable)
-#  library(reactable.extras)
+# library(bscui)
+# library(xml2)
+# library(dplyr)
+# library(readr)
+# library(stringr)
+# library(glue)
+# library(scales)
+# library(reactable)
+# library(reactable.extras)
 
 ## ----class.source='fold-hide'-------------------------------------------------
 sessionInfo()
@@ -127,18 +127,18 @@ figure |>
    )
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  bscui(svg) |>
-#     htmlwidgets::saveWidget(file = "figure.html")
+# bscui(svg) |>
+#    htmlwidgets::saveWidget(file = "figure.html")
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  bscui(svg) |>
-#     set_bscui_options(show_menu=FALSE) |>
-#     export_bscui_to_image(file = "figure.png", zoom=6)
+# bscui(svg) |>
+#    set_bscui_options(show_menu=FALSE) |>
+#    export_bscui_to_image(file = "figure.png", zoom=6)
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  Sys.setenv(
-#  	"CHROMOTE_CHROME" = "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
-#  )
+# Sys.setenv(
+# 	"CHROMOTE_CHROME" = "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
+# )
 
 ## -----------------------------------------------------------------------------
 svg <- xml2::read_xml(system.file(
@@ -210,25 +210,25 @@ bscui(svg) |>
    set_bscui_styles(styles)
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  shiny::runApp(system.file("examples", "shiny-anatomogram", package = "bscui"))
+# shiny::runApp(system.file("examples", "shiny-anatomogram", package = "bscui"))
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  ui <- fluidPage(
-#     bscuiOutput("anatomogram")
-#  )
-#  server <- function(input, output, session){
-#     output$anatomogram <- renderBscui({
-#        bscui(svg)|>
-#           set_bscui_ui_elements(ui_elements)
-#     })
-#  }
+# ui <- fluidPage(
+#    bscuiOutput("anatomogram")
+# )
+# server <- function(input, output, session){
+#    output$anatomogram <- renderBscui({
+#       bscui(svg)|>
+#          set_bscui_ui_elements(ui_elements)
+#    })
+# }
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  server <- function(input, output, session){
-#     output$anatomogram <- renderBscui({
-#        bscui(svg)|>
-#           set_bscui_ui_elements(ui_elements)
-#     })
-#     anatomogram_proxy <- bscuiProxy("anatomogram")
-#  }
+# server <- function(input, output, session){
+#    output$anatomogram <- renderBscui({
+#       bscui(svg)|>
+#          set_bscui_ui_elements(ui_elements)
+#    })
+#    anatomogram_proxy <- bscuiProxy("anatomogram")
+# }
 

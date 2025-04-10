@@ -1,81 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://patzaw.github.io/bscui/404.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/articles/bscui.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/articles/web_only/SVG-examples.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/index.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/add_bscui_element.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/bscui-shiny.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/bscui.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/bscuiProxy.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/click_bscui_element.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/export_bscui_to_image.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/get_bscui_svg.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/order_bscui_elements.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/remove_bscui_elements.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/set_bscui_attributes.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/set_bscui_options.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/set_bscui_selection.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/set_bscui_styles.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/set_bscui_ui_elements.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/update_bscui_attributes.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/update_bscui_selection.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/update_bscui_styles.html</loc>
-  </url>
-  <url>
-    <loc>https://patzaw.github.io/bscui/reference/update_bscui_ui_elements.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://patzaw.github.io/bscui/404.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/articles/bscui.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/articles/index.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/articles/web_only/SVG-examples.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/authors.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/index.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/news/index.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/add_bscui_element.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/bscui-shiny.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/bscui.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/bscuiProxy.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/click_bscui_element.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/export_bscui_to_image.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/get_bscui_svg.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/index.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/order_bscui_elements.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/remove_bscui_elements.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/set_bscui_attributes.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/set_bscui_options.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/set_bscui_selection.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/set_bscui_styles.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/set_bscui_ui_elements.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/update_bscui_attributes.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/update_bscui_selection.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/update_bscui_styles.html</loc></url>
+<url><loc>https://patzaw.github.io/bscui/reference/update_bscui_ui_elements.html</loc></url>
 </urlset>
+

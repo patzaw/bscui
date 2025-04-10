@@ -466,6 +466,7 @@ function Scui(element_id){
 
       // Display Events
       svg.addEventListener("wheel", function(event){
+         event.preventDefault();
          scui.wheel_zoom(event);
       });
 
@@ -753,7 +754,7 @@ function Scui(element_id){
                if (scui.structure_shapes.has(to_add.tagName)) {
                   to_add.style.fill = "none";
                   to_add.style.stroke = selection_color;
-                  to_add.style.strokeWidth = to_add.style.strokeWidth + 
+                  to_add.style.strokeWidth = to_add.style.strokeWidth +
                      selection_width;
                   to_add.style.strokeOpacity = 1;
                   to_add.style.opacity = selection_opacity;
@@ -820,7 +821,7 @@ function Scui(element_id){
    //////////////////////////////////
    /**
     * Update selection
-    * 
+    *
     * @param {Array} elements element identifiers to select
     *
     */
@@ -838,7 +839,7 @@ function Scui(element_id){
    //////////////////////////////////
    /**
     * Click on an element
-    * 
+    *
     * @param {string} element identifier of the element to click on
     * @param {boolean} dbl_click if true double click
     *
@@ -862,7 +863,7 @@ function Scui(element_id){
    //////////////////////////////////
    /**
     * Set element styles
-    * 
+    *
     * @param {object} element_styles a data frame with an "id" column and
     * column per style to apply
     * @param {Array} to_ignore identifiers of elements to ignore:
@@ -891,7 +892,7 @@ function Scui(element_id){
             for (let pname in element_styles) {
                if(pname != "id"){
                   if(append && node.style){
-                     node.style[pname] = node.style[pname] + " " + 
+                     node.style[pname] = node.style[pname] + " " +
                         element_styles[pname][i];
                   }else{
                      node.style[pname] = element_styles[pname][i];
@@ -918,7 +919,7 @@ function Scui(element_id){
    //////////////////////////////////
    /**
     * Set style of selected elements
-    * 
+    *
     * @param {object} element_styles a data frame without an "id" column and
     * column per style to apply
     * @param {Array} targeted_tags affected tag names
@@ -951,7 +952,7 @@ function Scui(element_id){
    //////////////////////////////////
    /**
     * Set element attributes
-    * 
+    *
     * @param {object} element_attributes a data frame with an "id" column and
     * column per attibute to set
     * @param {Array} to_ignore identifiers of elements to ignore:
@@ -1010,7 +1011,7 @@ function Scui(element_id){
    //////////////////////////////////
    /**
     * Set attributes of selected elements
-    * 
+    *
     * @param {object} element_attributes a data frame without an "id" column and
     * column per attribute to set
     * @param {Array} targeted_tags affected tag names
@@ -1043,7 +1044,7 @@ function Scui(element_id){
    //////////////////////////////////
    /**
     * Change element order in the SVG
-    * 
+    *
     * @param {Array} element_ids the identifiers of the elements to move
     * @param {string} where where to move the elements (default: "front")
     *
@@ -1084,7 +1085,7 @@ function Scui(element_id){
    //////////////////////////////////
    /**
     * Add an element to the interface
-    * 
+    *
     * @param {String} element_id the identifier of the element to add
     * @param {String} svg_txt SVG code of one element and its children
     * @param {String} ui_type either "selectable", "button" or "none".
@@ -1131,7 +1132,7 @@ function Scui(element_id){
    //////////////////////////////////
    /**
     * Remove elements from the interface
-    * 
+    *
     * @param {Array} element_ids the identifiers of the elements to remove
     *
     */
@@ -1170,7 +1171,7 @@ function Scui(element_id){
    //////////////////////////////////
    /**
     * Update ui elements type and title
-    * 
+    *
     * @param {object} ui_elements a data frame with "id", "ui_type" and "title"
     *    columns
     *
@@ -1359,7 +1360,7 @@ function Scui(element_id){
     *
     * @param {distance} distance between touches
     * @param {lcp} center point
-    * 
+    *
     */
    this.touch_zoom = function(distance, lcp){
       var scui = this;
@@ -1369,7 +1370,7 @@ function Scui(element_id){
       }
       var svg = scui.svg;
       var orip = point_to_area_ref(lcp, svg);
-      
+
       var viewBox = svg.getAttribute("viewBox").split(" ");
       var vbx = Number(viewBox[0]);
       var vby = Number(viewBox[1]);

@@ -1,7 +1,7 @@
 dependencies:
 - name: bscui
-  version: 0.0.3
-  src: htmlwidgets/lib/bscui-0.0.3
+  version: 0.0.4
+  src: htmlwidgets/lib/bscui-0.0.4
   script:
    - bscui.min.js
 

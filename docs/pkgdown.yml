@@ -1,11 +1,10 @@
-pandoc: 3.1.1
-pkgdown: 2.0.7
+pandoc: '3.2'
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   bscui: bscui.html
-  SVG-examples: web_only/SVG-examples.html
-last_built: 2024-03-31T16:14Z
+  web_only/SVG-examples: web_only/SVG-examples.html
+last_built: 2025-04-10T05:31Z
 urls:
   reference: https://patzaw.github.io/bscui/reference
   article: https://patzaw.github.io/bscui/articles
-
